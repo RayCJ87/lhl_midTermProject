@@ -66,25 +66,3 @@
   loadGuestList();
 
  });
-
-<span class="attendeeListItem">
-          <h4>John Smith (sample entry)</h4>
-          <p class="attendeeAvailability">Availability:</p>
-          <ul>
-            <li>
-              <p>Mon 12/04 from 1:00pm - 4:30pm</p>
-            </li>
-          </ul>
-        </span>
-        <span class="attendeeListItem">
-          <h4>Adam Jones (sample entry)</h4>
-          <p class="attendeeAvailability">Availability:</p>
-          <ul>
-            <li>
-              <p>Mon 12/04 from 12:00pm - 3:30pm</p>
-            </li>
-            <li>
-              <p>Mon 12/04 from 1:00pm - 4:30pm</p>
-            </li>
-          </ul>
-        </span>
