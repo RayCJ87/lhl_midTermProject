@@ -22,11 +22,42 @@
     </section>
 
 <!-- RSVP Button -->
-    <input type="submit" value="RSVP">
+    <input id="rsvp" type="submit" value="RSVP">
+<!-- Edit RSVP Button -->
+    <input id="rsvpEdit" type="submit" value="Edit Existing RSVP">
+
 <!-- RSVP Form -->
     <section class="toggleRSVP">
-      <!-- add method and action to form -- POST or PUT? -->
-      <form id="attendeeRSVP">
+      <form id="attendeeRSVP" method="POST" action="/<%=events.id%>">
+        <!-- em for error messages -->
+        <em></em>
+        <p class="formLabel">Name:</p>
+        <textarea name="text" placeholder="Enter your first and last name"></textarea>
+        <p class="formLabel">Email:</p>
+        <textarea name="email" placeholder="Enter your email address"></textarea>
+        <span class="rsvpAvailability">
+          <h3>Please select your availability:</h3>
+          <p>(Day MM/DD from start time - end time)</p>
+          <ul>
+            <!-- append checkbox with date, start_time - date, end_time for each timeslot chosen by organizer -->
+            <li>
+              <input type="checkbox">
+              <h4>Mon 12/04 from 12:00pm - 3:30pm (sample entry)</h4>
+            </li>
+            <li>
+              <input type="checkbox">
+              <h4>Mon 12/04 from 1:00pm - 4:30pm (sample entry)</h4>
+            </li>
+            <!-- end appended html -->
+          </ul>
+          <input type="submit" value="Submit Availability">
+        </span>
+      </form>
+    </section>
+
+<!-- Edit RSVP Form -->
+    <section class="toggleEdit">
+      <form id="editForm" method="PUT" action="/<%=events.id%>">
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
@@ -85,3 +116,5 @@
 
   </body>
 </html>
+
+<!-- Branch: feature/event-page -->
