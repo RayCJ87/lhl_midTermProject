@@ -43,6 +43,35 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+//organizer will be redirected after input personal information and description of event
+app.post("/", (req, res) => {
+
+
+  res.redirect("/createEvent");
+});
+
+//organizer inputs attendee information and create event
+app.get("/createEvent", (req, res) => {
+  // const getNewEventURL = generateRandomString();
+
+  res.render("invite");
+})
+
+//organizer will be redirected to an event page after an event is created
+app.post("/createEvent", (req, res) => {
+  res.redirect("/testEvent");
+})
+
+//read the event page
+app.get("/testEvent", (req, res) => {
+  res.render("event_show");
+})
+
+app.post("/testEvent", (req, res) => {
+
+})
+
+
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
 });
