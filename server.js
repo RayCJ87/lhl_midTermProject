@@ -13,20 +13,20 @@ const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
-const pg          = require("pg");
+// const pg          = require("pg");
 const settings = require("./settings");
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
 
 // Setup postgreSQL database
-const client = new pg.Client({
-  user     : settings.user,
-  password : settings.password,
-  database : settings.database,
-  host     : settings.hostname,
-  port     : settings.port,
-  ssl      : settings.ssl
-});
+// const client = new pg.Client({
+//   user     : settings.user,
+//   password : settings.password,
+//   database : settings.database,
+//   host     : settings.hostname,
+//   port     : settings.port,
+//   ssl      : settings.ssl
+// });
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
