@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <title>Schoodle</title>
+
+<!-- Stylesheets -->
+    <link rel="stylesheet" href="../public/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="../public/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="../public/styles/layout.css" type="text/css" />
+
+<!-- App JS -->
+    <script type="text/javascript" src="../public/scripts/app.js"></script>
+
   </head>
 
   <body>
@@ -32,7 +41,7 @@
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
-        <textarea name="text" placeholder="Enter your first and last name"></textarea>
+        <textarea id="nameNew" name="text" placeholder="Enter your first and last name"></textarea>
         <p class="formLabel">Email:</p>
         <textarea name="email" placeholder="Enter your email address"></textarea>
         <span class="rsvpAvailability">
@@ -61,7 +70,7 @@
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
-        <textarea name="text" placeholder="Enter your first and last name"></textarea>
+        <textarea id="nameEdit" name="text" placeholder="Enter your first and last name"></textarea>
         <p class="formLabel">Email:</p>
         <textarea name="email" placeholder="Enter your email address"></textarea>
         <span class="rsvpAvailability">
