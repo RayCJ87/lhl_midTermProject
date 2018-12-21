@@ -15,6 +15,7 @@ const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
 const DataHelpers = require("./dataHelper.js")(knex);
+
 // Seperated Routes for each Resource
 const eventsRoutes = require("./routes/events")(DataHelpers);
 const organizer = require('./lib/organizer')(knex);
@@ -66,6 +67,8 @@ app.get("/createEvent", (req, res) => {
 
 //organizer will be redirected to an event page after an event is created
 app.post("/createEvent", (req, res) => {
+  console.log(req.body);
+  organizer.addOrganizer(req.body.theHostEmail, req.body.theHostName);
   res.redirect("/testEvent");
 })
 
@@ -77,6 +80,10 @@ app.get("/testEvent", (req, res) => {
 app.post("/testEvent", (req, res) => {
 
 })
+
+//***TEST CODE***
+organizer.find(2);
+// organizer.findByEmail('ajones@example.com');
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
