@@ -31,13 +31,13 @@
     </section>
 
 <!-- RSVP Button -->
-    <input id="rsvp" type="submit" value="RSVP">
+    <input id="rsvp" type="button" value="RSVP">
 <!-- Edit RSVP Button -->
-    <input id="rsvpEdit" type="submit" value="Edit Existing RSVP">
+    <input id="rsvpEdit" type="button" value="Edit Existing RSVP">
 
 <!-- RSVP Form -->
     <section class="toggleRSVP">
-      <form id="attendeeRSVP" method="POST" action="/api/events/invite">
+      <form id="attendeeRSVP" method="GET" action="/">
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
@@ -59,14 +59,14 @@
             </li>
             <!-- end appended html -->
           </ul>
-          <input type="submit" value="Submit Availability">
+          <input type="submit" value="Submit Availability" id="updateAvalability">
         </span>
       </form>
     </section>
 
 <!-- Edit RSVP Form -->
     <section class="toggleEdit">
-      <form id="editForm" method="PUT" action="/testEvent">
+      <form id="editForm" method="PUT" action="/api/events/invite">
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
