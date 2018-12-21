@@ -16,8 +16,8 @@
 
   </head>
 
-
-  <header>
+  <header><% include partials/_header %><h1>Welcome to Schoodle</h1>
+  </header>
 
     <!-- Navbar -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -59,7 +59,10 @@
     </div>
 
     <div class="jumbotron">
-      <form action="/api/events/create" method="POST">
+      <!-- <form action="/api/events/create" method="POST"> -->
+
+      <form action="/api/events/create" method="GET">
+
         <div class="eventInput">
           <label type="text" >Event title:</label>
           <input type="text" name="theEventName">
@@ -82,6 +85,7 @@
         <div class="eventSetup">
           <h4>Select time slots</h4>
           <input type="datetime-local" id="getDate" name="eventTime">
+
           <button id="setDate" type="button" name="addTime" >Add Timeslot</button>
             <p class="timeZone">
             </p>
@@ -90,5 +94,15 @@
       </form>
     </div>
   </main>
+
+          <button id="setDate" type="button" name="addTime" onClick="loadTimeSlots()">Add Timeslot</button>
+
+            <p class="timeZone"></p>
+            <button id="createEvent" type="submit">Create the Event</button>
+      </div>
+
+
+    </form>
+
   </body>
 </html>
