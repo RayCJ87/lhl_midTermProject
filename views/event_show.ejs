@@ -37,7 +37,7 @@
 
 <!-- RSVP Form -->
     <section class="toggleRSVP">
-      <form id="attendeeRSVP" method="POST" action="/<%=events.id%>">
+      <form id="attendeeRSVP" method="POST" action="/api/events/invite">
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
@@ -66,7 +66,7 @@
 
 <!-- Edit RSVP Form -->
     <section class="toggleEdit">
-      <form id="editForm" method="PUT" action="/<%=events.id%>">
+      <form id="editForm" method="PUT" action="/testEvent">
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
@@ -124,6 +124,5 @@
   </main>
 
   </body>
-</html>
 
-<!-- Branch: feature/event-page -->
+</html>

@@ -17,8 +17,8 @@
   </form>
 
   <br>
-
-  <h4>Add attendees:</h4>
+<!-- merge conflict - is the commented-out part ok to delete? -->
+<!--   <h4>Add attendees:</h4>
   <form>
     <label>Name: </label> <input type="test" name="name" style="width:15%;"> <label>Email: </label> <input type="test" name="email" style="width:20%;"><button>Add</button>
   </form>
@@ -34,5 +34,20 @@
 
   <button class="btn btn-primary btn-lg">Send invitation!</button>
     </form>
+ -->
+  <form method="POST" action="/api/events/invite">
+    <h4>Add attendees:</h4>
+      <div>
+        <label>Name: </label> <input type="test" name="attendeeName" style="width:15%;"> <label>Email: </label> <input type="test" name="attendeeMail" style="width:20%;">
+        <button>Add</button>
+      </div>
+    <br>
+    <h4>Invite list:</h4>
+      <ul>
+        <li><button>Delete</button></li>
+      </ul>
+    <button class="btn btn-primary btn-lg">Send invitation!</button>
+  </form>
+
 </body>
 </html>
