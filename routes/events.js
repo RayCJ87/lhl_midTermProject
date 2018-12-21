@@ -3,6 +3,9 @@
 const express = require('express');
 const router  = express.Router();
 
+const organizerHelper = require('../lib/organizer');
+
+
 module.exports = function (DataHelpers) {
 
   //organizer will be redirected after input personal information and description of event
