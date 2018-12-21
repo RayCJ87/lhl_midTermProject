@@ -17,6 +17,7 @@ const knexLogger  = require('knex-logger');
 const DataHelpers = require("./dataHelper.js")(knex);
 // Seperated Routes for each Resource
 const eventsRoutes = require("./routes/events")(DataHelpers);
+const organizer = require('./lib/organizer')(knex);
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
