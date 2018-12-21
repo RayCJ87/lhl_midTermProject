@@ -19,6 +19,7 @@ const DataHelpers = require("./dataHelper.js")(knex);
 // Seperated Routes for each Resource
 const eventsRoutes = require("./routes/events")(DataHelpers);
 const organizer = require('./lib/organizer')(knex);
+const event = require('./lib/event')(knex);
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -68,7 +69,10 @@ app.get("/createEvent", (req, res) => {
 //organizer will be redirected to an event page after an event is created
 app.post("/createEvent", (req, res) => {
   console.log(req.body);
-  organizer.addOrganizer(req.body.theHostEmail, req.body.theHostName);
+  // function(req.body.email name)
+  // make json
+  // cb add organizer(email, name)
+  // organizer.addOrganizer(req.body.theHostMail, req.body.theHostName);
   res.redirect("/testEvent");
 })
 
@@ -83,6 +87,7 @@ app.post("/testEvent", (req, res) => {
 
 //***TEST CODE***
 organizer.find(2);
+event.findByURL('a1b2c3d4e5f6g7h8i9j0');
 // organizer.findByEmail('ajones@example.com');
 
 app.listen(PORT, () => {
