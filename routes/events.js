@@ -5,24 +5,15 @@ const router  = express.Router();
 
 module.exports = function (DataHelpers) {
 
-    // function createTimeSlot(newTime){
-    //     timeSlotCount.push(newTime);
-    // return timeSlotCount;
-    // }
-
   //organizer will be redirected after input personal information and description of event
    router.post("/create", (req, res) => {
 
     const organizer = {name: req.body.theHostName, mail: req.body.theHostMail }
-    const eventInfo = {title: req.body.theEventName, description: req.body.theEventDescription};
+    const eventInfo = {title: req.body.theEventName,location: req.body.theEventLocation, description: req.body.theEventDescription};
     console.log("the time is: ", req.body.eventTime);
     const totalInfo = {organizers: organizer, theEventInfo: eventInfo};
-    console.log("the big time: ", );
     console.log(totalInfo);
 
-    //
-    //let people = ['geddy', 'neil', 'alex'];
-    // res.render("invite", {people: people});
     res.render("invite");
     // res.redirect("/invite");
   });
@@ -47,11 +38,9 @@ module.exports = function (DataHelpers) {
   //   res.render("event_show");
   // })
 
-  router.post("/api/events/testEvent", (req, res) => {
+//   router.post("/api/events/testEvent", (req, res) => {
 
-})
-
-
+// })
 
   return router;
 }
