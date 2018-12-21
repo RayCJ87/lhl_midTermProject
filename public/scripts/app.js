@@ -48,27 +48,40 @@ function composeEvent(){
   $('.eventSetup').slideToggle(100)
 }
 
-// function removeItem(){
-//   console.log($(this));
-//   $(this).parent().remove();
-//   console.log($(this).parent().remove());
-// }
+function removeItem(element){
+  console.log($(element).parent());
+  //$(this).parent().remove();
+  $(element).closest("li").remove();
+  // console.log($(this).parent().remove());
+}
 
 function addAttendeeInfo(event){
   event.preventDefault();
   let name = $('#aName').val();
   let mail = $('#aMail').val();
   console.log(name, mail);
-  let guestInfo = `Name: ${name} - email: ${mail}`;
-  let possibleGuests = `<li>${guestInfo}  <button type="button" onClick = "removeItem()"}>Delete</li>`
-  $('.invitedList .peopleList').append(possibleGuests);
-
+  if ($('#aMail').val() && $('#aName').val()){
+    let guestInfo = `Name: ${name} - email: ${mail}`;
+    let possibleGuests = `<li>${guestInfo}  <button type="button" onClick="removeItem(this)" class="removeInvite">Delete</button></li>`
+    $('.invitedList .peopleList').append(possibleGuests);
+  }
   // console.log(event);
 }
 
-function deleteGuest(event){
-  event.preventDefault();
+function getEventUrl(){
+  console.log($('#eventURL').val());
+  let ind = "http://localhost:8080/" + generateRandomString();
+  $('#eventURL').val(ind);
+  console.log($('#eventURL').val());
+  $('#eventURL').select;
+  document.execCommand("copy");
+}
 
+function copyUrl(){
+const theDoc = document.getElementById("eventURL");
+console.log(theDoc);
+theDoc.select();
+document.execCommand("copy");
 }
 
 // function renderTimeSlots(time){
@@ -124,7 +137,7 @@ $( document ).ready(function() {
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   console.log("got it!");
-
-  // postTimeSlots();
+  getEventUrl();
+  $('.copyButton').on("click", copyUrl);
 })
 

@@ -10,11 +10,12 @@
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
   </head>
-  <header><% include partials/_header %><h1>Welcome to Schoodle</h1></header>
+  <header><% include partials/_header %><h1>Welcome to Schoodle</h1>
+  </header>
 
   <body>
 
-      <form action="/api/events/create" method="POST">
+      <form action="/api/events/create" method="GET">
         <div class="eventInput">
           <label type="text" >Event title:</label>
           <input type="text" name="theEventName">
@@ -36,13 +37,9 @@
       <div class="eventSetup">
           <h1>Select time slots</h1>
           <input type="datetime-local" id="getDate" name="eventTime">
-          <button id="setDate" type="button" name="addTime" >Add Timeslot</button>
+          <button id="setDate" type="button" name="addTime" onClick="loadTimeSlots()">Add Timeslot</button>
 
-            <p class="timeZone">
-    <!--           <li >
-
-              </li> -->
-            </p>
+            <p class="timeZone"></p>
             <button id="createEvent" type="submit">Create the Event</button>
       </div>
 
