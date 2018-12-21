@@ -1,15 +1,15 @@
+$(document).ready(function () {
 
-
-$(() => {
-  $.ajax({
-    method: "GET",
-    url: "/api/events"
-  }).done((users) => {
-    for(user of users) {
-      $("<div>").text(user.name).appendTo($("body"));
-    }
-  });;
-});
+  // $(() => {
+  //   $.ajax({
+  //     method: "GET",
+  //     url: "/api/users"
+  //   }).done((users) => {
+  //     for(user of users) {
+  //       $("<div>").text(user.name).appendTo($("body"));
+  //     }
+  //   });;
+  // });
 
 //TOGGLE NEW RSVP FORM
   $('#rsvp').click(function () {
@@ -32,6 +32,29 @@ $(() => {
       $editRSVP.slideUp();
     }
   });
+
+//TOGGLE NEW RSVP FORM
+  $('#rsvp').click(function () {
+    let $newRSVP = $('.toggleRSVP');
+    if ($newRSVP.is(':hidden')) {
+      $newRSVP.slideDown();
+      $('#nameNew').focus();
+    } else {
+      $newRSVP.slideUp();
+    }
+  });
+
+  //TOGGLE EDIT RSVP FORM
+  $('#rsvpEdit').click(function () {
+    let $editRSVP = $('.toggleEdit');
+    if ($editRSVP.is(':hidden')) {
+      $editRSVP.slideDown();
+      $('nameEdit').focus();
+    } else {
+      $editRSVP.slideUp();
+    }
+  });
+
 // button to set multiple timeslots.
 function loadTimeSlots(){
     console.log("loadTimeSlots");
@@ -40,6 +63,7 @@ function loadTimeSlots(){
     $('.eventSetup .timeZone').append(theText);
 
 }
+
 
 function composeEvent(){
   $('.eventSetup').slideToggle(100)
