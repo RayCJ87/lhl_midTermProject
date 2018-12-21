@@ -1,52 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Schoodle - Home Page</title>
+    <title>Schoodle</title>
 
-    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
-    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
-    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+<!-- Stylesheets -->
+    <link rel="stylesheet" href="../public/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="../public/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="../public/styles/layout.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
-    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
-    <script type="text/javascript" src="/scripts/app.js"></script>
+
+<!-- App JS -->
+    <script type="text/javascript" src="../public/scripts/app.js"></script>
+
   </head>
-  <header><% include partials/_header %><h1>Welcome to Schoodle</h1></header>
 
-  <body>
 
+  <header>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+           </button>
+          <a href="#" class="navbar-brand"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Schoodle </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Sign Up</a></li>
+            <li><a href="#">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  </header>
+  <!-- <header><% include partials/_header %><h1>Welcome to Schoodle</h1></header> -->
+
+  <body class="bodyLayout">
+
+  <main class="container">
+    <br><br><br>
+    <div class="headerStep1">
+      <h4 class="step">Step 1 of 2</h4>
+      <h1 class="eventName">Create an event</h1>
+    </div>
+
+    <div class="jumbotron">
       <form action="/api/events/create" method="POST">
         <div class="eventInput">
           <label type="text" >Event title:</label>
           <input type="text" name="theEventName">
 
-          <label type="text">Location:</label>
+          <label type="text">Location  :</label>
           <input type="text" name="theEventLocation">
+          <br>
+          <label type="text">Organizer:</label>
+          <input type="text" name="theHostName">
 
+          <label type="text">Email:   </label>
+          <input type="email" name="theHostMail">
+          <br>
           <label type="text">Event Description:</label>
           <textarea name="theEventDescription" placeholder="Tell us about thie event." ></textarea>
 
-          <label type="text">Enter your name:</label>
-          <input type="text" name="theHostName">
-
-          <label type="text">Enter your email:</label>
-          <input type="email" name="theHostMail">
           <button id="setEvent" type="button" name="addEvent" onClick="composeEvent()">Continue</button>
         </div>
 
-      <div class="eventSetup">
-          <h1>Select time slots</h1>
+        <div class="eventSetup">
+          <h4>Select time slots</h4>
           <input type="datetime-local" id="getDate" name="eventTime">
           <button id="setDate" type="button" name="addTime" >Add Timeslot</button>
-
             <p class="timeZone">
-    <!--           <li >
-
-              </li> -->
             </p>
-            <button id="createEvent" type="submit">Create the Event</button>
-      </div>
-
-
-    </form>
+            <button id="createEvent" class="btn btn-success">Create the Event</button>
+        </div>
+      </form>
+    </div>
+  </main>
   </body>
 </html>

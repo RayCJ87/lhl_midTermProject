@@ -47,33 +47,56 @@
     </nav>
 
   </header>
-  <!-- <header><% include partials/_header %><h1>Welcome to Schoodle</h1></header> -->
 
-<body>
-<main>
+<!-- <% include ./partials/_header %> -->
+
+<body class="bodyLayout">
+<main class="container">
+
+    <div class="headerStep1">
+      <h4 class="step">Step 1 of 2</h4>
+      <h1 class="eventName">Create an event</h1>
+    </div>
+
   <div class="jumbotron">
-    <h2>Event Name</h2>
 
-    <form>
-      <p>Here is the link of your event:</p>
-      <input type="text" name="longURL" style="width:25%;"><button><i class="fas fa-copy"> Copy</i></button>
-    </form>
+    <div>
+     <span>Organizer: <input type="text" name="name" placeholder="Host name" style="width:auto;"></span>
+     <span>Location : <input type="text" name="name" placeholder="location" style="width:auto;"></span><br>
+     <span class="eventHead">Event description: <textarea class="textArea"></textarea></span>
+     <button class="btn btn-info">Add</button>
+    </div>
 
-    <br>
-    <form method="POST" action="/api/events/invite">
-      <h4>Add attendees:</h4>
-        <div>
-          <label>Name: </label> <input type="test" name="attendeeName" style="width:15%;"> <label>Email: </label> <input type="test" name="attendeeMail" style="width:20%;">
-          <button>Add</button>
-        </div>
-      <br>
-      <h4>Invite list:</h4>
+    <h4>Choose your availability:</h4>
+      <ul>
+          <li>
+            <label for="startTime">Time:</label>
+            <input id="startTime" type="datetime-local" name="startTime" value="2017-06-01T08:30">
+            <button class="btn btn-info">Add</button>
+          </li>
+      </ul>
+
+    <h4>Add attendees:</h4>
+      <form>
+        <label>Name: </label> <input type="text" name="name" placeholder="attendee" style="width:15%;">
+        <label>Email: </label> <input type="email" name="email" placeholder="email" style="width:20%;">
+        <button class="btn btn-info">Add</button>
+      </form>
+
+      <form>
         <ul>
-          <li><button>Delete</button></li>
+          <span>req.body.name, req.body.email<button><i class="fas fa-trash-alt"></i></button></span>
         </ul>
-      <span class="sendInvite"><button class="btn btn-primary btn-lg">Send invitation!</button></span>
-    </form>
+      </form>
+
+      <br>
+
+    <span class="continue1"><button class="btn btn-success">Continue</button></span>
+
   </div>
+
 </main>
+
 </body>
 </html>
+
