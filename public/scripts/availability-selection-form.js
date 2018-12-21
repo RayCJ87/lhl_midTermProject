@@ -1,12 +1,12 @@
  $(document).ready(function () {
 
   // RENDERS TIMESLOT CHOICES ON FORM
-  //   function renderTimeslots(timeslots) {
-  //     timeslots.forEach(function (timeslots) {
-  //       let $timeslot = createTimeslotElement(timeslots);
-  //       $('ul #attendeeRSVP').append($timeslot);
-  //   });
-  // }
+    function renderTimeslots(timeslots) {
+      timeslots.forEach(function (timeslots) {
+        let $timeslot = createTimeslotElement(timeslots);
+        $('ul #attendeeRSVP').append($timeslot);
+    });
+  }
 
   //CREATE STRUCTURE FOR TIMESLOT CHOICES
   function createTimeslotElement(timeslots) {

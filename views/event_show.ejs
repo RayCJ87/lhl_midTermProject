@@ -16,7 +16,6 @@
   <body>
 
   <header>
-    <!-- <% include ./partials/_header %> -->
     <h1 class="websiteName">Schoodle</h1>
   </header>
 
@@ -37,7 +36,7 @@
 
 <!-- RSVP Form -->
     <section class="toggleRSVP">
-      <form id="attendeeRSVP" method="POST" action="/<%=events.id%>">
+      <form id="attendeeRSVP" method="POST" action="">
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
@@ -66,7 +65,7 @@
 
 <!-- Edit RSVP Form -->
     <section class="toggleEdit">
-      <form id="editForm" method="PUT" action="/<%=events.id%>">
+      <form id="editForm" method="PUT" action="">
         <!-- em for error messages -->
         <em></em>
         <p class="formLabel">Name:</p>
