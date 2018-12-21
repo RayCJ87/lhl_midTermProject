@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Schoodle</title>
+
+<!-- Stylesheets -->
+    <link rel="stylesheet" href="../public/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="../public/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="../public/styles/layout.css" type="text/css" />
+
+<!-- App JS -->
+    <script type="text/javascript" src="../public/scripts/app.js"></script>
+
+  </head>
+
+  <body>
+
+  <header>
+    <!-- <% include ./partials/_header %> -->
+    <h1 class="websiteName">Schoodle</h1>
+  </header>
+
+  <main class="container">
+
+<!-- Event Information -->
+    <section class="eventInformation">
+      <h2 class="eventName">Name of Event Goes Here</h2>
+      <h3 class="organizerName">Hosted by: Organizer Name Goes Here</h3>
+      <h3 class="eventLocation">Location: Location of Event Goes Here</h3>
+      <p class="eventDescription">Description of Event Goes Here Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+    </section>
+
+<!-- RSVP Button -->
+    <input id="rsvp" type="submit" value="RSVP">
+<!-- Edit RSVP Button -->
+    <input id="rsvpEdit" type="submit" value="Edit Existing RSVP">
+
+<!-- RSVP Form -->
+    <section class="toggleRSVP">
+      <form id="attendeeRSVP" method="POST" action="/api/events/invite">
+        <!-- em for error messages -->
+        <em></em>
+        <p class="formLabel">Name:</p>
+        <textarea id="nameNew" name="text" placeholder="Enter your first and last name"></textarea>
+        <p class="formLabel">Email:</p>
+        <textarea name="email" placeholder="Enter your email address"></textarea>
+        <span class="rsvpAvailability">
+          <h3>Please select your availability:</h3>
+          <p>(Day MM/DD from start time - end time)</p>
+          <ul>
+            <!-- append checkbox with date, start_time - date, end_time for each timeslot chosen by organizer -->
+            <li>
+              <input type="checkbox">
+              <h4>Mon 12/04 from 12:00pm - 3:30pm (sample entry)</h4>
+            </li>
+            <li>
+              <input type="checkbox">
+              <h4>Mon 12/04 from 1:00pm - 4:30pm (sample entry)</h4>
+            </li>
+            <!-- end appended html -->
+          </ul>
+          <input type="submit" value="Submit Availability">
+        </span>
+      </form>
+    </section>
+
+<!-- Edit RSVP Form -->
+    <section class="toggleEdit">
+      <form id="editForm" method="PUT" action="/testEvent">
+        <!-- em for error messages -->
+        <em></em>
+        <p class="formLabel">Name:</p>
+        <textarea id="nameEdit" name="text" placeholder="Enter your first and last name"></textarea>
+        <p class="formLabel">Email:</p>
+        <textarea name="email" placeholder="Enter your email address"></textarea>
+        <span class="rsvpAvailability">
+          <h3>Please select your availability:</h3>
+          <p>(Day MM/DD from start time - end time)</p>
+          <ul>
+            <!-- append checkbox with date, start_time - date, end_time for each timeslot chosen by organizer -->
+            <li>
+              <input type="checkbox">
+              <h4>Mon 12/04 from 12:00pm - 3:30pm (sample entry)</h4>
+            </li>
+            <li>
+              <input type="checkbox">
+              <h4>Mon 12/04 from 1:00pm - 4:30pm (sample entry)</h4>
+            </li>
+            <!-- end appended html -->
+          </ul>
+          <input type="submit" value="Submit Availability">
+        </span>
+      </form>
+    </section>
+
+<!-- List of Attendees -->
+    <section class="attendeeList">
+      <h3>Who's attending:</h3>
+      <!-- append attendee name, timeslot selections when #attendeeRSVP input is clicked -->
+      <span class="attendeeListItem">
+        <h4>John Smith (sample entry)</h4>
+        <p class="attendeeAvailability">Availability:</p>
+        <ul>
+          <li>
+            <p>Mon 12/04 from 1:00pm - 4:30pm</p>
+          </li>
+        </ul>
+      </span>
+      <span class="attendeeListItem">
+        <h4>Adam Jones (sample entry)</h4>
+        <p class="attendeeAvailability">Availability:</p>
+        <ul>
+          <li>
+            <p>Mon 12/04 from 12:00pm - 3:30pm</p>
+          </li>
+          <li>
+            <p>Mon 12/04 from 1:00pm - 4:30pm</p>
+          </li>
+        </ul>
+      </span>
+      <!-- end appended html -->
+    </section>
+
+  </main>
+
+  </body>
+</html>

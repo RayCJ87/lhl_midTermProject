@@ -14,8 +14,9 @@ const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
+const DataHelpers = require("./dataHelper.js")(knex);
 // Seperated Routes for each Resource
-const usersRoutes = require("./routes/users");
+const eventsRoutes = require("./routes/events")(DataHelpers);
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -24,6 +25,9 @@ app.use(morgan('dev'));
 
 // Log knex SQL queries to STDOUT as well
 app.use(knexLogger(knex));
+
+let timeSlotCount = [];
+
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,41 +39,15 @@ app.use("/styles", sass({
 }));
 app.use(express.static("public"));
 
+
+
 // Mount all resource routes
-app.use("/api/users", usersRoutes(knex));
+app.use("/api/events", eventsRoutes);
 
 // Home page
 app.get("/", (req, res) => {
   res.render("index");
 });
-
-//organizer will be redirected after input personal information and description of event
-app.post("/", (req, res) => {
-
-
-  res.redirect("/createEvent");
-});
-
-//organizer inputs attendee information and create event
-app.get("/createEvent", (req, res) => {
-  // const getNewEventURL = generateRandomString();
-
-  res.render("invite");
-})
-
-//organizer will be redirected to an event page after an event is created
-app.post("/createEvent", (req, res) => {
-  res.redirect("/testEvent");
-})
-
-//read the event page
-app.get("/testEvent", (req, res) => {
-  res.render("event_show");
-})
-
-app.post("/testEvent", (req, res) => {
-
-})
 
 
 app.listen(PORT, () => {
