@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <title>Schoodle</title>
-
-<!-- Stylesheets -->
-    <link rel="stylesheet" href="../public/vendor/normalize-4.1.1.css" type="text/css" />
-    <link rel="stylesheet" href="../public/vendor/border-box.css" type="text/css" />
-    <link rel="stylesheet" href="../public/styles/layout.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-
-
 <head>
   <title>Schoodle</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -21,89 +10,25 @@
     <script type="text/javascript" src="/scripts/app.js"></script>
 </head>
 
+<body>
 
-
-<!-- App JS -->
-    <script type="text/javascript" src="../public/scripts/app.js"></script>
-
-  </head>
-
-
-  <header>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-           </button>
-          <a href="#" class="navbar-brand"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Schoodle </a>
-        </div>
-
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Sign Up</a></li>
-            <li><a href="#">Login</a></li>
-          </ul>
-        </div>
+  <h2>Event Name</h2>
 
   <form>
     <p>Here is the link of your event:</p>
     <input type="text" name="longURL" style="width:25%;" id="eventURL">
-    <button class="copyButton"><i class="fas fa-copy"> Copy</i></button>
+    <button class="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
   </form>
 
   <br>
+
   <form method="POST" action="/api/events/invite">
     <h4>Add attendees:</h4>
       <div>
         <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:15%;"> <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:20%;">
         <button id="addAttendee" >Add</button>
-
       </div>
-    </nav>
-
-  </header>
-  <!-- <header><% include partials/_header %><h1>Welcome to Schoodle</h1></header> -->
-
-<body>
-<main>
-  <div class="jumbotron">
-    <h2>Event Name</h2>
-
-    <form>
-      <p>Here is the link of your event:</p>
-      <input type="text" name="longURL" style="width:25%;"><button><i class="fas fa-copy"> Copy</i></button>
-    </form>
-
     <br>
-
-    <form method="POST" action="/api/events/invite">
-      <h4>Add attendees:</h4>
-        <div>
-          <label>Name: </label> <input type="test" name="attendeeName" style="width:15%;"> <label>Email: </label> <input type="test" name="attendeeMail" style="width:20%;">
-          <button>Add</button>
-        </div>
-      <br>
-      <h4>Invite list:</h4>
-        <ul>
-          <li><button>Delete</button></li>
-        </ul>
-      <span class="sendInvite"><button class="btn btn-primary btn-lg">Send invitation!</button></span>
-    </form>
-  </div>
-</main>
-
     <div class="invitedList">
     <h4>Invite list:</h4>
       <p class="peopleList">

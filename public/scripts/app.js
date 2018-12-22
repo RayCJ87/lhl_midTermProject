@@ -1,15 +1,15 @@
+$(document).ready(function () {
 
-
-$(() => {
-  $.ajax({
-    method: "GET",
-    url: "/api/events"
-  }).done((users) => {
-    for(user of users) {
-      $("<div>").text(user.name).appendTo($("body"));
-    }
-  });;
-});
+  // $(() => {
+  //   $.ajax({
+  //     method: "GET",
+  //     url: "/api/users"
+  //   }).done((users) => {
+  //     for(user of users) {
+  //       $("<div>").text(user.name).appendTo($("body"));
+  //     }
+  //   });;
+  // });
 
 //TOGGLE NEW RSVP FORM
   $('#rsvp').click(function () {
@@ -32,17 +32,38 @@ $(() => {
       $editRSVP.slideUp();
     }
   });
+
+//TOGGLE NEW RSVP FORM
+  $('#rsvp').click(function () {
+    let $newRSVP = $('.toggleRSVP');
+    if ($newRSVP.is(':hidden')) {
+      $newRSVP.slideDown();
+      $('#nameNew').focus();
+    } else {
+      $newRSVP.slideUp();
+    }
+  });
+
+  //TOGGLE EDIT RSVP FORM
+  $('#rsvpEdit').click(function () {
+    let $editRSVP = $('.toggleEdit');
+    if ($editRSVP.is(':hidden')) {
+      $editRSVP.slideDown();
+      $('nameEdit').focus();
+    } else {
+      $editRSVP.slideUp();
+    }
+  });
+
 // button to set multiple timeslots.
 function loadTimeSlots(){
     console.log("loadTimeSlots");
-  // timeArray.push(req.body.eventTime);
-  // let $input = $('Button[type="button"]')
-  // $input.on('click', function (event) {
-  //   event.preventDefault();
     time = $('.eventSetup #getDate').val();
-    let theText = `<p>${time}</p>`;
+    let theText = `<p>${time}</p> <input type="hidden" value="${time}" name="eventTimes[]"/>`;
     $('.eventSetup .timeZone').append(theText);
+
 }
+
 
 function composeEvent(){
   $('.eventSetup').slideToggle(100)
@@ -52,7 +73,8 @@ function removeItem(element){
   console.log($(element).parent());
   //$(this).parent().remove();
   $(element).closest("li").remove();
-  // console.log($(this).parent().remove());
+  $('input[type="hidden"][value="guestNames[]"]').remove();
+  console.log("To delete: ", $('input[type="hidden"][value="guestNames[]"]'));
 }
 
 function addAttendeeInfo(event){
@@ -62,7 +84,8 @@ function addAttendeeInfo(event){
   console.log(name, mail);
   if ($('#aMail').val() && $('#aName').val()){
     let guestInfo = `Name: ${name} - email: ${mail}`;
-    let possibleGuests = `<li>${guestInfo}  <button type="button" onClick="removeItem(this)" class="removeInvite">Delete</button></li>`
+    let possibleGuests = `<li>${guestInfo}  <button type="button" onClick="removeItem(this)" class="removeInvite">Delete</button></li>
+                          <input type="hidden" value="${name}" name="guestNames[]"/> <input type="hidden" value="${mail}" name="guestMails[]"/>`
     $('.invitedList .peopleList').append(possibleGuests);
   }
   // console.log(event);
@@ -131,7 +154,6 @@ function generateRandomString() {
 }
 
 
-
 $( document ).ready(function() {
   $('.eventSetup').hide();
   loadTimeSlots();
@@ -140,4 +162,3 @@ $( document ).ready(function() {
   getEventUrl();
   $('.copyButton').on("click", copyUrl);
 })
-
