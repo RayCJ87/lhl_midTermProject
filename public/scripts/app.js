@@ -1,59 +1,30 @@
-$(document).ready(function () {
 
-  // $(() => {
-  //   $.ajax({
-  //     method: "GET",
-  //     url: "/api/users"
-  //   }).done((users) => {
-  //     for(user of users) {
-  //       $("<div>").text(user.name).appendTo($("body"));
-  //     }
-  //   });;
-  // });
 
-//TOGGLE NEW RSVP FORM
-  $('#rsvp').click(function () {
-    let $newRSVP = $('.toggleRSVP');
-    if ($newRSVP.is(':hidden')) {
-      $newRSVP.slideDown();
-      $('#nameNew').focus();
-    } else {
-      $newRSVP.slideUp();
-    }
-  });
-
-  //TOGGLE EDIT RSVP FORM
-  $('#rsvpEdit').click(function () {
-    let $editRSVP = $('.toggleEdit');
-    if ($editRSVP.is(':hidden')) {
-      $editRSVP.slideDown();
-      $('nameEdit').focus();
-    } else {
-      $editRSVP.slideUp();
-    }
-  });
+// $(() => {
+//   $.ajax({
+//     method: "GET",
+//     url: "/api/events"
+//   }).done((users) => {
+//     for(user of users) {
+//       $("<div>").text(user.name).appendTo($("body"));
+//     }
+//   });;
+// });
 
 //TOGGLE NEW RSVP FORM
-  $('#rsvp').click(function () {
-    let $newRSVP = $('.toggleRSVP');
-    if ($newRSVP.is(':hidden')) {
-      $newRSVP.slideDown();
-      $('#nameNew').focus();
-    } else {
-      $newRSVP.slideUp();
-    }
-  });
+function getRSVPForm() {
+  $('.toggleRSVP').slideToggle(100);
+  if ($('.toggleRSVP').is(':visible')){
+    //get timeSlots.
+  }
+}
 
-  //TOGGLE EDIT RSVP FORM
-  $('#rsvpEdit').click(function () {
-    let $editRSVP = $('.toggleEdit');
-    if ($editRSVP.is(':hidden')) {
-      $editRSVP.slideDown();
-      $('nameEdit').focus();
-    } else {
-      $editRSVP.slideUp();
-    }
-  });
+// function displayTimeSlots() {
+//   let timeSlotLists = `
+//             <li><p class="timeOfEvents">${}</p><label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+//             </li>`;
+
+// }
 
 // button to set multiple timeslots.
 function loadTimeSlots(){
@@ -64,17 +35,19 @@ function loadTimeSlots(){
 
 }
 
-
 function composeEvent(){
   $('.eventSetup').slideToggle(100)
 }
 
 function removeItem(element){
   console.log($(element).parent());
-  //$(this).parent().remove();
+  console.log("it's :", $(element).closest("li").innerText);
   $(element).closest("li").remove();
-  $('input[type="hidden"][value="guestNames[]"]').remove();
-  console.log("To delete: ", $('input[type="hidden"][value="guestNames[]"]'));
+  $(element).find("input[type='hidden']").remove();
+
+  // $(element).closest("input:hidden").remove();
+  // $('input[type="hidden"][value="guestNames[]"]').remove();
+  // console.log("To delete: ", $('input[type="hidden"][value="guestNames[]"]'));
 }
 
 function addAttendeeInfo(event){
@@ -101,11 +74,23 @@ function getEventUrl(){
 }
 
 function copyUrl(){
-const theDoc = document.getElementById("eventURL");
-console.log(theDoc);
-theDoc.select();
-document.execCommand("copy");
+  const theDoc = document.getElementById("eventURL");
+  console.log(theDoc);
+  theDoc.select();
+  document.execCommand("copy");
 }
+
+function getSchedules() {
+  $.ajax({ url: "/api/events/invite", method: 'GET' })
+    .done(function() {
+      console.log("the schedule is:  ", totalInfo.eventSchedules);
+      console.log("weird: ", totalInfo);
+      let scheduleTables = `<li>${totalInfo.eventSchedules}   <label class="switch"><input class="switchToggle">
+       <span class="slider round"></span></label></li>`;
+      $('#attendeeRSVP .scheduleList').append(scheduleTables);
+    });
+}
+
 
 // function renderTimeSlots(time){
 //   // for (let time of timeArray) {
@@ -155,11 +140,16 @@ function generateRandomString() {
 
 
 $( document ).ready(function() {
+  $('.toggleRSVP').hide();
+  $('.toggleEdit').hide();
   $('.eventSetup').hide();
+  $('#rsvp').on("click", getSchedules);
+  $('#rsvp').on("click", getRSVPForm);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   console.log("got it!");
   getEventUrl();
   $('.copyButton').on("click", copyUrl);
+
 })
 
