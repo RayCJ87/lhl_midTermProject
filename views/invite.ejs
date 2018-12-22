@@ -1,41 +1,60 @@
+
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Schoodle - Home Page</title>
 
-<head>
-  <title>Schoodle</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
-</head>
 
-<body>
+  </head>
 
-  <h2>Event Name</h2>
+  <header>
+    <% include partials/_header %>
+  </header>
 
-  <form>
-    <p>Here is the link of your event:</p>
-    <input type="text" name="longURL" style="width:25%;" id="eventURL">
-    <button class="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
-  </form>
+<body class="bodyLayout">
 
-  <br>
+  <main>
+    <div class="container">
+    <div class="jumbotron">
 
-  <form method="POST" action="/api/events/invite">
-    <h4>Add attendees:</h4>
-      <div>
-        <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:15%;"> <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:20%;">
-        <button id="addAttendee" >Add</button>
-      </div>
-    <br>
-    <div class="invitedList">
-    <h4>Invite list:</h4>
-      <p class="peopleList">
-      </p>
+      <h2 class="eventName">Event Name</h2>
+
+      <form>
+        <p>Here is the link of your event:</p>
+        <input type="text" name="longURL" style="width:25%;" id="eventURL">
+        <button class="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
+      </form>
+
+      <br>
+
+      <form method="POST" action="/api/events/invite">
+        <h4>Add attendees:</h4>
+          <div>
+            <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:15%;"> <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:20%;">
+            <button id="addAttendee" >Add</button>
+          </div>
+
+        <br>
+
+        <div class="invitedList">
+          <h4>Invite list:</h4>
+          <p class="peopleList"></p>
+        </div>
+        <input id="sendInvite" class="btn btn-primary btn-lg" type="submit" value="Send invitation!"/>
+      </form>
     </div>
-    <input class="btn btn-primary btn-lg" type="submit" value="Send invitation!"/>
-  </form>
+    </div>
+  </main>
 
 </body>
 </html>

@@ -26,8 +26,10 @@
   <div class="content">
   <main class="container">
 
-    <h1 class="welcome">Welcome to Schoodle!</h1>
-    <div>
+    <div class="wrapper">
+
+    <div class="title">
+      <h1 class="welcome">Welcome to Schoodle!</h1>
       <h4 class="sub-title">Create an event!</h4>
       <h4 class="sub-title">Step 1 of 3</h4>
     </div>
@@ -36,7 +38,7 @@
       <form action="/api/events/create" method="POST">
         <div class="eventInput">
           <label type="text" >Event title:</label>
-          <input type="text" name="theEventName"><br>
+          <input type="text" name="theEventName" style="width: auto;"><br>
 
           <label type="text">Location  :</label>
           <input type="text" name="theEventLocation"><br>
@@ -61,6 +63,7 @@
           <button class="btn btn-success" id="createEvent" type="submit">Create Event</button>
         </div>
       </form>
+      </div>
     </div>
   </main>
   </div>
