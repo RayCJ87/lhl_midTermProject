@@ -1,8 +1,51 @@
-
 body {
   background-color: #EEE;
-
   h1 {
     color: #244751;
   }
+}
+
+.welcome {
+  padding-top: 50px;
+  font-family: 'Montserrat', sans-serif;
+  color: black;
+}
+
+.bodyLayout {
+  background: url(https://cssanimation.rocks/levelup/public/images/background.jpg);
+  font: black;
+  background-blend-mode: lighten;
+}
+
+.jumbotron {
+  padding-top: 20px;
+  opacity: 0.85;
+}
+
+/*.wrapper {
+  width: 60%;
+  align-items: center;
+  padding-top: 50px;
+  padding-left: 20px;
+}*/
+
+.title {
+  font-family: 'Montserrat', sans-serif;
+  color: black;
+}
+
+.main {
+  padding-top: 40px;
+  padding-left: 30px;
+}
+
+#createEvent {
+  float: right;
+}
+
+#sendInvite {
+  float: right;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
