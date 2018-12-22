@@ -37,7 +37,7 @@
 
       <!-- slideToggle form (new)  -->
 
-      <form id="attendeeRSVP" method="GET" action="/">
+      <form id="attendeeRSVP" method="PUT" action="/api/events/invite">
         <section class="toggleRSVP">
           <label class="formLabel">Name:</label>
           <textarea id="nameNew" name="text" placeholder="Enter your first and last name"></textarea>
@@ -49,7 +49,7 @@
 
             </p>
           </div>
-          <button id="submitAvalability">Confirm</button>
+          <button id="submitAvalability" type="submit">Confirm</button>
         </section>
       </form>
 

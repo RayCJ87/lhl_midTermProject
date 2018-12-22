@@ -48,12 +48,23 @@ module.exports = function (DataHelpers) {
     console.log(req.body);
     // const attendee = {name: req.body.attendeeName, email: req.body.attendeeMail}
     // totalInfo['attendee'] = attendee;
+    console.log("the time is: ", totalInfo.eventSchedules );
     res.render("event_show");
     // res.redirect("/testEvent");
   })
 
   router.get("/invite", (req, res) => {
-
+    // # 1. Get a console log fired here /invite when ajax request
+    // # 2. send back a static response {eventSchedules: []}
+    // # 3. front end to console.log static response
+    // # 4. make it dnyamic
+    let tempArray = totalInfo.eventSchedules;
+    let theScheduleData = {};
+    for (let i = 1; i < tempArray.length; i++){
+      theScheduleData[i] = tempArray[i];
+    }
+    console.log("the schedules: ",  theScheduleData);
+    res.json(theScheduleData);
   })
 
   router.put("/invite", (req, res) => {
