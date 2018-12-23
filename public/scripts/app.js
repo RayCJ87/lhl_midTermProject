@@ -69,11 +69,11 @@ function addAttendeeInfo(event){
 // generate an new Url
 function getEventUrl(){
   console.log($('#eventURL').val());
-  let ind = "http://localhost:8080/" + generateRandomString();
-  $('#eventURL').val(ind);
+  let randomURL = generateRandomString();
+  let totalURL = "http://localhost:8080/api/events/" + randomURL;
+  $('#eventURL').val(totalURL);
   console.log($('#eventURL').val());
-  $('#eventURL').select;
-  document.execCommand("copy");
+  return randomURL;
 }
 
 // copy the Url
@@ -156,12 +156,16 @@ $( document ).ready(function() {
   $('.toggleEdit').hide();
   $('.eventSetup').hide();
   $('#rsvp').on("click", getSchedules);
+  $('.copyButton').on("click", copyUrl);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   console.log("got it!");
-  getEventUrl();
-  $('.copyButton').on("click", copyUrl);
-  // $.ajax()
+  const secretURL = getEventUrl();
+  const urlAddress = {secretURL: secretURL};
+  console.log("The URL is: ", urlAddress);
+  $.ajax({url: "/api/events/create", data: urlAddress, method: 'PUT'}).done(function(){
+      console.log("Success!");
+    });
 
 })
 

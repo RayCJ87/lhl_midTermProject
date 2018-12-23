@@ -8,18 +8,17 @@ let totalInfo = {};
 module.exports = function (DataHelpers) {
 
   //organizer will be redirected after input personal information and description of event
-    let totalGuests = {};
-    router.get("/", (req, res) =>{
-      console.log("hello");
-
-    // res.redirect("/index");
-    });
+  let totalGuests = {};
+  router.get("/", (req, res) =>{
+    console.log("hello");
+  });
 
    // router.get("/create", (req, res) => {
    //  res.render("invite");
 
    // });
-   router.post("/create", (req, res) => {
+
+  router.post("/create", (req, res) => {
     const organizer = {name: req.body.theHostName, mail: req.body.theHostMail }
     const eventInfo = {title: req.body.theEventName,location: req.body.theEventLocation, description: req.body.theEventDescription};
     const att = {name: req.body.attendeeName, mail: req.body.attendeeMail};
@@ -36,6 +35,9 @@ module.exports = function (DataHelpers) {
 
   //   res.render("invite");
   // })
+  router.put("/create", (req, res) => {
+    console.log("the URL from backend: ", req.body.secretURL);
+  })
 
   //organizer will be redirected to an event page after an event is created
   router.post("/invite", (req, res) => {
@@ -70,6 +72,22 @@ module.exports = function (DataHelpers) {
   router.put("/invite", (req, res) => {
 
   })
+
+  router.post("/invite", (req, res) => {
+
+  totalInfo['guests'] = req.body.guestNames;
+  totalInfo['guestsContact'] = req.body.guestMails;
+  console.log(totalInfo);
+
+  console.log("The req body:  ");
+  console.log(req.body);
+  // const attendee = {name: req.body.attendeeName, email: req.body.attendeeMail}
+  // totalInfo['attendee'] = attendee;
+  console.log("the time is: ", totalInfo.eventSchedules );
+  res.render("event_show");
+    // res.redirect("/testEvent");
+  })
+
 
   return router;
 }
