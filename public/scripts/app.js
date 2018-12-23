@@ -68,7 +68,6 @@ function addAttendeeInfo(event){
 
 // generate an new Url
 function getEventUrl(){
-  console.log($('#eventURL').val());
   let randomURL = generateRandomString();
   let totalURL = "http://localhost:8080/api/events/" + randomURL;
   $('#eventURL').val(totalURL);

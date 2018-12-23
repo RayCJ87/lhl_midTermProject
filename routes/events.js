@@ -13,79 +13,58 @@ module.exports = function (DataHelpers) {
     console.log("hello");
   });
 
-   // router.get("/create", (req, res) => {
-   //  res.render("invite");
+  // store secretURL  to be reused later
+  router.put("/create", (req, res) => {
+    console.log("the URL from backend: ", req.body.secretURL);
+    totalInfo.theEventInfo["secretURL"] = req.body.secretURL;
+  })
 
-   // });
-
+  //store event, host information.
   router.post("/create", (req, res) => {
     const organizer = {name: req.body.theHostName, mail: req.body.theHostMail }
     const eventInfo = {title: req.body.theEventName,location: req.body.theEventLocation, description: req.body.theEventDescription};
     const att = {name: req.body.attendeeName, mail: req.body.attendeeMail};
-    totalInfo = {organizers: organizer, theEventInfo: eventInfo, eventSchedules: req.body.eventTimes};
-    console.log(totalInfo);
+    totalInfo = {organizers: organizer, theEventInfo: eventInfo, eventSchedules: req.body.eventTimes.slice(1)};
+    console.log("The super data is: ", totalInfo);
     console.log(req.body);
     res.render("invite");
-    // res.redirect("/invite");
+
   });
 
-  //organizer inputs attendee information and create event
-  // router.get("/invite", (req, res) => {
-  //   // const getNewEventURL = generateRandomString();
-
-  //   res.render("invite");
-  // })
-  router.put("/create", (req, res) => {
-    console.log("the URL from backend: ", req.body.secretURL);
-  })
-
-  //organizer will be redirected to an event page after an event is created
-  router.post("/invite", (req, res) => {
-
-    totalInfo['guests'] = req.body.guestNames;
-    totalInfo['guestsContact'] = req.body.guestMails;
-    console.log(totalInfo);
-
-    console.log("The req body:  ");
-    console.log(req.body);
-    // const attendee = {name: req.body.attendeeName, email: req.body.attendeeMail}
-    // totalInfo['attendee'] = attendee;
-    console.log("the time is: ", totalInfo.eventSchedules );
-    res.render("event_show");
-    // res.redirect("/testEvent");
-  })
-
   router.get("/invite", (req, res) => {
-    // # 1. Get a console log fired here /invite when ajax request
-    // # 2. send back a static response {eventSchedules: []}
-    // # 3. front end to console.log static response
-    // # 4. make it dnyamic
     let tempArray = totalInfo.eventSchedules;
     let theScheduleData = {};
     for (let i = 1; i < tempArray.length; i++){
       theScheduleData[i] = tempArray[i];
     }
-    console.log("the schedules: ",  theScheduleData);
+    console.log("Real schedules: ",  theScheduleData);
+    console.log("Schedule data loded!");
     res.json(theScheduleData);
   })
 
-  router.put("/invite", (req, res) => {
+
+  router.post("/invite", (req, res) => {
+    totalInfo['guests'] = req.body.guestNames;
+    totalInfo['guestsContact'] = req.body.guestMails;
+    const secretURL = totalInfo.theEventInfo.secretURL;
+    console.log("Ultimate data: ", totalInfo);
+    res.redirect(`/api/events/${secretURL}`);
 
   })
 
-  router.post("/invite", (req, res) => {
+  router.get("/:id", (req, res) => {
+    let tempArray = totalInfo.eventSchedules;
+    let theScheduleData = {};
+    for (let i = 1; i < tempArray.length; i++){
+      theScheduleData[i] = tempArray[i];
+    }
+    console.log("Data shown!");
+    let secretURL = req.params.id;
+    res.render("event_show", {secretURL: secretURL});
+  })
 
-  totalInfo['guests'] = req.body.guestNames;
-  totalInfo['guestsContact'] = req.body.guestMails;
-  console.log(totalInfo);
-
-  console.log("The req body:  ");
-  console.log(req.body);
-  // const attendee = {name: req.body.attendeeName, email: req.body.attendeeMail}
-  // totalInfo['attendee'] = attendee;
-  console.log("the time is: ", totalInfo.eventSchedules );
-  res.render("event_show");
-    // res.redirect("/testEvent");
+  router.put("/:id", (req, res) => {
+    res.render("event_show");
   })
 
 
