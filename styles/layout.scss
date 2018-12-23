@@ -6,7 +6,7 @@ body {
 }
 
 .welcome {
-  padding-top: 50px;
+  padding-top: 20px;
   font-family: 'Montserrat', sans-serif;
   color: black;
 }
@@ -20,14 +20,24 @@ body {
 .jumbotron {
   padding-top: 20px;
   opacity: 0.85;
+  width: 70%;
+  padding-right: 20px;
+  padding-left: 40px;
+  float: center;
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+  /*centered*/
+  margin:0 auto
 }
 
-/*.wrapper {
-  width: 60%;
-  align-items: center;
+.wrapper {
+  /*width: 60%;*/
+  /*align-items: center;*/
   padding-top: 50px;
   padding-left: 20px;
-}*/
+}
 
 .title {
   font-family: 'Montserrat', sans-serif;
@@ -41,11 +51,72 @@ body {
 
 #createEvent {
   float: right;
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
 }
 
 #sendInvite {
   float: right;
   padding-bottom: 10px;
   margin-bottom: 10px;
-  margin-right: 10px;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
 }
+
+.textArea {
+  vertical-align: top;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+
+}
+
+.clmnWidth {
+  column-width: 200px;
+}
+
+#addAttendee {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#backBtn {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#setEvent {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#setDate {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#copyButton {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+
+
+
+
+
+
+
+
+
+

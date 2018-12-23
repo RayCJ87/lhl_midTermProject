@@ -23,16 +23,17 @@
 
 <body class="bodyLayout">
 
-  <main>
-    <div class="container">
+<div class="content">
+  <main class="container">
+    <div class="wrapper">
     <div class="jumbotron">
-
-      <h2 class="eventName">Event Name</h2>
+      <h4 class="sub-title">Step 2 of 3</h4>
+      <h2 class="eventName"> Event title </h2>
 
       <form>
         <p>Here is the link of your event:</p>
-        <input type="text" name="longURL" style="width:25%;" id="eventURL">
-        <button class="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
+        <input type="text" name="longURL" style="width:45%;" id="eventURL">
+        <button class="btn btn-secondary btn-sm" id="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
       </form>
 
       <br>
@@ -41,7 +42,7 @@
         <h4>Add attendees:</h4>
           <div>
             <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:15%;"> <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:20%;">
-            <button id="addAttendee" >Add</button>
+            <button class="btn btn-secondary btn-sm" id="addAttendee" > <i class="fas fa-check-circle"></i> Add</button>
           </div>
 
         <br>
@@ -50,11 +51,15 @@
           <h4>Invite list:</h4>
           <p class="peopleList"></p>
         </div>
+        <button id="backBtn" class="btn btn-warning">Back</button>
         <input id="sendInvite" class="btn btn-primary btn-lg" type="submit" value="Send invitation!"/>
       </form>
     </div>
-    </div>
+  </div>
   </main>
-
+</div>
 </body>
+<footer>
+
+</footer>
 </html>

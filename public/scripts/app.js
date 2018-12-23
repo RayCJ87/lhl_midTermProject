@@ -15,7 +15,6 @@
 function getRSVPForm() {
   $('.toggleRSVP').slideToggle(100);
   if ($('.toggleRSVP').is(':visible')){
-    //get timeSlots.
   }
 }
 
@@ -35,10 +34,12 @@ function loadTimeSlots(){
 
 }
 
+//show timeslots selection
 function composeEvent(){
   $('.eventSetup').slideToggle(100)
 }
 
+//remove unwanted guests
 function removeItem(element){
   console.log($(element).parent());
   console.log("it's :", $(element).closest("li").innerText);
@@ -50,6 +51,7 @@ function removeItem(element){
   // console.log("To delete: ", $('input[type="hidden"][value="guestNames[]"]'));
 }
 
+//add new guests
 function addAttendeeInfo(event){
   event.preventDefault();
   let name = $('#aName').val();
@@ -64,6 +66,7 @@ function addAttendeeInfo(event){
   // console.log(event);
 }
 
+// generate an new Url
 function getEventUrl(){
   console.log($('#eventURL').val());
   let ind = "http://localhost:8080/" + generateRandomString();
@@ -73,6 +76,7 @@ function getEventUrl(){
   document.execCommand("copy");
 }
 
+// copy the Url
 function copyUrl(){
   const theDoc = document.getElementById("eventURL");
   console.log(theDoc);
@@ -80,17 +84,25 @@ function copyUrl(){
   document.execCommand("copy");
 }
 
+//list all timeslots
 function getSchedules() {
-  $.ajax({ url: "/api/events/invite", method: 'GET' })
-    .done(function() {
-      console.log("the schedule is:  ", totalInfo.eventSchedules);
-      console.log("weird: ", totalInfo);
-      let scheduleTables = `<li>${totalInfo.eventSchedules}   <label class="switch"><input class="switchToggle">
-       <span class="slider round"></span></label></li>`;
-      $('#attendeeRSVP .scheduleList').append(scheduleTables);
-    });
+  let scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
+  if ($('.toggleRSVP').is(':hidden')){
+        scheduleData.done(function(response) {
+         console.log("the schedule is:  ", response);
+          // console.log("weird: ", totalInfo);
+          for (let i in response) {
+            let scheduleTables = `<li>${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox">
+            <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
+            $('#attendeeRSVP .scheduleList').append(scheduleTables);
+          }
+          getRSVPForm();
+      });
+  }
+  else{
+    alert("Please RSVP!");
+  }
 }
-
 
 // function renderTimeSlots(time){
 //   // for (let time of timeArray) {
@@ -144,11 +156,11 @@ $( document ).ready(function() {
   $('.toggleEdit').hide();
   $('.eventSetup').hide();
   $('#rsvp').on("click", getSchedules);
-  $('#rsvp').on("click", getRSVPForm);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   console.log("got it!");
   getEventUrl();
   $('.copyButton').on("click", copyUrl);
+  // $.ajax()
 
 })

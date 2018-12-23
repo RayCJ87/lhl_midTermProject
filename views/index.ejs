@@ -30,44 +30,69 @@
 
     <div class="title">
       <h1 class="welcome">Welcome to Schoodle!</h1>
+    </div>
+    <article>
+    <div class="jumbotron" >
       <h4 class="sub-title">Create an event!</h4>
       <h4 class="sub-title">Step 1 of 3</h4>
-    </div>
-
-    <div class="jumbotron" >
       <form action="/api/events/create" method="POST">
         <div class="eventInput">
-          <label type="text" >Event title:</label>
-          <input type="text" name="theEventName" style="width: auto;"><br>
+        <table>
+          <tr>
+            <td> <label type="text" >Event title:</label> </td>
+            <td class="clmnWidth"> <input type="text" name="theEventName" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text">Location  :</label>
-          <input type="text" name="theEventLocation"><br>
+          <tr>
+            <td> <label type="text">Location  :</label> </td>
+            <td> <input type="text" name="theEventLocation" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text">Organizer:</label>
-          <input type="text" name="theHostName"><br>
+          <tr>
+            <td> <label type="text">Organizer:</label> </td>
+            <td> <input type="text" name="theHostName" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text">Email:</label>
-          <input type="email" name="theHostEmail" placeholder="email@example.com"><br>
+          <tr>
+            <td> <label type="text">Email:</label> </td>
+            <td> <input type="email" name="theHostEmail" placeholder="email@example.com" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text" class="eventDescr">Event Description:</label>
-          <textarea name="theEventDescription" placeholder="Tell us about the event"></textarea>
+          <tr>
+            <td> <label type="text" class="eventDescr">Event Description:</label> </td>
+            <td> <textarea class="textArea" name="theEventDescription" placeholder="Tell us about the event" style="width: 100%;"> </textarea></td>
+          </tr>
+        </table>
 
-          <button class="btn btn-primary btn-sm" id="setEvent" type="button" name="addEvent" >Continue</button>
+          <button class="btn btn-primary btn-sm" id="setEvent" type="button" name="addEvent" onClick="composeEvent()">Continue</button>
         </div>
 
         <div class="eventSetup">
           <h4>Select time slots</h4>
           <input type="datetime-local" id="getDate" name="eventTime">
-          <button id="setDate" type="button" name="addTime" onClick="loadTimeSlots()">Add Timeslot</button>
+          <button  class="btn btn-secondary btn-sm" id="setDate" type="button" name="addTime" onClick="loadTimeSlots()"> <i class="fas fa-check-circle"></i> Add</button>
           <p class="timeZone"></p>
-          <button class="btn btn-success" id="createEvent" type="submit">Create Event</button>
+          <button  class="btn btn-success" id="createEvent" type="submit">Create Event</button>
         </div>
       </form>
       </div>
+    </article>
+
     </div>
   </main>
   </div>
 
+
 </body>
+
+
+
+  <footer>
+    <div class="footer-copyright text-center py-3">© 2019 Copyright:
+      <span>Schoodle.com</span>
+    </div>
+  </footer>
+
+
 
 </html>
