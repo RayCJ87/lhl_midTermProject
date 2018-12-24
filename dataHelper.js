@@ -6,6 +6,13 @@ module.exports = function MakeDataHelpers(knex) {
 //CALLBACKS:
 //-------------------------------------------------------------
 
+  // function createOrganizer(email, name) {
+  //   knex('organizers').insert({
+  //     name: name,
+  //     email: email
+  //   })
+  // }
+
   //ADDS A NEW ORGANIZER
   const createOrganizer = (email, name) => {
     return (
@@ -13,13 +20,13 @@ module.exports = function MakeDataHelpers(knex) {
       name: name,
       email: email
       })
-      .then((email) => {
+      .then(() => {
         knex('organizers')
-        .select('*')
+        .select('id')
         .where({email: email})
         .then((rows) => {
-          let organizer = rows[0]
-          return organizer
+          let organizerID = rows[0].id;
+          return organizerID
         })
       })
     )
@@ -27,19 +34,22 @@ module.exports = function MakeDataHelpers(knex) {
 
   //FINDS ORGANIZER BY EMAIL TO PREVENT DUPLICATE ORGANIZERS
   const doesEmailExist = (email, name) => {
-    return (
+    return new Promise ((resolve) => {
       knex('organizers')
-      .select('*')
+      .select('id')
       .where({email: email})
       .then((rows) => {
         if (rows.length >= 1) {
-          let organizer = rows[0]
-          return organizer
-        } else {
-          return createOrganizer(email, name)
+          let organizerID = rows[0].id
+          resolve(organizerID);
+        } else if (!rows) {
+          return createOrganizer(email, name);
         }
       })
-    )
+      .then((organizerID) => {
+        console.log(organizerID);
+      })
+    });
   };
 
   //GENERATES RANDOM STRING FOR EVENT URL
@@ -52,12 +62,47 @@ module.exports = function MakeDataHelpers(knex) {
     return randomString;
   };
 
+  //RETURNS EVENT ROW FROM DB BY URL TO DISPLAY ON EVENT PAGE
+  const findEventByURL = (url) => {
+      return new Promise((resolve, reject) => {
+        knex('events')
+        .select('*')
+        .where({url: url})
+        .limit(1)
+        .then((rows) => {
+          let event = rows[0]
+          if (event) {
+            return event;
+          }
+          else {
+            return reject('404 Page Not Found');
+          }
+        })
+        .catch((error) => reject(error));
+      });
+  }
+
+  const findEventIDByURL = (url) => {
+      return new Promise((resolve) => {
+        knex('events')
+        .select('*')
+        .where({url: url})
+        .limit(1)
+        .then((rows) => {
+          let eventID = rows[0].id
+            resolve(eventID);
+        })
+      });
+  }
+
 
 //-------------------------------------------------------------
 //RETURNED FUNCTIONS:
 //-------------------------------------------------------------
 
   return {
+    doesEmailExist: doesEmailExist,
+    findEventByURL: findEventByURL,
 
     //SAVES WEBSITE INPUT IN SERVER MEMORY
     saveActivityInfo: function(info, callback) {
@@ -121,25 +166,6 @@ module.exports = function MakeDataHelpers(knex) {
     //   })
     // },
 
-    //RETURNS EVENT ROW FROM DB BY URL TO DISPLAY ON EVENT PAGE
-    findEventByURL: (url) => {
-      return new Promise((resolve, reject) => {
-        knex('events')
-        .select('*')
-        .where({url: url})
-        .limit(1)
-        .then((rows) => {
-          let event = rows[0]
-          if (event) {
-            return resolve(event)
-          }
-          else {
-            return reject()
-          }
-        })
-        .catch((error) => reject(error));
-      })
-    },
 
     //RETURNS ORGANIZER OF EVENT TO DISPLAY ON EVENT PAGE
     joinOrganizer: (url) => {
@@ -150,18 +176,19 @@ module.exports = function MakeDataHelpers(knex) {
         .where({url: url})
         .then((rows) => {
           let organizer = rows[0]
-          return resolve(organizer);
+          resolve(organizer);
         })
       })
     },
 
     //ADDS EVENT TO DB
     createEvent: (email, organizerName, eventName, description, location) => {
-      return (
+        // let organizerID = doesEmailExist(email, organizerName)
         doesEmailExist(email, organizerName)
-        .then((organizer) => {
-          return organizer.id;
-        })
+        // .then((organizerID) => {
+            // return console.log('got organizerID ', organizerID);
+          // return organizerID
+        // })
         .then((organizerID) => {
           knex('organizers')
           .select('id')
@@ -184,7 +211,38 @@ module.exports = function MakeDataHelpers(knex) {
             })
           })
         })
-      );
+    },
+
+    //PULLS ALL TIMESLOTS DATA FOR AN EVENT FROM DB
+    findTimeslots: (url) => {
+      findEventByURL(url)
+        .then((eventID) => {
+          let query = knex('timeslots');
+          query = query.join('events', 'timeslots.event_id', '=', 'events.id');
+          query = query.select('*');
+          query = query.where({event_id: eventID});
+          query.then(timeslots => {
+            return timeslots;
+          })
+        })
+    },
+
+    // PULLS ALL GUEST_LISTS NAMES AND TIMES FOR AN EVENT FROM DB
+    //***will show multiple names for guests with multiple time slots selected;
+    //***not sure if I can fix this here or if it should be fixed in the function in routes
+    findGuestLists: (url) => {
+      findEventIDByURL(url)
+      .then((eventID) => {
+        knex('guest_lists')
+        .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+        .join('attendees', 'guest_lists.attendee_id', '=', 'attendees.id')
+        .select('attendees.name', 'attendees.email', 'timeslots.start_time')
+        .where({event_id: eventID})
+        .then((guestList) => {
+          return guestList;
+        })
+      })
+
     }
 
 
