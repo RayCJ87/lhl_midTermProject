@@ -10,7 +10,8 @@ module.exports = function (DataHelpers) {
   //organizer will be redirected after input personal information and description of event
   let totalGuests = {};
   router.get("/", (req, res) =>{
-    console.log("hello");
+    console.log("Hello there!");
+    // res.render("index");
   });
 
   // store secretURL  to be reused later
@@ -31,10 +32,11 @@ module.exports = function (DataHelpers) {
 
   });
 
+  // redirect to the invite page and store event times.
   router.get("/invite", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let theScheduleData = {};
-    for (let i = 1; i < tempArray.length; i++){
+    for (let i = 0; i < tempArray.length; i++){
       theScheduleData[i] = tempArray[i];
     }
     console.log("Real schedules: ",  theScheduleData);
@@ -42,7 +44,7 @@ module.exports = function (DataHelpers) {
     res.json(theScheduleData);
   })
 
-
+  // store guest names and mails and redirect to event page.
   router.post("/invite", (req, res) => {
     totalInfo['guests'] = req.body.guestNames;
     totalInfo['guestsContact'] = req.body.guestMails;
@@ -52,6 +54,7 @@ module.exports = function (DataHelpers) {
 
   })
 
+  // redirect to the page with the unique URL
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let theScheduleData = {};
@@ -63,9 +66,11 @@ module.exports = function (DataHelpers) {
     res.render("event_show", {secretURL: secretURL});
   })
 
+  //update the page after the client select availability.
   router.put("/:id", (req, res) => {
     res.render("event_show");
   })
+
 
 
   return router;
