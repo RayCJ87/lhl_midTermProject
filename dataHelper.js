@@ -101,6 +101,7 @@ module.exports = function MakeDataHelpers(knex) {
 //-------------------------------------------------------------
 
   return {
+
     doesEmailExist: doesEmailExist,
     findEventByURL: findEventByURL,
 

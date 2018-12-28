@@ -5,9 +5,6 @@ const router  = express.Router();
 let totalInfo = {};
 
 
-const organizerHelper = require('../lib/organizer');
-
-
 module.exports = function (DataHelpers) {
 
   //organizer will be redirected after input personal information and description of event
@@ -57,6 +54,7 @@ module.exports = function (DataHelpers) {
   router.put("/invite", (req, res) => {
 
   })
+
 
   return router;
 }

@@ -18,8 +18,8 @@ const DataHelpers = require("./dataHelper.js")(knex);
 
 // Seperated Routes for each Resource
 const eventsRoutes = require("./routes/events")(DataHelpers);
-const organizer = require('./lib/organizer')(knex);
-const event = require('./lib/event')(knex);
+// const organizer = require('./lib/organizer')(knex);
+// const event = require('./lib/event')(knex);
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -84,10 +84,7 @@ app.post("/testEvent", (req, res) => {
 
 })
 
-//***TEST CODE***
-organizer.find(2);
-event.findByURL('a1b2c3d4e5f6g7h8i9j0');
-// organizer.findByEmail('ajones@example.com');
+
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);

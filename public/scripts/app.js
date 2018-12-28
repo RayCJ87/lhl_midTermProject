@@ -162,5 +162,5 @@ $( document ).ready(function() {
   console.log("got it!");
   getEventUrl();
   $('.copyButton').on("click", copyUrl);
-})
+});
 
