@@ -163,4 +163,15 @@ $( document ).ready(function() {
   $('.copyButton').on("click", copyUrl);
   // $.ajax()
 
+//to make first page toggle slide when click on "create an event" button
+  $( '.content1' ).hide();
+  $( '#start' ).on('click', function() {
+    $( '.content1' ).slideDown('fast')
+    $( '#start' ).hide()
+  })
+
 })
+
+
+
+
