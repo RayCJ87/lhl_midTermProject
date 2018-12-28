@@ -11,7 +11,7 @@ $(document).ready(function () {
   //   });;
   // });
 
-//TOGGLE NEW RSVP FORM
+  //TOGGLE NEW RSVP FORM
   $('#rsvp').click(function () {
     let $newRSVP = $('.toggleRSVP');
     if ($newRSVP.is(':hidden')) {
@@ -33,51 +33,33 @@ $(document).ready(function () {
     }
   });
 
-//TOGGLE NEW RSVP FORM
-  $('#rsvp').click(function () {
-    let $newRSVP = $('.toggleRSVP');
-    if ($newRSVP.is(':hidden')) {
-      $newRSVP.slideDown();
-      $('#nameNew').focus();
-    } else {
-      $newRSVP.slideUp();
-    }
-  });
+// button to set multiple timeslots.
+function loadTimeSlots(){
+    console.log("loadTimeSlots");
+    time = $('.eventSetup #getDate').val();
+    let theText = `<p>${time}</p> <input type="hidden" value="${time}" name="eventTimes[]"/>`;
+    $('.eventSetup .timeZone').append(theText);
 
-  //TOGGLE EDIT RSVP FORM
-  $('#rsvpEdit').click(function () {
-    let $editRSVP = $('.toggleEdit');
-    if ($editRSVP.is(':hidden')) {
-      $editRSVP.slideDown();
-      $('nameEdit').focus();
-    } else {
-      $editRSVP.slideUp();
-    }
-  });
+}
 
-  // button to set multiple timeslots.
-  function loadTimeSlots(){
-      console.log("loadTimeSlots");
-    // timeArray.push(req.body.eventTime);
-    // let $input = $('Button[type="button"]')
-    // $input.on('click', function (event) {
-    //   event.preventDefault();
-      time = $('.eventSetup #getDate').val();
-      let theText = `<p>${time}</p>`;
-      $('.eventSetup .timeZone').append(theText);
-  }
-
+//show timeslots selection
 function composeEvent(){
   $('.eventSetup').slideToggle(100)
 }
 
+//remove unwanted guests
 function removeItem(element){
   console.log($(element).parent());
-  //$(this).parent().remove();
+  console.log("it's :", $(element).closest("li").innerText);
   $(element).closest("li").remove();
-  // console.log($(this).parent().remove());
+  $(element).find("input[type='hidden']").remove();
+
+  // $(element).closest("input:hidden").remove();
+  // $('input[type="hidden"][value="guestNames[]"]').remove();
+  // console.log("To delete: ", $('input[type="hidden"][value="guestNames[]"]'));
 }
 
+//add new guests
 function addAttendeeInfo(event){
   event.preventDefault();
   let name = $('#aName').val();
@@ -85,12 +67,14 @@ function addAttendeeInfo(event){
   console.log(name, mail);
   if ($('#aMail').val() && $('#aName').val()){
     let guestInfo = `Name: ${name} - email: ${mail}`;
-    let possibleGuests = `<li>${guestInfo}  <button type="button" onClick="removeItem(this)" class="removeInvite">Delete</button></li>`
+    let possibleGuests = `<li>${guestInfo}  <button type="button" onClick="removeItem(this)" class="removeInvite">Delete</button></li>
+                          <input type="hidden" value="${name}" name="guestNames[]"/> <input type="hidden" value="${mail}" name="guestMails[]"/>`
     $('.invitedList .peopleList').append(possibleGuests);
   }
   // console.log(event);
 }
 
+// generate an new Url
 function getEventUrl(){
   console.log($('#eventURL').val());
   let ind = "http://localhost:8080/" + generateRandomString();
@@ -100,11 +84,32 @@ function getEventUrl(){
   document.execCommand("copy");
 }
 
+// copy the Url
 function copyUrl(){
-const theDoc = document.getElementById("eventURL");
-console.log(theDoc);
-theDoc.select();
-document.execCommand("copy");
+  const theDoc = document.getElementById("eventURL");
+  console.log(theDoc);
+  theDoc.select();
+  document.execCommand("copy");
+}
+
+//list all timeslots
+function getSchedules() {
+  let scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
+  if ($('.toggleRSVP').is(':hidden')){
+        scheduleData.done(function(response) {
+         console.log("the schedule is:  ", response);
+          // console.log("weird: ", totalInfo);
+          for (let i in response) {
+            let scheduleTables = `<li>${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox">
+            <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
+            $('#attendeeRSVP .scheduleList').append(scheduleTables);
+          }
+          getRSVPForm();
+      });
+  }
+  else{
+    alert("Please RSVP!");
+  }
 }
 
 // function renderTimeSlots(time){
@@ -154,9 +159,11 @@ function generateRandomString() {
 }
 
 
-
 $( document ).ready(function() {
+  $('.toggleRSVP').hide();
+  $('.toggleEdit').hide();
   $('.eventSetup').hide();
+  $('#rsvp').on("click", getSchedules);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   console.log("got it!");
@@ -164,3 +171,4 @@ $( document ).ready(function() {
   $('.copyButton').on("click", copyUrl);
 });
 
+})

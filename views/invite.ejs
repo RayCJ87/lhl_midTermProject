@@ -1,58 +1,79 @@
+
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Schoodle - Home Page</title>
 
-<head>
-  <title>Schoodle</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
-</head>
 
-<body>
+  </head>
 
-  <h2>Event Name</h2>
+  <header>
+    <% include partials/_header %>
+  </header>
 
-  <form>
-    <p>Here is the link of your event:</p>
-    <input type="text" name="longURL" style="width:25%;" id="eventURL">
-    <button class="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
-  </form>
+  <div class="icon-bar">
+    <a href="www.facebook.com" class="facebook"><i class="fa fa-facebook"></i></a>
+    <a href="www.twitter.com" class="twitter"><i class="fa fa-twitter"></i></a>
+    <a href="www.google.com" class="google"><i class="fa fa-google"></i></a>
+    <a href="www.linkedin.com" class="linkedin"><i class="fa fa-linkedin"></i></a>
+    <a href="www.youtube.com" class="youtube"><i class="fa fa-youtube"></i></a>
+  </div>
 
-  <br>
-<!-- merge conflict - is the commented-out part ok to delete? -->
-<!--   <h4>Add attendees:</h4>
-  <form>
-    <label>Name: </label> <input type="test" name="name" style="width:15%;"> <label>Email: </label> <input type="test" name="email" style="width:20%;"><button>Add</button>
-  </form>
+<body class="bodyLayout">
 
-  <br>
+<div class="content">
+  <main class="container">
+    <div class="wrapper">
+    <div class="jumbotron">
+      <h4 class="sub-title">Step 2 of 3</h4>
+      <h2 class="eventName"> Event title </h2>
 
-  <form method="POST" action="/createEvent">
-    <h4>Invite list:</h4>
-    <ul>
-      <li>req.body.name, req.body.email<button>Delete</button></li>
-    </ul>
+      <form>
+        <p>Here is the link of your event:</p>
+        <input type="text" name="longURL" style="width:45%;" id="eventURL">
+        <button class="btn btn-secondary btn-sm" id="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
+      </form>
 
+      <br>
 
-  <button class="btn btn-primary btn-lg">Send invitation!</button>
-    </form>
- -->
-  <form method="POST" action="/api/events/invite">
-    <h4>Add attendees:</h4>
-      <div>
-        <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:15%;"> <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:20%;">
-        <button id="addAttendee" >Add</button>
-      </div>
-    <br>
-    <div class="invitedList">
-    <h4>Invite list:</h4>
-      <p class="peopleList">
-      </p>
+      <form method="POST" action="/api/events/invite">
+        <h4>Add attendees:</h4>
+          <div>
+            <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:15%;"> <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:20%;">
+            <button class="btn btn-secondary btn-sm" id="addAttendee" > <i class="fas fa-check-circle"></i> Add</button>
+          </div>
+
+        <br>
+
+        <div class="invitedList">
+          <h4>Invite list:</h4>
+          <p class="peopleList"></p>
+        </div>
+        <button id="backBtn" class="btn btn-warning">Back</button>
+        <input id="sendInvite" class="btn btn-primary btn-lg" type="submit" value="Send invitation!"/>
+      </form>
     </div>
-    <input class="btn btn-primary btn-lg" type="submit" value="Send invitation!"/>
-  </form>
-
+  </div>
+  </main>
+</div>
 </body>
+
+
+  <footer>
+    <div class="footer-copyright text-center py-3">© 2019 Copyright:
+      <span>Schoodle.com</span>
+    </div>
+  </footer>
+
 </html>
