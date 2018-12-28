@@ -1,5 +1,6 @@
 body {
   background-color: #EEE;
+  min-height: 400px;
   h1 {
     color: #244751;
   }
@@ -22,21 +23,22 @@ body {
   opacity: 0.85;
   width: 70%;
   padding-right: 20px;
-  padding-left: 40px;
+  padding-left: 20px;
   float: center;
   /*shadow*/
   position: relative;
   z-index: 2;
   box-shadow: 0 8px 16px -6px black;
   /*centered*/
-  margin:0 auto
+  margin:0 auto;
+  max-width: 700px;
 }
 
 .wrapper {
   /*width: 60%;*/
   /*align-items: center;*/
   padding-top: 50px;
-  padding-left: 20px;
+  /*padding-left: 20px;*/
 }
 
 .title {
@@ -174,7 +176,20 @@ footer {
   text-align: center;
   /*vertical-align: center;*/
   background-color: #333;
+
 }
+
+#submitAvalability {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.formLabel {
+  vertical-align: top;
+}
+
 
 
 

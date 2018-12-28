@@ -42,7 +42,7 @@
       <form>
         <p>Here is the link of your event:</p>
         <input type="text" name="longURL" style="width:45%;" id="eventURL">
-        <button class="btn btn-secondary btn-sm" id="copyButton" type="button"><i class="fas fa-copy"> Copy</i></button>
+        <button class="btn btn-secondary btn-sm" id="copyButton" type="button"> <i class="fas fa-copy"> Copy</i></button>
       </form>
 
       <br>
@@ -50,7 +50,8 @@
       <form method="POST" action="/api/events/invite">
         <h4>Add attendees:</h4>
           <div>
-            <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:15%;"> <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:20%;">
+            <label>Name: </label> <input type="text" name="attendeeName" id="aName"style="width:25%;">
+            <label>Email: </label> <input type="text" name="attendeeMail" id="aMail" style="width:30%;">
             <button class="btn btn-secondary btn-sm" id="addAttendee" > <i class="fas fa-check-circle"></i> Add</button>
           </div>
 
