@@ -43,7 +43,7 @@
 
       <!-- slideToggle form (new)  -->
 
-      <form id="attendeeRSVP" method="PUT" action="/api/events/invite">
+      <form id="attendeeRSVP" method="PUT" action="/api/events/<%=secretURL%>">
         <section class="toggleRSVP">
           <label class="formLabel">Name:</label>
           <textarea id="nameNew" name="text" placeholder="Enter your first and last name"></textarea>
@@ -51,9 +51,7 @@
           <textarea name="email" placeholder="Enter your email address"></textarea>
           <div class="rsvpAvailability">
             <h3>Please select your availability:</h3>
-            <p class="scheduleList">
-
-            </p>
+            <p class="scheduleList"></p>
           </div>
           <button id="submitAvalability" type="submit">Confirm</button>
         </section>
@@ -67,12 +65,9 @@
         </p>
       </section>
 
-
       </div>
 
     </main>
 
-
   </body>
-
 </html>

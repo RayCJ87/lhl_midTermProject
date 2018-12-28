@@ -13,8 +13,8 @@ module.exports = function MakeDataHelpers(knex) {
   //   })
   // }
 
-  //ADDS A NEW ORGANIZER
-  const createOrganizer = (email, name) => {
+ //ADDS A NEW ORGANIZER
+const createOrganizer = (email, name) => {
     return (
       knex('organizers').insert({
       name: name,

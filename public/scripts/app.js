@@ -1,15 +1,3 @@
-$(document).ready(function () {
-
-  // $(() => {
-  //   $.ajax({
-  //     method: "GET",
-  //     url: "/api/users"
-  //   }).done((users) => {
-  //     for(user of users) {
-  //       $("<div>").text(user.name).appendTo($("body"));
-  //     }
-  //   });;
-  // });
 
   //TOGGLE NEW RSVP FORM
   $('#rsvp').click(function () {
@@ -32,6 +20,13 @@ $(document).ready(function () {
       $editRSVP.slideUp();
     }
   });
+
+//TOGGLE NEW RSVP FORM
+function getRSVPForm() {
+  $('.toggleRSVP').slideToggle(100);
+  if ($('.toggleRSVP').is(':visible')){
+  }
+}
 
 // button to set multiple timeslots.
 function loadTimeSlots(){
@@ -76,12 +71,11 @@ function addAttendeeInfo(event){
 
 // generate an new Url
 function getEventUrl(){
+  let randomURL = generateRandomString();
+  let totalURL = "http://localhost:8080/api/events/" + randomURL;
+  $('#eventURL').val(totalURL);
   console.log($('#eventURL').val());
-  let ind = "http://localhost:8080/" + generateRandomString();
-  $('#eventURL').val(ind);
-  console.log($('#eventURL').val());
-  $('#eventURL').select;
-  document.execCommand("copy");
+  return randomURL;
 }
 
 // copy the Url
@@ -164,11 +158,15 @@ $( document ).ready(function() {
   $('.toggleEdit').hide();
   $('.eventSetup').hide();
   $('#rsvp').on("click", getSchedules);
+  $('.copyButton').on("click", copyUrl);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   console.log("got it!");
-  getEventUrl();
-  $('.copyButton').on("click", copyUrl);
-});
+  const secretURL = getEventUrl();
+  const urlAddress = {secretURL: secretURL};
+  console.log("The URL is: ", urlAddress);
+  $.ajax({url: "/api/events/create", data: urlAddress, method: 'PUT'}).done(function(){
+      console.log("Success!");
+    });
 
 })
