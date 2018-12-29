@@ -121,9 +121,17 @@ module.exports = function MakeDataHelpers(knex) {
     });
   };
 
-  //guest enters email on event page
-    //is guest in system - yes, email
-    //is guest linked to event: event, attendee.id, guest_list
+  const findAttendeeIDByEmail = (attendeeEmail) => {
+    return (
+      knex('attendees')
+      .select('id')
+      .where({email: attendeeEmail})
+      .then((rows) => {
+        let attendeeID = rows[0].id
+        return attendeeID;
+      })
+      );
+  };
 
     //CHECKS IF ATTENDEE HAS RSVP'D AND RETURNS TRUE OR FALSE
     const haveRSVP = (url, email) => {
@@ -190,6 +198,7 @@ module.exports = function MakeDataHelpers(knex) {
     doesOrganizerExist: doesOrganizerExist,
     doesAttendeeExist: doesAttendeeExist,
     findEventByURL: findEventByURL,
+    findAttendeeIDByEmail: findAttendeeIDByEmail,
     // showRSVP: showRSVP,
 
     //SAVES WEBSITE INPUT IN SERVER MEMORY
@@ -306,7 +315,26 @@ module.exports = function MakeDataHelpers(knex) {
           return guestList;
         })
       })
+    },
 
+    //PULLS ALL GUEST_LISTS FOR A SPECIFIC ATTENDEE AND EVENT
+    findAttendeeGuestLists: (url, attendeeEmail) => {
+      findAttendeeIDByEmail(attendeeEmail)
+      .then((attendeeID) => {
+        knex('attendees')
+        .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
+        .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+        .select([
+          'attendees.name',
+          'attendees.email',
+          knex.raw('ARRAY_AGG(timeslots.start_time) as availability')
+          ])
+        .where({attendee_id: attendeeID})
+        .groupBy('attendees.email', 'attendees.name')
+        .then((availability) => {
+          return console.log(availability);
+        })
+      })
     }
 
 
