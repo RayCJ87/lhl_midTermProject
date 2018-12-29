@@ -6,15 +6,8 @@ module.exports = function MakeDataHelpers(knex) {
 //CALLBACKS:
 //-------------------------------------------------------------
 
-  // function createOrganizer(email, name) {
-  //   knex('organizers').insert({
-  //     name: name,
-  //     email: email
-  //   })
-  // }
-
- //ADDS A NEW ORGANIZER
-const createOrganizer = (email, name) => {
+  //ADDS A NEW ORGANIZER
+  const createOrganizer = (email, name) => {
     return (
       knex('organizers').insert({
       name: name,
@@ -33,7 +26,7 @@ const createOrganizer = (email, name) => {
   };
 
   //FINDS ORGANIZER BY EMAIL TO PREVENT DUPLICATE ORGANIZERS
-  const doesEmailExist = (email, name) => {
+  const doesOrganizerExist = (email, name) => {
     return new Promise ((resolve) => {
       knex('organizers')
       .select('id')
@@ -95,6 +88,41 @@ const createOrganizer = (email, name) => {
       });
   }
 
+  //guest enters email on event page
+    //is guest in system - yes, email
+    //is guest linked to event: event, attendee.id, guest_list
+
+    //CHECKS IF ATTENDEE HAS RSVP'D AND RETURNS TRUE OR FALSE
+    const haveRSVP = (url, email) => {
+      return new Promise((resolve) => {
+        findEventIDByURL(url)
+        .then((eventID) => {
+          knex('attendees')
+          .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
+          .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+          // .join('events', 'timeslots.event_id', '=', 'events.id')
+          .select('attendees.id')
+          .where({email: email})
+          .andWhere({event_id: eventID})
+          .groupBy('attendees.id')
+          // .andWhere({attendee_id: attendees.id})
+          .then((rows) => {
+            let rsvp = rows[0];
+            if (rsvp) {
+              let hasRSVP = true;
+              resolve(hasRSVP);
+              // console.log('rsvp: ', rsvp)
+            } else {
+              let hasRSVP = false;
+              resolve(hasRSVP);
+              // console.log('no rsvp')
+            }
+          })
+        })
+      })
+    }
+
+
 
 //-------------------------------------------------------------
 //RETURNED FUNCTIONS:
@@ -102,7 +130,7 @@ const createOrganizer = (email, name) => {
 
   return {
 
-    doesEmailExist: doesEmailExist,
+    doesOrganizerExist: doesOrganizerExist,
     findEventByURL: findEventByURL,
 
     //SAVES WEBSITE INPUT IN SERVER MEMORY
@@ -185,7 +213,7 @@ const createOrganizer = (email, name) => {
     //ADDS EVENT TO DB
     createEvent: (email, organizerName, eventName, description, location) => {
         // let organizerID = doesEmailExist(email, organizerName)
-        doesEmailExist(email, organizerName)
+        doesOrganizerExist(email, organizerName)
         // .then((organizerID) => {
             // return console.log('got organizerID ', organizerID);
           // return organizerID
@@ -214,6 +242,19 @@ const createOrganizer = (email, name) => {
         })
     },
 
+    //ADDS A NEW TIMESLOT TO DB
+    //***let me know if we need a function to
+    //***check if timeslot already exists
+    createTimeslot: (url, startTime) => {
+      findEventIDByURL(url)
+      .then((eventID) => {
+        return knex('timeslots').insert({
+          start_time: startTime,
+          event_id: eventID
+        })
+      })
+    },
+
     //PULLS ALL TIMESLOTS DATA FOR AN EVENT FROM DB
     findTimeslots: (url) => {
       findEventByURL(url)
@@ -228,9 +269,29 @@ const createOrganizer = (email, name) => {
         })
     },
 
+
+    //ADDS A NEW ATTENDEE FROM RSVP FORM
+    //***let me know if you need to check if attendee already exists
+    //***when you call this function. I will move some things around.
+    createAttendee: (url, attendeeName, attendeeEmail) => {
+      haveRSVP(url, attendeeEmail)
+      .then((hasRSVP) => {
+        if (hasRSVP === false) {
+          return knex('attendees').insert({
+            name: attendeeName,
+            email: attendeeEmail
+          })
+        }
+      })
+    },
+
+    //LINKS ATTENDEE TO SELECTED TIMESLOTS
+    // createGuestList
+
     // PULLS ALL GUEST_LISTS NAMES AND TIMES FOR AN EVENT FROM DB
     //***will show multiple names for guests with multiple time slots selected;
     //***not sure if I can fix this here or if it should be fixed in the function in routes
+    //***group by???***
     findGuestLists: (url) => {
       findEventIDByURL(url)
       .then((eventID) => {
