@@ -8,7 +8,7 @@ module.exports = function MakeDataHelpers(knex) {
 
   //ADDS A NEW ORGANIZER
   const createOrganizer = (email, name) => {
-    return (
+    return new Promise((resolve) => {
       knex('organizers').insert({
       name: name,
       email: email
@@ -19,10 +19,10 @@ module.exports = function MakeDataHelpers(knex) {
         .where({email: email})
         .then((rows) => {
           let organizerID = rows[0].id;
-          return organizerID
+          resolve(organizerID);
         })
       })
-    )
+    });
   };
 
   //FINDS ORGANIZER BY EMAIL TO PREVENT DUPLICATE ORGANIZERS
@@ -35,13 +35,13 @@ module.exports = function MakeDataHelpers(knex) {
         if (rows.length >= 1) {
           let organizerID = rows[0].id
           resolve(organizerID);
-        } else if (!rows) {
-          return createOrganizer(email, name);
+        } else if (rows.length < 1) {
+          resolve(createOrganizer(email, name));
         }
       })
-      .then((organizerID) => {
-        console.log(organizerID);
-      })
+      // .then((organizerID) => {
+      //   console.log(organizerID);
+      // })
     });
   };
 
@@ -239,6 +239,9 @@ module.exports = function MakeDataHelpers(knex) {
               organizer_id: organizerID
             })
           })
+          .then(() => {
+            console.log("event info: ", events.url, events.name, events.description, events.location, events.organizer_id);
+          })
         })
     },
 
@@ -258,17 +261,16 @@ module.exports = function MakeDataHelpers(knex) {
     //PULLS ALL TIMESLOTS DATA FOR AN EVENT FROM DB
     findTimeslots: (url) => {
       findEventByURL(url)
-        .then((eventID) => {
-          let query = knex('timeslots');
-          query = query.join('events', 'timeslots.event_id', '=', 'events.id');
-          query = query.select('*');
-          query = query.where({event_id: eventID});
-          query.then(timeslots => {
-            return timeslots;
-          })
+      .then((eventID) => {
+        let query = knex('timeslots');
+        query = query.join('events', 'timeslots.event_id', '=', 'events.id');
+        query = query.select('*');
+        query = query.where({event_id: eventID});
+        query.then(timeslots => {
+          return timeslots;
         })
+      })
     },
-
 
     //ADDS A NEW ATTENDEE FROM RSVP FORM
     //***let me know if you need to check if attendee already exists
@@ -286,7 +288,9 @@ module.exports = function MakeDataHelpers(knex) {
     },
 
     //LINKS ATTENDEE TO SELECTED TIMESLOTS
-    // createGuestList
+    // createGuestList: () => {
+
+    // }
 
     // PULLS ALL GUEST_LISTS NAMES AND TIMES FOR AN EVENT FROM DB
     //***will show multiple names for guests with multiple time slots selected;
