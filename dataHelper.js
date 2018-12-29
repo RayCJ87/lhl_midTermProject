@@ -39,9 +39,42 @@ module.exports = function MakeDataHelpers(knex) {
           resolve(createOrganizer(email, name));
         }
       })
-      // .then((organizerID) => {
-      //   console.log(organizerID);
-      // })
+    });
+  };
+
+  //ADDS A NEW ATTENDEE FROM RSVP FORM
+  const createAttendee = (attendeeEmail, attendeeName) => {
+    return new Promise((resolve) => {
+      knex('attendees').insert({
+        name: attendeeName,
+        email: attendeeEmail
+      })
+      .then(() => {
+        knex('attendees')
+        .select('id')
+        .where({email: attendeeEmail})
+        .then((rows) => {
+          let attendeeID = rows[0].id;
+          resolve(attendeeID);
+        })
+      })
+    })
+  };
+
+  //FINDS ATTENDEE BY EMAIL TO PREVENT DUPLICATE ATTENDEES
+  const doesAttendeeExist = (attendeeEmail, attendeeName) => {
+    return new Promise ((resolve) => {
+      knex('attendees')
+      .select('id')
+      .where({email: attendeeEmail})
+      .then((rows) => {
+        if (rows.length >= 1) {
+          let attendeeID = rows[0].id
+          resolve(attendeeID);
+        } else {
+          resolve(createAttendee(attendeeEmail, attendeeName));
+        }
+      })
     });
   };
 
@@ -57,36 +90,36 @@ module.exports = function MakeDataHelpers(knex) {
 
   //RETURNS EVENT ROW FROM DB BY URL TO DISPLAY ON EVENT PAGE
   const findEventByURL = (url) => {
-      return new Promise((resolve, reject) => {
-        knex('events')
-        .select('*')
-        .where({url: url})
-        .limit(1)
-        .then((rows) => {
-          let event = rows[0]
-          if (event) {
-            return event;
-          }
-          else {
-            return reject('404 Page Not Found');
-          }
-        })
-        .catch((error) => reject(error));
-      });
-  }
+    return new Promise((resolve, reject) => {
+      knex('events')
+      .select('*')
+      .where({url: url})
+      .limit(1)
+      .then((rows) => {
+        let event = rows[0]
+        if (event) {
+          return event;
+        }
+        else {
+          return reject('404 Page Not Found');
+        }
+      })
+      .catch((error) => reject(error));
+    });
+  };
 
   const findEventIDByURL = (url) => {
-      return new Promise((resolve) => {
-        knex('events')
-        .select('*')
-        .where({url: url})
-        .limit(1)
-        .then((rows) => {
-          let eventID = rows[0].id
-            resolve(eventID);
-        })
-      });
-  }
+    return new Promise((resolve) => {
+      knex('events')
+      .select('*')
+      .where({url: url})
+      .limit(1)
+      .then((rows) => {
+        let eventID = rows[0].id
+          resolve(eventID);
+      })
+    });
+  };
 
   //guest enters email on event page
     //is guest in system - yes, email
@@ -100,12 +133,10 @@ module.exports = function MakeDataHelpers(knex) {
           knex('attendees')
           .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
           .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
-          // .join('events', 'timeslots.event_id', '=', 'events.id')
           .select('attendees.id')
           .where({email: email})
           .andWhere({event_id: eventID})
           .groupBy('attendees.id')
-          // .andWhere({attendee_id: attendees.id})
           .then((rows) => {
             let rsvp = rows[0];
             if (rsvp) {
@@ -120,7 +151,33 @@ module.exports = function MakeDataHelpers(knex) {
           })
         })
       })
-    }
+    };
+
+    //SHOWS ALL TIMESLOTS THAT AN ATTENDEE HAS SELECTED FOR A SPECIFIC EVENT
+    // const showRSVP = (url, email) => {
+    //   return new Promise((resolve) => {
+    //     findEventIDByURL(url)
+    //     .then((eventID) => {
+    //       knex('attendees')
+    //       .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
+    //       .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+    //       .select('timeslots.start_time')
+    //       .where({email: email})
+    //       .andWhere({event_id: eventID})
+    //       .then((rows) => {
+    //         if (rows[0]) {
+    //           let rsvp = rows;
+    //           // console.log('rsvp: ', rsvp)
+    //           resolve(rsvp);
+    //         } else {
+    //           let rsvp = false;
+    //           // console.log('no rsvp')
+    //           resolve(rsvp);
+    //         }
+    //       })
+    //     })
+    //   })
+    // };
 
 
 
@@ -131,7 +188,9 @@ module.exports = function MakeDataHelpers(knex) {
   return {
 
     doesOrganizerExist: doesOrganizerExist,
+    doesAttendeeExist: doesAttendeeExist,
     findEventByURL: findEventByURL,
+    // showRSVP: showRSVP,
 
     //SAVES WEBSITE INPUT IN SERVER MEMORY
     saveActivityInfo: function(info, callback) {
@@ -153,49 +212,6 @@ module.exports = function MakeDataHelpers(knex) {
       callback(null, true);
     },
 
-    //RETURNS ORGANIZER ROW FROM DB BY ID
-    //** commented out because we may not need this **
-    // findOrganizerByID: (id) => {
-    //   return new Promise((resolve, reject) => {
-    //     knex('organizers')
-    //     .select('*')
-    //     .where({id: id})
-    //     .limit(1)
-    //     .then((rows) => {
-    //       let organizer = rows[0]
-    //       if (organizer) {
-    //         return resolve(organizer)
-    //       }
-    //       else {
-    //         return reject()
-    //       }
-    //     })
-    //     .catch((error) => reject(error));
-    //   })
-    // },
-
-    //RETURNS EVENT ROW FROM DB BY ID
-    //** commented out because we may not need this **
-    // findEventByID: (id) => {
-    //   return new Promise((resolve, reject) => {
-    //     knex('events')
-    //     .select('*')
-    //     .where({id: id})
-    //     .limit(1)
-    //     .then((rows) => {
-    //       let event = rows[0]
-    //       if (event) {
-    //         return resolve(event)
-    //       }
-    //       else {
-    //         return reject()
-    //       }
-    //     })
-    //     .catch((error) => reject(error));
-    //   })
-    // },
-
-
     //RETURNS ORGANIZER OF EVENT TO DISPLAY ON EVENT PAGE
     joinOrganizer: (url) => {
       return new Promise((resolve) => {
@@ -211,38 +227,26 @@ module.exports = function MakeDataHelpers(knex) {
     },
 
     //ADDS EVENT TO DB
-    createEvent: (email, organizerName, eventName, description, location) => {
-        // let organizerID = doesEmailExist(email, organizerName)
-        doesOrganizerExist(email, organizerName)
-        // .then((organizerID) => {
-            // return console.log('got organizerID ', organizerID);
-          // return organizerID
-        // })
+    createEvent: (email, organizerName, url, eventName, description, location) => {
+      doesOrganizerExist(email, organizerName)
+      .then((organizerID) => {
+        knex('organizers')
+        .select('id')
+        .where({id: organizerID})
+        .then((rows) => {
+          let organizerID = rows[0]
+          return organizerID
+        })
         .then((organizerID) => {
-          knex('organizers')
-          .select('id')
-          .where({id: organizerID})
-          .then((rows) => {
-            let organizerID = rows[0]
-            return organizerID
-          })
-          .then((organizerID) => {
-            const url = generateURL(45)
-            return url
-          })
-          .then((url) => {
-            return knex('events').insert({
-              url: url,
-              name: eventName,
-              description: description,
-              location: location,
-              organizer_id: organizerID
-            })
-          })
-          .then(() => {
-            console.log("event info: ", events.url, events.name, events.description, events.location, events.organizer_id);
+          return knex('events').insert({
+            url: url,
+            name: eventName,
+            description: description,
+            location: location,
+            organizer_id: organizerID
           })
         })
+      })
     },
 
     //ADDS A NEW TIMESLOT TO DB
@@ -272,38 +276,32 @@ module.exports = function MakeDataHelpers(knex) {
       })
     },
 
-    //ADDS A NEW ATTENDEE FROM RSVP FORM
-    //***let me know if you need to check if attendee already exists
-    //***when you call this function. I will move some things around.
-    createAttendee: (url, attendeeName, attendeeEmail) => {
-      haveRSVP(url, attendeeEmail)
-      .then((hasRSVP) => {
-        if (hasRSVP === false) {
-          return knex('attendees').insert({
-            name: attendeeName,
-            email: attendeeEmail
-          })
-        }
-      })
-    },
-
     //LINKS ATTENDEE TO SELECTED TIMESLOTS
-    // createGuestList: () => {
+    //get attendee from email;
+    //page shows list of all timeslots available,
+    //checkmarks by ones already chosen by attendee;
+    //on submit, add new checkmarks to guest_lists
+    // createGuestList: (attendeeEmail, attendeeName, availabilityArr) => {
+    //   doesAttendeeExist(attendeeEmail, attendeeName)
+    //   .then((attendeeID) => {
 
-    // }
+    //   })
+    // },
 
-    // PULLS ALL GUEST_LISTS NAMES AND TIMES FOR AN EVENT FROM DB
-    //***will show multiple names for guests with multiple time slots selected;
-    //***not sure if I can fix this here or if it should be fixed in the function in routes
-    //***group by???***
+    // PULLS ALL GUEST_LISTS NAMES, EMAILS, AND TIMES FOR AN EVENT FROM DB
     findGuestLists: (url) => {
       findEventIDByURL(url)
       .then((eventID) => {
         knex('guest_lists')
         .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
         .join('attendees', 'guest_lists.attendee_id', '=', 'attendees.id')
-        .select('attendees.name', 'attendees.email', 'timeslots.start_time')
+        .select([
+          'attendees.name',
+          'attendees.email',
+          knex.raw('ARRAY_AGG(timeslots.start_time) as availability')
+          ])
         .where({event_id: eventID})
+        .groupBy('attendees.email', 'attendees.name')
         .then((guestList) => {
           return guestList;
         })
