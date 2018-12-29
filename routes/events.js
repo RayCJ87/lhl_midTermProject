@@ -71,7 +71,13 @@ module.exports = function (DataHelpers) {
     res.render("event_show");
   })
 
-
-
+// DataHelpers.haveRSVP('a1b2c3d4e5f6g7h8i9j0', 'peter@example.com');
+// DataHelpers.showRSVP('a1b2c3d4e5f6g7h8i9j0', 'peter@example.com');
+// DataHelpers.doesAttendeeExist('mycapeiscoolerthanyours@example.com', 'Stephen Strange');
+DataHelpers.findAttendeeGuestLists('a1b2c3d4e5f6g7h8i9j0', 'west@example.com');
+// DataHelpers.findGuestLists('a1b2c3d4e5f6g7h8i9j0');
+// DataHelpers.createAttendee('a1b2c3d4e5f6g7h8i9j0', 'Bruce Banner', 'alwaysangry@example.com'); //id: 4
+// DataHelpers.createTimeslot('uD69nbR7u3NE0HywBTz7TBU7kdlI1d6XlhR3LUAWhUK9B', '2019-02-03 16:00:00+00'); //id: 4
+// DataHelpers.createEvent('bluedude@example.com', 'Kurt Vonnegan ', 'See the World', 'Backpacking across the world without the travel time, or backpacks', 'Earth');
   return router;
 }
