@@ -30,6 +30,11 @@ module.exports = function (DataHelpers) {
     const eventInfo = {title: req.body.theEventName,location: req.body.theEventLocation, description: req.body.theEventDescription};
     const att = {name: req.body.attendeeName, mail: req.body.attendeeMail};
     totalInfo = {organizers: organizer, theEventInfo: eventInfo, eventSchedules: req.body.eventTimes.slice(1)};
+
+    //create organizer here
+    DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
+
+
     // DataHelpers.createOrganizer;
 
     // knex("organizers").insert({
@@ -73,11 +78,15 @@ module.exports = function (DataHelpers) {
 
     console.log("Ultimate data: ", totalInfo);
     console.log("About to knex.");
-    // console.log("the mail is: ", totalInfo.organizers.mail);
-    // console.log("the name is: ", totalInfo.organizers.name);
-    // DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL);
+
+    //Create the event here
+    DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL);
     console.log("Event created!");
+
+
     res.redirect(`/api/events/${secretURL}`);
+
+
 
   })
 
@@ -85,12 +94,14 @@ module.exports = function (DataHelpers) {
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let theScheduleData = {};
-    for (let i = 1; i < tempArray.length; i++){
+    const theURL = totalInfo.theEventInfo.secretURL.toString();
+    for (let i = 0; i < tempArray.length; i++){
+      console.log("The time of the event: ", tempArray[i]);
       theScheduleData[i] = tempArray[i];
+      DataHelpers.createTimeslot(theURL, tempArray[i].toString());
     }
-    console.log("Data shown!");
+    console.log("timeslots added!")
     let secretURL = req.params.id;
-    console.log("The secretURL is: ", secretURL);
     res.render("event_show", {secretURL: secretURL});
   })
 
@@ -105,6 +116,6 @@ module.exports = function (DataHelpers) {
   })
 
 
-
+  // DataHelpers.createTimeslot('8RQ154', '2018-12-30T17:50');
   return router;
 }
