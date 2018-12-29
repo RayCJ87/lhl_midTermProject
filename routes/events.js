@@ -2,6 +2,10 @@
 
 const express = require('express');
 const router  = express.Router();
+const ENV         = process.env.ENV || "development";
+const knexConfig  = require("../knexfile");
+const knex        = require("knex")(knexConfig[ENV]);
+
 let totalInfo = {};
 
 
@@ -22,10 +26,25 @@ module.exports = function (DataHelpers) {
 
   //store event, host information.
   router.post("/create", (req, res) => {
-    const organizer = {name: req.body.theHostName, mail: req.body.theHostMail }
+    const organizer = {name: req.body.theHostName, mail: req.body.theHostEmail }
     const eventInfo = {title: req.body.theEventName,location: req.body.theEventLocation, description: req.body.theEventDescription};
     const att = {name: req.body.attendeeName, mail: req.body.attendeeMail};
     totalInfo = {organizers: organizer, theEventInfo: eventInfo, eventSchedules: req.body.eventTimes.slice(1)};
+    // DataHelpers.createOrganizer;
+
+    // knex("organizers").insert({
+    //   name: organizer.name,
+    //   email: organizer.mail
+    // })
+    // .then(function(){
+    //   console.log("successfully added an organizer.")
+    //   knex.select().from('organizers')
+    //     .then(function(organizers) {
+    //       console.log("done!");
+    //       req.send(organizers);
+    //     })
+    // })
+
     console.log("The super data is: ", totalInfo);
     console.log(req.body);
     res.render("invite");
@@ -39,6 +58,8 @@ module.exports = function (DataHelpers) {
     for (let i = 0; i < tempArray.length; i++){
       theScheduleData[i] = tempArray[i];
     }
+    console.log("the URL from backend: ", req.body.secretURL);
+    totalInfo.theEventInfo["secretURL"] = req.body.secretURL
     console.log("Real schedules: ",  theScheduleData);
     console.log("Schedule data loded!");
     res.json(theScheduleData);
@@ -49,7 +70,13 @@ module.exports = function (DataHelpers) {
     totalInfo['guests'] = req.body.guestNames;
     totalInfo['guestsContact'] = req.body.guestMails;
     const secretURL = totalInfo.theEventInfo.secretURL;
+
     console.log("Ultimate data: ", totalInfo);
+    console.log("About to knex.");
+    // console.log("the mail is: ", totalInfo.organizers.mail);
+    // console.log("the name is: ", totalInfo.organizers.name);
+    // DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL);
+    console.log("Event created!");
     res.redirect(`/api/events/${secretURL}`);
 
   })
@@ -63,11 +90,17 @@ module.exports = function (DataHelpers) {
     }
     console.log("Data shown!");
     let secretURL = req.params.id;
+    console.log("The secretURL is: ", secretURL);
     res.render("event_show", {secretURL: secretURL});
   })
 
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
+    console.log("New guest name: ", req.body.attName);
+    console.log("New guest mail: ", req.body.attMail);
+    DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
+
+    console.log("attendee created!");
     res.render("event_show");
   })
 

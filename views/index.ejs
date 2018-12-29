@@ -7,43 +7,98 @@
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
   </head>
-  <header><% include partials/_header %><h1>Welcome to Schoodle</h1>
+  <header><% include partials/_header %>
   </header>
 
-  <body>
+  <div class="icon-bar">
+    <a href="www.facebook.com" class="facebook"><i class="fa fa-facebook"></i></a>
+    <a href="www.twitter.com" class="twitter"><i class="fa fa-twitter"></i></a>
+    <a href="www.google.com" class="google"><i class="fa fa-google"></i></a>
+    <a href="www.linkedin.com" class="linkedin"><i class="fa fa-linkedin"></i></a>
+    <a href="www.youtube.com" class="youtube"><i class="fa fa-youtube"></i></a>
+  </div>
 
+  <body class="bodyLayout">
+
+    <div class="title">
+      <h1 class="welcome">Welcome to Schoodle!</h1>
+      <p>Where creating event is fast and easy!</p>
+      <button id="start" class="btn btn-primary btn-lg">Create an Event!</button>
+    </div>
+
+  <div class="content1">
+  <main class="container">
+
+    <div class="wrapper">
+
+
+    <article>
+    <div class="jumbotron" >
+      <h4 class="sub-title">Create an event!</h4>
+      <h4 class="sub-title">Step 1 of 3</h4>
       <form action="/api/events/create" method="POST">
         <div class="eventInput">
-          <label type="text" >Event title:</label>
-          <input type="text" name="theEventName">
+        <table>
+          <tr>
+            <td> <label type="text" >Event title:</label> </td>
+            <td class="clmnWidth"> <input type="text" name="theEventName" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text">Location:</label>
-          <input type="text" name="theEventLocation">
+          <tr>
+            <td> <label type="text">Location  :</label> </td>
+            <td> <input type="text" name="theEventLocation" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text">Event Description:</label>
-          <textarea name="theEventDescription" placeholder="Tell us about thie event." ></textarea>
+          <tr>
+            <td> <label type="text">Organizer:</label> </td>
+            <td> <input type="text" name="theHostName" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text">Enter your name:</label>
-          <input type="text" name="theHostName">
+          <tr>
+            <td> <label type="text">Email:</label> </td>
+            <td> <input type="email" name="theHostEmail" placeholder="email@example.com" style="width: 100%;"> </td>
+          </tr>
 
-          <label type="text">Enter your email:</label>
-          <input type="email" name="theHostEmail">
-          <button id="setEvent" type="button" name="addEvent">Continue</button>
+          <tr>
+            <td> <label type="text" class="eventDescr">Event Description:</label> </td>
+            <td> <textarea class="textArea" name="theEventDescription" placeholder="Tell us about the event" style="width: 100%;"> </textarea></td>
+          </tr>
+        </table>
+
+          <button class="btn btn-primary btn-sm" id="setEvent" type="button" name="addEvent" onClick="composeEvent()">Continue</button>
         </div>
 
-      <div class="eventSetup">
-          <h1>Select time slots</h1>
+        <div class="eventSetup">
+          <h4>Select time slots</h4>
           <input type="datetime-local" id="getDate" name="eventTime">
-          <button id="setDate" type="button" name="addTime" onClick="loadTimeSlots()">Add Timeslot</button>
-
-            <p class="timeZone"></p>
-            <button id="createEvent" type="submit">Create the Event</button>
+          <button  class="btn btn-secondary btn-sm" id="setDate" type="button" name="addTime" onClick="loadTimeSlots()"> <i class="fas fa-check-circle"></i> Add</button>
+          <p class="timeZone"></p>
+          <button  class="btn btn-success" id="createEvent" type="submit">Create Event</button>
+        </div>
+      </form>
       </div>
+    </article>
+
+    </div>
+  </main>
+  </div>
 
 
-    </form>
-  </body>
+</body>
+
+  <footer class="container">
+    <div>© 2019 Copyright:
+      <span>Schoodle.com</span>
+    </div>
+  </footer>
+
+
 </html>
