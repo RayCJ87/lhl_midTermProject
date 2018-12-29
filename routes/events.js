@@ -76,7 +76,7 @@ module.exports = function (DataHelpers) {
     console.log("About to knex.");
     // console.log("the mail is: ", totalInfo.organizers.mail);
     // console.log("the name is: ", totalInfo.organizers.name);
-    // DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL);
+    DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL);
     console.log("Event created!");
     res.redirect(`/api/events/${secretURL}`);
   })
@@ -107,10 +107,11 @@ module.exports = function (DataHelpers) {
 // DataHelpers.haveRSVP('a1b2c3d4e5f6g7h8i9j0', 'peter@example.com');
 // DataHelpers.showRSVP('a1b2c3d4e5f6g7h8i9j0', 'peter@example.com');
 // DataHelpers.doesAttendeeExist('mycapeiscoolerthanyours@example.com', 'Stephen Strange');
-DataHelpers.findAttendeeGuestLists('a1b2c3d4e5f6g7h8i9j0', 'west@example.com');
+// DataHelpers.findAttendeeGuestLists('a1b2c3d4e5f6g7h8i9j0', 'west@example.com');
 // DataHelpers.findGuestLists('a1b2c3d4e5f6g7h8i9j0');
-// DataHelpers.createAttendee('a1b2c3d4e5f6g7h8i9j0', 'Bruce Banner', 'alwaysangry@example.com'); //id: 4
-// DataHelpers.createTimeslot('uD69nbR7u3NE0HywBTz7TBU7kdlI1d6XlhR3LUAWhUK9B', '2019-02-03 16:00:00+00'); //id: 4
-// DataHelpers.createEvent('bluedude@example.com', 'Kurt Vonnegan ', 'See the World', 'Backpacking across the world without the travel time, or backpacks', 'Earth');
+// DataHelpers.createTimeslot('a1b2c3d4e5f6g7h8i9j0', '2018-12-31T9:00');
+
+
+
   return router;
 }
