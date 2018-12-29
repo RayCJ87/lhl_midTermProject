@@ -2,6 +2,7 @@
 
 body {
   background-color: #EEE;
+  min-height: 400px;
   h1 {
     color: #036;
   }
@@ -11,6 +12,7 @@ body {
   padding-top: 20px;
   font-family: 'Montserrat', sans-serif;
   color: black;
+  font-size: 45px;
 }
 
 .bodyLayout {
@@ -24,26 +26,30 @@ body {
   opacity: 0.85;
   width: 70%;
   padding-right: 20px;
-  padding-left: 40px;
+  padding-left: 20px;
   float: center;
   /*shadow*/
   position: relative;
   z-index: 2;
   box-shadow: 0 8px 16px -6px black;
   /*centered*/
-  margin:0 auto
+  margin:0 auto;
+  max-width: 600px;
 }
 
 .wrapper {
   /*width: 60%;*/
   /*align-items: center;*/
-  padding-top: 50px;
-  padding-left: 20px;
+  padding-top: 30px;
+  /*padding-left: 20px;*/
 }
 
-.title {
+body .title {
   font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
   color: black;
+  text-align: center;
+  padding-top: 30px;
 }
 
 .main {
@@ -159,11 +165,6 @@ body {
   color: white;
 }
 
-.content {
-  margin-left: 75px;
-  /*font-size: 30px;*/
-}
-
 
 /*footer*/
 footer {
@@ -176,4 +177,16 @@ footer {
   text-align: center;
   /*vertical-align: center;*/
   background-color: #333;
+
+}
+
+#submitAvalability {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.formLabel {
+  vertical-align: top;
 }

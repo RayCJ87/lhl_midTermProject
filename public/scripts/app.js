@@ -62,7 +62,7 @@ function addAttendeeInfo(event){
   console.log(name, mail);
   if ($('#aMail').val() && $('#aName').val()){
     let guestInfo = `Name: ${name} - email: ${mail}`;
-    let possibleGuests = `<li>${guestInfo}  <button type="button" onClick="removeItem(this)" class="removeInvite">Delete</button></li>
+    let possibleGuests = `<li>${guestInfo}  <button class="btn btn-secondary btn-sm" type="button" onClick="removeItem(this)" class="removeInvite"> <i class="fas fa-trash-alt"></i> Delete</button></li>
                           <input type="hidden" value="${name}" name="guestNames[]"/> <input type="hidden" value="${mail}" name="guestMails[]"/>`
     $('.invitedList .peopleList').append(possibleGuests);
     clearInfo();
@@ -156,4 +156,15 @@ $( document ).ready(function() {
     $( '#start' ).hide()
   })
 
+//to make first page toggle slide when click on "create an event" button
+  $( '.content1' ).hide();
+  $( '#start' ).on('click', function() {
+    $( '.content1' ).slideDown('fast')
+    $( '#start' ).hide()
+  })
+
 })
+
+
+
+

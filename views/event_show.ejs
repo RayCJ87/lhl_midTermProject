@@ -28,6 +28,14 @@
     <a href="https://www.youtube.com" class="youtube" target="_blank"><i class="fa fa-youtube"></i></a>
   </div>
 
+  <div class="icon-bar">
+    <a href="https://www.facebook.com" class="facebook" target="_blank"><i class="fa fa-facebook"></i></a>
+    <a href="https://www.twitter.com" class="twitter" target="_blank"><i class="fa fa-twitter"></i></a>
+    <a href="https://www.google.com" class="google" target="_blank"><i class="fa fa-google"></i></a>
+    <a href="https://www.linkedin.com" class="linkedin" target="_blank"><i class="fa fa-linkedin"></i></a>
+    <a href="https://www.youtube.com" class="youtube" target="_blank"><i class="fa fa-youtube"></i></a>
+  </div>
+
   <body class="bodyLayout">
 
     <header>
@@ -47,22 +55,23 @@
       </section>
 
   <!-- RSVP Button -->
-      <input id="rsvp" type="button" value="check">
+      <input id="rsvp" type="button" value="Check" class="btn btn-info">
 
       <!-- slideToggle form (new)  -->
       <br>
-      <div id="attendeeRSVP" >
+
+      <form id="attendeeRSVP" method="PUT" action="/api/events/invite">
         <section class="toggleRSVP">
           <br>
           <label class="formLabel">Name:</label>
-          <input type="text" id="newAttendeeName" name="newName" placeholder="Enter your first and last name" style="width: 30%">
+          <input type="text" id="nameNew" name="text" placeholder="Enter your first and last name" style="width: 30%">
           <label class="formLabel">Email:</label>
-          <input type="email" id="newAttendeeMail" name="newMail" placeholder="Enter your email address" style="width: 30%">
+          <input type="email" name="email" placeholder="Enter your email address" style="width: 30%">
           <div class="rsvpAvailability">
             <h3>Please select your availability:</h3>
             <p class="scheduleList"></p>
           </div>
-          <button class="btn btn-success" id="submitAvailability" >Confirm</button>
+          <button class="btn btn-success" id="submitAvalability" type="submit">Confirm</button>
         </section>
       </div>
 
