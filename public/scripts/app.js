@@ -1,14 +1,14 @@
 
   //TOGGLE NEW RSVP FORM
-  $('#rsvp').click(function () {
-    let $newRSVP = $('.toggleRSVP');
-    if ($newRSVP.is(':hidden')) {
-      $newRSVP.slideDown();
-      $('#nameNew').focus();
-    } else {
-      $newRSVP.slideUp();
-    }
-  });
+  // $('#rsvp').click(function () {
+  //   let $newRSVP = $('.toggleRSVP');
+  //   if ($newRSVP.is(':hidden')) {
+  //     $newRSVP.slideDown();
+  //     $('#nameNew').focus();
+  //   } else {
+  //     $newRSVP.slideUp();
+  //   }
+  // });
 
   //TOGGLE EDIT RSVP FORM
   $('#rsvpEdit').click(function () {
@@ -65,8 +65,14 @@ function addAttendeeInfo(event){
     let possibleGuests = `<li>${guestInfo}  <button type="button" onClick="removeItem(this)" class="removeInvite">Delete</button></li>
                           <input type="hidden" value="${name}" name="guestNames[]"/> <input type="hidden" value="${mail}" name="guestMails[]"/>`
     $('.invitedList .peopleList').append(possibleGuests);
+    clearInfo();
   }
   // console.log(event);
+}
+
+function clearInfo() {
+  $('#aMail').val('');
+  $('#aName').val('');
 }
 
 // generate an new Url
@@ -106,41 +112,6 @@ function getSchedules() {
   }
 }
 
-// function renderTimeSlots(time){
-//   // for (let time of timeArray) {
-//   //   let $time = createTimeElement(time);
-//   //   $('.eventSetup .timeZone').append($time);
-//   // }
-//   let $time = createTimeSlots(time)
-//   $('.eventSetup .timeZone').append($time);
-//   console.log("try it:  ", $('.eventSetup .timeZone').val());
-// }
-
-// function createTimeSlots(time){
-//   var $article = $('<p></p>').addClass('timeZone');
-//   let $time = $($article).addClass('timeZone')
-//   $article.append($time);
-//   return $article;
-// }
-
-
-
-// function postTimeSlots() {
-//   let $input = $('Button[type="button"]');
-  // $input.on('click', function (event) {
-//     event.preventDefault();
-//     let newTime = $(".eventSetup #getDate");
-//     $.ajax({url: "/", data: newTime, method: 'POST'}).then(function(newTime) {
-//       console.log("We got a new time slot!!!")
-
-//     })
-//   })
-
-// }
-
-
-
-
 // generate a random string as new event id which can be used as URL
 function generateRandomString() {
   const randomKey = "1qaz2wsx3edc4rfv5tgb6yhn7ujm8ik9ol0pQAZWSXEDCRFVTGBYHNUJMIKOLP";
@@ -152,21 +123,37 @@ function generateRandomString() {
   return output;
 }
 
+function updateAttStatus(){
+  console.log($('#newAttendeeName').val());
+  const attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val()};
+  $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
+    console.log("Seccessfully sent data!");
+  })
+}
 
 $( document ).ready(function() {
   $('.toggleRSVP').hide();
   $('.toggleEdit').hide();
   $('.eventSetup').hide();
   $('#rsvp').on("click", getSchedules);
-  $('.copyButton').on("click", copyUrl);
+  $('#copyButton').on("click", copyUrl);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   console.log("got it!");
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
   console.log("The URL is: ", urlAddress);
+
+  $('#submitAvailability').on("click", updateAttStatus);
+
   $.ajax({url: "/api/events/create", data: urlAddress, method: 'PUT'}).done(function(){
       console.log("Success!");
     });
+  //to make first page toggle slide when click on "create an event" button
+  $( '.content1' ).hide();
+  $( '#start' ).on('click', function() {
+    $( '.content1' ).slideDown(500)
+    $( '#start' ).hide()
+  })
 
 })

@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
-     <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,6 +20,13 @@
 
   </head>
 
+  <div class="icon-bar">
+    <a href="https://www.facebook.com" class="facebook" target="_blank"><i class="fa fa-facebook"></i></a>
+    <a href="https://www.twitter.com" class="twitter" target="_blank"><i class="fa fa-twitter"></i></a>
+    <a href="https://www.google.com" class="google" target="_blank"><i class="fa fa-google"></i></a>
+    <a href="https://www.linkedin.com" class="linkedin" target="_blank"><i class="fa fa-linkedin"></i></a>
+    <a href="https://www.youtube.com" class="youtube" target="_blank"><i class="fa fa-youtube"></i></a>
+  </div>
 
   <body class="bodyLayout">
 
@@ -42,20 +50,22 @@
       <input id="rsvp" type="button" value="check">
 
       <!-- slideToggle form (new)  -->
-
-      <form id="attendeeRSVP" method="PUT" action="/api/events/<%=secretURL%>">
+      <br>
+      <div id="attendeeRSVP" >
         <section class="toggleRSVP">
+          <br>
           <label class="formLabel">Name:</label>
-          <textarea id="nameNew" name="text" placeholder="Enter your first and last name"></textarea>
+          <input type="text" id="newAttendeeName" name="newName" placeholder="Enter your first and last name" style="width: 30%">
           <label class="formLabel">Email:</label>
-          <textarea name="email" placeholder="Enter your email address"></textarea>
+          <input type="email" id="newAttendeeMail" name="newMail" placeholder="Enter your email address" style="width: 30%">
           <div class="rsvpAvailability">
             <h3>Please select your availability:</h3>
             <p class="scheduleList"></p>
           </div>
-          <button id="submitAvalability" type="submit">Confirm</button>
+          <button class="btn btn-success" id="submitAvailability" >Confirm</button>
         </section>
-      </form>
+      </div>
+
 
       <!-- List of Attendees -->
       <section class="attendeeList">
@@ -68,6 +78,11 @@
       </div>
 
     </main>
-
   </body>
+
+    <footer>
+    <div>© 2019 Copyright:
+      <span>Schoodle.com</span>
+    </div>
+  </footer>
 </html>
