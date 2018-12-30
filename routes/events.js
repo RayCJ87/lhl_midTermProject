@@ -7,7 +7,8 @@ const knexConfig  = require("../knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 
 let totalInfo = {};
-
+let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': ''};
+let counter = 0;
 
 module.exports = function (DataHelpers) {
 
@@ -22,6 +23,10 @@ module.exports = function (DataHelpers) {
   router.put("/create", (req, res) => {
     console.log("the URL from backend: ", req.body.secretURL);
     totalInfo.theEventInfo["secretURL"] = req.body.secretURL;
+    if (counter === 0) {
+      DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, totalInfo.theEventInfo.secretURL);
+      counter++;
+    }
   })
 
   //store event, host information.
@@ -33,10 +38,6 @@ module.exports = function (DataHelpers) {
 
     //create organizer here
     DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
-
-
-    // DataHelpers.createOrganizer;
-
     // knex("organizers").insert({
     //   name: organizer.name,
     //   email: organizer.mail
@@ -72,18 +73,24 @@ module.exports = function (DataHelpers) {
 
   // store guest names and mails and redirect to event page.
   router.post("/invite", (req, res) => {
-    totalInfo['guests'] = req.body.guestNames;
-    totalInfo['guestsContact'] = req.body.guestMails;
+    // totalInfo['guests'] = req.body.guestNames;
+    // totalInfo['guestsContact'] = req.body.guestMails;
     const secretURL = totalInfo.theEventInfo.secretURL;
 
     console.log("Ultimate data: ", totalInfo);
     console.log("About to knex.");
 
     //Create the event here
-    DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL);
+
+
+      for (let time of totalInfo.eventSchedules) {
+        console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
+        console.log("The time for timeslots: ", time);
+        DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
+      };
+
+
     console.log("Event created!");
-
-
     res.redirect(`/api/events/${secretURL}`);
 
 
@@ -98,19 +105,67 @@ module.exports = function (DataHelpers) {
     for (let i = 0; i < tempArray.length; i++){
       console.log("The time of the event: ", tempArray[i]);
       theScheduleData[i] = tempArray[i];
-      DataHelpers.createTimeslot(theURL, tempArray[i].toString());
+      // DataHelpers.createTimeslot(theURL, tempArray[i].toString());
     }
-    console.log("timeslots added!")
+    // console.log("timeslots added!")
     let secretURL = req.params.id;
-    res.render("event_show", {secretURL: secretURL});
+    //-----------------------------
+    // DataHelpers.findGuestLists(theURL)
+    // .then((templateVars) => {
+      DataHelpers.findEventByURL(theURL)
+      .then((event) => {
+        DataHelpers.joinOrganizer(theURL)
+        .then((organizer) => {
+          templateVars.eventInfo = {
+            title: event.name,
+            description: event.description,
+            location: event.location,
+            organizerName: organizer
+          }
+
+          // .then((guestList) => {
+          //   templateVars.attendeeInfo = {
+          //     name: guestList[0].name,
+          //     email: guestList[0].email,
+          //     availability: guestList[0].availability[0]
+          //   }
+          // console.log("THe organizer name: ", templateVars.eventInfo.organizerName);
+          console.log('templateVars: ', templateVars);
+          res.render("event_show", templateVars);
+        // })
+      })
+    })
+
+    //-----------------------------
   })
+    // DataHelpers.findEventIDByURL('Z4Xk5b')
+    //   .then((eventList) => {
+    //     console.log("This is the event");
+    //     console.log(eventList);
+    //     console.log(eventList[0]);
+    //     let theInfo = {
+    //       name: eventList[0]['name'],
+    //       location: eventList[0]['location']
+    //     };
+      //   knex('events')
+      // .select('*')
+      // .where({url: totalInfo.theEventInfo.secretURL})
+      // .limit(1)
+      // .then((rows) => {
+      //   let theInfo = {};
+      //   console.log(rows[0]);
+      //   theInfo["theEventName"] = rows[0].name;
+      //   theInfo["eventLocation"] = rows[0].location;
 
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
-    console.log("New guest name: ", req.body.attName);
-    console.log("New guest mail: ", req.body.attMail);
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
-
+    // DataHelpers.
+    // for (let time of totalInfo.eventSchedules) {
+    //   console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
+    //   console.log("The time for timeslots: ", time);
+    //   DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
+    // }
     console.log("attendee created!");
     res.render("event_show");
   })

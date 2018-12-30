@@ -1,12 +1,6 @@
+let scheduleData;
 
 
-
-//TOGGLE NEW RSVP FORM
-function getRSVPForm() {
-  $('.toggleRSVP').slideToggle(100);
-  if ($('.toggleRSVP').is(':visible')){
-  }
-}
 
 // function displayTimeSlots() {
 //   let timeSlotLists = `
@@ -81,8 +75,8 @@ function copyUrl(){
 
 //list all timeslots
 function getSchedules() {
-  let scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
-  if ($('.toggleRSVP').is(':hidden')){
+     scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
+  // if ($('.toggleRSVP').is(':hidden')){
         scheduleData.done(function(response) {
          console.log("the schedule is:  ", response);
           // console.log("weird: ", totalInfo);
@@ -91,12 +85,9 @@ function getSchedules() {
             <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
             $('#attendeeRSVP .scheduleList').append(scheduleTables);
           }
-          getRSVPForm();
       });
-  }
-  else{
-    alert("Please RSVP!");
-  }
+
+
 }
 
 
@@ -115,18 +106,36 @@ function generateRandomString() {
 
 
 function updateAttStatus(){
-  console.log($('#newAttendeeName').val());
+  // console.log("The schedules data is: ", scheduleData);
+    console.log($('.scheduleList'));
+    console.log("The checkbox: ", $('.scheduleList .switchToggle'));
+
+
   const attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val()};
   $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
     console.log("Seccessfully sent data!");
   })
+
+
 }
 
+function SetEventPage() {
+
+  $('.organizerName')
+}
+
+// function getRsvpStatus() {
+//   get data from back end
+
+//   organize / sort -> print to the bottom.
+// }
+
 $( document ).ready(function() {
-  $('.toggleRSVP').hide();
+  // $('.toggleRSVP').hide();
   $('.toggleEdit').hide();
   $('.eventSetup').hide();
   $('#rsvp').on("click", getSchedules);
+  // getSchedules();
   $('#copyButton').on("click", copyUrl);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
@@ -134,6 +143,8 @@ $( document ).ready(function() {
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
   console.log("The URL is: ", urlAddress);
+  // Should show host and event info on the page
+
 
   $('#submitAvailability').on("click", updateAttStatus);
 
