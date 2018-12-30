@@ -97,10 +97,10 @@ module.exports = function MakeDataHelpers(knex) {
       .then((rows) => {
         let event = rows[0]
         if (event) {
-          return event;
+          resolve(event);
         }
         else {
-          return reject('404 Page Not Found');
+          reject('404 Page Not Found');
         }
       })
       .catch((error) => reject(error));
@@ -227,7 +227,7 @@ module.exports = function MakeDataHelpers(knex) {
         .select('organizers.name')
         .where({url: url})
         .then((rows) => {
-          let organizer = rows[0]
+          let organizer = rows[0].name;
           resolve(organizer);
         })
       });
@@ -235,7 +235,6 @@ module.exports = function MakeDataHelpers(knex) {
 
     //ADDS EVENT TO DB
     createEvent: (email, organizerName, eventName, description, location, url) => {
-      console.log('createEvent is being run');
       doesOrganizerExist(email, organizerName)
       .then((organizerID) => {
         knex('organizers')
