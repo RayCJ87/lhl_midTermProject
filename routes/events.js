@@ -62,13 +62,13 @@ module.exports = function (DataHelpers) {
   router.get("/invite", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let theScheduleData = {};
-    for (let i = 0; i < tempArray.length; i++){
-      theScheduleData[i] = tempArray[i];
-    }
-    console.log("the URL from backend: ", req.body.secretURL);
-    totalInfo.theEventInfo["secretURL"] = req.body.secretURL
-    console.log("Real schedules: ",  theScheduleData);
-    console.log("Schedule data loded!");
+    // for (let i = 0; i < tempArray.length; i++){
+    //   theScheduleData[i] = tempArray[i];
+    // }
+    // console.log("the URL from backend: ", req.body.secretURL);
+    // totalInfo.theEventInfo["secretURL"] = req.body.secretURL
+    // console.log("Real schedules: ",  theScheduleData);
+    // console.log("Schedule data loded!");
     res.json(theScheduleData);
   })
 
@@ -93,6 +93,7 @@ module.exports = function (DataHelpers) {
     let tempArray = totalInfo.eventSchedules;
     let theScheduleData = {};
     // const theURL = totalInfo.theEventInfo.secretURL.toString();
+    const theURL = 'a1b2c3d4e5f6g7h8i9j0';
     // for (let i = 0; i < tempArray.length; i++){
     //   console.log("The time of the event: ", tempArray[i]);
     //   theScheduleData[i] = tempArray[i];
@@ -101,9 +102,9 @@ module.exports = function (DataHelpers) {
     let secretURL = req.params.id;
     // console.log("timeslots added!")
     //show event info on page:
-    Promise.resolve(DataHelpers.findEventByURL('a1b2c3d4e5f6g7h8i9j0'))
+    Promise.resolve(DataHelpers.findEventByURL(theURL))
     .then((event) => {
-      DataHelpers.joinOrganizer('a1b2c3d4e5f6g7h8i9j0')
+      DataHelpers.joinOrganizer(theURL)
       .then((organizer) => {
         templateVars.eventInfo = {
           title: event.name,
@@ -111,8 +112,24 @@ module.exports = function (DataHelpers) {
           location: event.location,
           organizerName: organizer
         }
-        console.log('templateVars: ', templateVars);
-        res.render("event_show", templateVars);
+        return templateVars;
+      })
+      .then((templateVars) => {
+        DataHelpers.findGuestLists(theURL)
+        .then((guestList) => {
+          console.log('guestList: ', guestList)
+          if (guestList === false) {
+            templateVars.attendeeInfo = '';
+          } else {
+            templateVars.attendeeInfo = {
+              name: guestList[0].name,
+              email: guestList[0].email,
+              availability: guestList[0].availability
+            }
+          }
+          console.log('templateVars: ', templateVars);
+          res.render("event_show", templateVars);
+        })
       })
     })
   })
@@ -123,21 +140,6 @@ module.exports = function (DataHelpers) {
     console.log("New guest mail: ", req.body.attMail);
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName)
     console.log("attendee created!")
-    .then(() => {
-      DataHelpers.findGuestLists('a1b2c3d4e5f6g7h8i9j0')
-            .then((guestList) => {
-              console.log('guestList: ', guestList)
-              if (guestList) {
-                templateVars.attendeeInfo = {
-                  name: guestList[0].name,
-                  email: guestList[0].email,
-                  availability: guestList[0].availability
-                }
-              } else {
-                templateVars.attendeeInfo = '';
-              }
-            })
-    })
     res.render("event_show");
   })
 
@@ -147,7 +149,7 @@ module.exports = function (DataHelpers) {
 // DataHelpers.findAttendeeGuestLists('a1b2c3d4e5f6g7h8i9j0', 'west@example.com');
 // DataHelpers.findGuestLists('a1b2c3d4e5f6g7h8i9j0');
 // DataHelpers.createTimeslot('a1b2c3d4e5f6g7h8i9j0', '2018-12-31T9:00');
-DataHelpers.findEventByURL('a1b2c3d4e5f6g7h8i9j0');
+// DataHelpers.findEventByURL('a1b2c3d4e5f6g7h8i9j0');
 
   // DataHelpers.createTimeslot('8RQ154', '2018-12-30T17:50');
   return router;

@@ -313,13 +313,15 @@ module.exports = function MakeDataHelpers(knex) {
           .where({event_id: eventID})
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
-            if (guestList[0].length >= 1) {
+            console.log('initial guestList: ', guestList)
+            console.log('guestList[0]: ', guestList[0])
+            if (guestList.length >= 1) {
               console.log('function guestList: ', guestList)
               resolve(guestList);
             } else {
               guestList = false;
               console.log('function guestList: ', guestList)
-              reject(guestList);
+              resolve(guestList);
             }
 
           })
