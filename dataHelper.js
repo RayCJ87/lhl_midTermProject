@@ -297,9 +297,11 @@ module.exports = function MakeDataHelpers(knex) {
 
     // PULLS ALL GUEST_LISTS NAMES, EMAILS, AND TIMES FOR AN EVENT FROM DB
     findGuestLists: (url) => {
-      return new Promise((resolve) => {
+      console.log('findGuestLists running')
+      return new Promise((resolve, reject) => {
         findEventIDByURL(url)
         .then((eventID) => {
+          console.log('got eventID: ', eventID)
           knex('guest_lists')
           .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
           .join('attendees', 'guest_lists.attendee_id', '=', 'attendees.id')
@@ -311,10 +313,15 @@ module.exports = function MakeDataHelpers(knex) {
           .where({event_id: eventID})
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
-            // console.log(guestList);
-            // console.log('guestlist.val: ', guestList.stringify());
+            if (guestList[0].length >= 1) {
+              console.log('function guestList: ', guestList)
+              resolve(guestList);
+            } else {
+              guestList = false;
+              console.log('function guestList: ', guestList)
+              reject(guestList);
+            }
 
-            resolve(guestList);
           })
         })
       });

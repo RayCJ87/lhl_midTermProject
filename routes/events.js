@@ -92,49 +92,52 @@ module.exports = function (DataHelpers) {
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let theScheduleData = {};
-    const theURL = totalInfo.theEventInfo.secretURL.toString();
-    for (let i = 0; i < tempArray.length; i++){
-      console.log("The time of the event: ", tempArray[i]);
-      theScheduleData[i] = tempArray[i];
-      // DataHelpers.createTimeslot(theURL, tempArray[i].toString());
-    }
-    // console.log("timeslots added!")
+    // const theURL = totalInfo.theEventInfo.secretURL.toString();
+    // for (let i = 0; i < tempArray.length; i++){
+    //   console.log("The time of the event: ", tempArray[i]);
+    //   theScheduleData[i] = tempArray[i];
+    //   // DataHelpers.createTimeslot(theURL, tempArray[i].toString());
+    // }
     let secretURL = req.params.id;
-    //-----------------------------
-    DataHelpers.findGuestLists(theURL)
-    .then((templateVars) => {
-      DataHelpers.findEventByURL(theURL)
-      .then((event) => {
-        DataHelpers.joinOrganizer(theURL)
-        .then((organizer) => {
-          templateVars.eventInfo = {
-            title: event.name,
-            description: event.description,
-            location: event.location,
-            organizerName: organizer
-          }
-          // .then((guestList) => {
-          //   templateVars.attendeeInfo = {
-          //     name: guestList[0].name,
-          //     email: guestList[0].email,
-          //     availability: guestList[0].availability[0]
-          //   }
-          console.log('templateVars: ', templateVars);
-          res.render("event_show", templateVars);
-        // })
+    // console.log("timeslots added!")
+    //show event info on page:
+    Promise.resolve(DataHelpers.findEventByURL('a1b2c3d4e5f6g7h8i9j0'))
+    .then((event) => {
+      DataHelpers.joinOrganizer('a1b2c3d4e5f6g7h8i9j0')
+      .then((organizer) => {
+        templateVars.eventInfo = {
+          title: event.name,
+          description: event.description,
+          location: event.location,
+          organizerName: organizer
+        }
+        console.log('templateVars: ', templateVars);
+        res.render("event_show", templateVars);
       })
     })
-    })
-    //-----------------------------
   })
 
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
     console.log("New guest name: ", req.body.attName);
     console.log("New guest mail: ", req.body.attMail);
-    DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
-
-    console.log("attendee created!");
+    DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName)
+    console.log("attendee created!")
+    .then(() => {
+      DataHelpers.findGuestLists('a1b2c3d4e5f6g7h8i9j0')
+            .then((guestList) => {
+              console.log('guestList: ', guestList)
+              if (guestList) {
+                templateVars.attendeeInfo = {
+                  name: guestList[0].name,
+                  email: guestList[0].email,
+                  availability: guestList[0].availability
+                }
+              } else {
+                templateVars.attendeeInfo = '';
+              }
+            })
+    })
     res.render("event_show");
   })
 
