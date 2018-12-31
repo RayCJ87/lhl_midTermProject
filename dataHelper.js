@@ -271,15 +271,21 @@ module.exports = function MakeDataHelpers(knex) {
 
     //PULLS ALL TIMESLOTS DATA FOR AN EVENT FROM DB
     findTimeslots: (url) => {
-      findEventByURL(url)
-      .then((eventID) => {
-        let query = knex('timeslots');
-        query = query.join('events', 'timeslots.event_id', '=', 'events.id');
-        query = query.select('*');
-        query = query.where({event_id: eventID});
-        query.then(timeslots => {
-          return timeslots;
+      return new Promise((resolve) => {
+        findEventIDByURL(url)
+        .then((eventID) => {
+          knex('timeslots')
+          .join('events', 'timeslots.event_id', '=', 'events.id')
+          .select(
+              knex.raw('ARRAY_AGG(timeslots.start_time) as times')
+            )
+          .where({event_id: eventID})
+          .then((arr) => {
+            let timeslots = arr[0];
+            resolve(timeslots);
+          })
         })
+
       })
     },
 
@@ -297,11 +303,9 @@ module.exports = function MakeDataHelpers(knex) {
 
     // PULLS ALL GUEST_LISTS NAMES, EMAILS, AND TIMES FOR AN EVENT FROM DB
     findGuestLists: (url) => {
-      console.log('findGuestLists running')
       return new Promise((resolve, reject) => {
         findEventIDByURL(url)
         .then((eventID) => {
-          console.log('got eventID: ', eventID)
           knex('guest_lists')
           .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
           .join('attendees', 'guest_lists.attendee_id', '=', 'attendees.id')
@@ -313,14 +317,10 @@ module.exports = function MakeDataHelpers(knex) {
           .where({event_id: eventID})
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
-            console.log('initial guestList: ', guestList)
-            console.log('guestList[0]: ', guestList[0])
             if (guestList.length >= 1) {
-              console.log('function guestList: ', guestList)
               resolve(guestList);
             } else {
               guestList = false;
-              console.log('function guestList: ', guestList)
               resolve(guestList);
             }
 
@@ -331,20 +331,22 @@ module.exports = function MakeDataHelpers(knex) {
 
     //PULLS ALL GUEST_LISTS FOR A SPECIFIC ATTENDEE AND EVENT
     findAttendeeGuestLists: (url, attendeeEmail) => {
-      findAttendeeIDByEmail(attendeeEmail)
-      .then((attendeeID) => {
-        knex('attendees')
-        .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
-        .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
-        .select([
-          'attendees.name',
-          'attendees.email',
-          knex.raw('ARRAY_AGG(timeslots.start_time) as availability')
-          ])
-        .where({attendee_id: attendeeID})
-        .groupBy('attendees.email', 'attendees.name')
-        .then((availability) => {
-          return console.log(availability);
+      return new Promise((resolve) => {
+        findAttendeeIDByEmail(attendeeEmail)
+        .then((attendeeID) => {
+          knex('attendees')
+          .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
+          .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+          .select([
+            'attendees.name',
+            'attendees.email',
+            knex.raw('ARRAY_AGG(timeslots.start_time) as availability')
+            ])
+          .where({attendee_id: attendeeID})
+          .groupBy('attendees.email', 'attendees.name')
+          .then((availability) => {
+            resolve(availability);
+          })
         })
       })
     }

@@ -90,13 +90,13 @@ function generateRandomString() {
   return output;
 }
 
-function updateAttStatus(){
-  console.log($('#newAttendeeName').val());
-  const attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val()};
-  $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
-    console.log("Seccessfully sent data!");
-  })
-}
+// function updateAttStatus(){
+//   console.log($('#newAttendeeName').val());
+//   const attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val()};
+//   $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
+//     console.log("Seccessfully sent data!");
+//   })
+// }
 
 function updateAttStatus(){
   // console.log("The schedules data is: ", scheduleData);

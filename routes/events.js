@@ -8,7 +8,7 @@ const knex        = require("knex")(knexConfig[ENV]);
 
 
 let totalInfo = {};
-let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': ''};
+let templateVars = { 'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': '' };
 let counter = 0;
 
 module.exports = function (DataHelpers) {
@@ -70,23 +70,23 @@ module.exports = function (DataHelpers) {
     console.log("About to knex.");
 
     //Create the event here
-    DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL);
-    console.log("Event created!");
-
-    res.redirect(`/api/events/${secretURL}`);
+    DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL)
+    console.log("Event created!")
 
 // =======
-//     //Create the event here
-//       for (let time of totalInfo.eventSchedules) {
-//         console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
-//         console.log("The time for timeslots: ", time);
-//         DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
-//       };
-
-//     console.log("Event created!");
-//     res.redirect(`/api/events/${secretURL}`);
-//   })
+    .then(() => {
+      for (let time of totalInfo.eventSchedules) {
+        console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
+        console.log("The time for timeslots: ", time);
+        DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
+      };
 // >>>>>>> origin/feature/invite
+
+      res.redirect(`/api/events/${secretURL}`);
+    })
+  });
+
+
 
 
   // redirect to the page with the unique URL
@@ -116,20 +116,30 @@ module.exports = function (DataHelpers) {
         return templateVars;
       })
       .then((templateVars) => {
-        DataHelpers.findGuestLists(theURL)
-        .then((guestList) => {
-          console.log('guestList: ', guestList)
-          if (guestList === false) {
-            templateVars.attendeeInfo = '';
-          } else {
-            templateVars.attendeeInfo = {
-              name: guestList[0].name,
-              email: guestList[0].email,
-              availability: guestList[0].availability
-            }
+        DataHelpers.findTimeslots(theURL)
+        .then((timeslots) => {
+          console.log('timeslots: ', timeslots)
+          templateVars.timeslotInfo = {
+            time: timeslots.times
           }
-          console.log('templateVars: ', templateVars);
-          res.render("event_show", templateVars);
+          return templateVars;
+        })
+        .then((templateVars) => {
+          DataHelpers.findGuestLists(theURL)
+          .then((guestList) => {
+            console.log('guestList: ', guestList)
+            if (guestList === false) {
+              templateVars.attendeeInfo = '';
+            } else {
+              templateVars.attendeeInfo = {
+                name: guestList[0].name,
+                email: guestList[0].email,
+                availability: guestList[0].availability
+              }
+            }
+            console.log('templateVars: ', templateVars);
+            res.render("event_show", templateVars);
+          })
         })
       })
     })
@@ -153,6 +163,7 @@ module.exports = function (DataHelpers) {
 // DataHelpers.createTimeslot('a1b2c3d4e5f6g7h8i9j0', '2018-12-31T9:00');
 // DataHelpers.findEventByURL('a1b2c3d4e5f6g7h8i9j0');
 // DataHelpers.createTimeslot('8RQ154', '2018-12-30T17:50');
+// DataHelpers.findTimeslots('a1b2c3d4e5f6g7h8i9j0');
 
 
   return router;
