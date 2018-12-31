@@ -112,7 +112,7 @@ module.exports = function (DataHelpers) {
           description: event.description,
           location: event.location,
           organizerName: organizer
-        }
+        };
         return templateVars;
       })
       .then((templateVars) => {
@@ -120,8 +120,8 @@ module.exports = function (DataHelpers) {
         .then((timeslots) => {
           console.log('timeslots: ', timeslots)
           templateVars.timeslotInfo = {
-            time: timeslots.times
-          }
+            time: timeslots.times.sort((a, b) => a -b)
+          };
           return templateVars;
         })
         .then((templateVars) => {
@@ -135,7 +135,7 @@ module.exports = function (DataHelpers) {
                 name: guestList[0].name,
                 email: guestList[0].email,
                 availability: guestList[0].availability
-              }
+              };
             }
             console.log('templateVars: ', templateVars);
             res.render("event_show", templateVars);
