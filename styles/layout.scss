@@ -10,13 +10,29 @@ body {
   padding-top: 20px;
   font-family: 'Montserrat', sans-serif;
   color: black;
+  text-shadow: 2px 0 0 #ffd, -2px 0 0 #ffd, 0 2px 0 #ffd, 0 -2px 0 #ffd, 1px 1px #ffd, -1px -1px 0 #ffd, 1px -1px 0 #ffd, -1px 1px 0 #ffd;
   font-size: 45px;
+}
+
+body .title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  color: #FFD700;
+  text-align: center;
+  text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  padding-top: 30px;
 }
 
 .bodyLayout {
   background: url(https://cssanimation.rocks/levelup/public/images/background.jpg);
   font: black;
   background-blend-mode: lighten;
+}
+
+.bodyLayout #start {
+  display: block;
+  margin: auto;
+  display: block;
 }
 
 .jumbotron {
@@ -42,13 +58,10 @@ body {
   /*padding-left: 20px;*/
 }
 
-body .title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
-  color: black;
-  text-align: center;
-  padding-top: 30px;
-}
+
+/*#start {
+  color: #FFD700;
+}*/
 
 .main {
   padding-top: 40px;
@@ -117,21 +130,21 @@ body .title {
 }
 
 /*fixed social bar*/
-.icon-bar {
-  position: fixed;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
 
 .icon-bar a {
-  display: block;
+  /*display: block;*/
   text-align: center;
   padding: 16px;
+  padding-right: 20px;
+  padding-left: 20px;
   transition: all 0.3s ease;
   color: white;
-  /*font-size: 20px;*/
+  font-size: 15px;
+  border-radius: 3px;
+}
+
+.icon-bar {
+  align-content: center;
 }
 
 .icon-bar a:hover {
@@ -185,10 +198,70 @@ footer {
   box-shadow: 0 8px 16px -6px black;
 }
 
+#rsvp {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
 .formLabel {
   vertical-align: top;
 }
 
+
+/*submit availability*/
+/*.switch-yes-no {
+  padding: 0;
+  margin: 15px 0 0;
+  background: #FFF;
+  border-radius: 0;
+  background-image: none;
+}
+
+.switch-yes-no .switch-label {
+  box-shadow: none;
+  background: none;
+}
+
+.switch-yes-no .switch-label:after, .switch-yes-no .switch-label:before {
+  width: 100%;
+  height: 70%;
+  top: 5px;
+  left: 0;
+  text-align: center;
+  padding-top: 10%;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.switch-yes-no .switch-label:after {
+  color: #FFFFFF;
+  background: #32CD32;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+
+.switch-yes-no .switch-label:before {
+  background: #eceeef;
+  backface-visibility: hidden;
+}
+
+.switch-yes-no .switch-handle {
+  display: none;
+}
+
+.switch-yes-no .switch-input:checked ~ .switch-label {
+  background: #FFF;
+  border-color: #0088cc;
+}
+
+.switch-yes-no .switch-input:checked ~ .switch-label:before {
+  transform: rotateY(180deg)
+}
+
+.switch-yes-no .switch-input:checked ~ .switch-label:after {
+  transform: rotateY(0)
+}*/
 
 
 
