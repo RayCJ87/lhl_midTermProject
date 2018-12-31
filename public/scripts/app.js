@@ -73,23 +73,6 @@ function copyUrl(){
   document.execCommand("copy");
 }
 
-//list all timeslots
-function getSchedules() {
-     scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
-  // if ($('.toggleRSVP').is(':hidden')){
-        scheduleData.done(function(response) {
-         console.log("the schedule is:  ", response);
-          // console.log("weird: ", totalInfo);
-          for (let i in response) {
-            let scheduleTables = `<li>${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox">
-            <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
-            $('#attendeeRSVP .scheduleList').append(scheduleTables);
-          }
-      });
-
-
-}
-
 
 
 
@@ -109,45 +92,62 @@ function updateAttStatus(){
   // console.log("The schedules data is: ", scheduleData);
     console.log($('.scheduleList'));
     console.log("The checkbox: ", $('.scheduleList .switchToggle'));
-
-
-  const attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val()};
-  $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
-    console.log("Seccessfully sent data!");
-  })
-
+    const attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val()};
+    $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
+      console.log("Seccessfully sent data!");
+    })
 
 }
 
-function SetEventPage() {
+// list all timeslots
+function getSchedules() {
+     scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
+  // if ($('.toggleRSVP').is(':hidden')){
+        scheduleData.done(function(response) {
+         console.log("the schedule is:  ", response);
+          // console.log("weird: ", totalInfo);
+          for (let i in response) {
+            let scheduleTables = `<li>${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox">
+            <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
+            $('#attendeeRSVP .scheduleList').append(scheduleTables);
+          }
+      });
 
-  $('.organizerName')
 }
 
-// function getRsvpStatus() {
-//   get data from back end
+function showDateSelections(){
+  let dataaa = JSON.parse(dateSelection);
+  console.log("Start to get Data", dataaa);
+  let availableDates = $.ajax({url: "/api/events/:id" , method: 'GET'});
+    availableDates.done(function(response) {
+      console.log("The available dates are: ",  response);
+      let theIndex = 0;
+      for (let i in response) {
+        let timeOptions = `<li><span class=time${theIndex}>${i} </span><input class=toggle type="checkbox"></li>`;
+        $('#attendeeRSVP .scheduleList').append(timeOptions);
+        theIndex++;
+      }
+    });
+}
 
-//   organize / sort -> print to the bottom.
-// }
+
 
 $( document ).ready(function() {
   // $('.toggleRSVP').hide();
   $('.toggleEdit').hide();
   $('.eventSetup').hide();
-  $('#rsvp').on("click", getSchedules);
+  // $('#rsvp').on("click", getSchedules);
   // getSchedules();
   $('#copyButton').on("click", copyUrl);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
+  $('#rsvp').on("click", showDateSelections);
   console.log("got it!");
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
   console.log("The URL is: ", urlAddress);
   // Should show host and event info on the page
-
-
   $('#submitAvailability').on("click", updateAttStatus);
-
   $.ajax({url: "/api/events/create", data: urlAddress, method: 'PUT'}).done(function(){
       console.log("Success!");
     });

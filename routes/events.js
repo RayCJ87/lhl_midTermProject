@@ -9,6 +9,7 @@ const knex        = require("knex")(knexConfig[ENV]);
 let totalInfo = {};
 let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': ''};
 let counter = 0;
+let theURL = '';
 
 module.exports = function (DataHelpers) {
 
@@ -54,6 +55,7 @@ module.exports = function (DataHelpers) {
     console.log("The super data is: ", totalInfo);
     console.log(req.body);
     res.render("invite");
+    // console.log("successfully rendered 2nd page.")
 
   });
 
@@ -64,10 +66,10 @@ module.exports = function (DataHelpers) {
     for (let i = 0; i < tempArray.length; i++){
       theScheduleData[i] = tempArray[i];
     }
-    console.log("the URL from backend: ", req.body.secretURL);
-    totalInfo.theEventInfo["secretURL"] = req.body.secretURL
-    console.log("Real schedules: ",  theScheduleData);
-    console.log("Schedule data loded!");
+    // console.log("the URL from backend: ", req.body.secretURL);
+    // totalInfo.theEventInfo["secretURL"] = req.body.secretURL
+    // console.log("Real schedules: ",  theScheduleData);
+    // console.log("Schedule data loded!");
     res.json(theScheduleData);
   })
 
@@ -82,92 +84,89 @@ module.exports = function (DataHelpers) {
 
     //Create the event here
 
-
+    // .then(() => {
       for (let time of totalInfo.eventSchedules) {
         console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
         console.log("The time for timeslots: ", time);
         DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
       };
-
-
     console.log("Event created!");
     res.redirect(`/api/events/${secretURL}`);
-
-
-
+    // })
   })
 
   // redirect to the page with the unique URL
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
-    let theScheduleData = {};
-    const theURL = totalInfo.theEventInfo.secretURL.toString();
-    for (let i = 0; i < tempArray.length; i++){
-      console.log("The time of the event: ", tempArray[i]);
-      theScheduleData[i] = tempArray[i];
-      // DataHelpers.createTimeslot(theURL, tempArray[i].toString());
-    }
-    // console.log("timeslots added!")
+    let dateSelection = {};
+    theURL = totalInfo.theEventInfo.secretURL.toString();
+    // const theURL = 'a1b2c3d4e5f6g7h8i9j0';
+    // for (let i = 0; i < tempArray.length; i++){
+    //   console.log("The time of the event: ", tempArray[i]);
+    //   theScheduleData[i] = tempArray[i];
+    //   // DataHelpers.createTimeslot(theURL, tempArray[i].toString());
+    // }
     let secretURL = req.params.id;
-    //-----------------------------
-    // DataHelpers.findGuestLists(theURL)
-    // .then((templateVars) => {
-      DataHelpers.findEventByURL(theURL)
-      .then((event) => {
-        DataHelpers.joinOrganizer(theURL)
-        .then((organizer) => {
-          templateVars.eventInfo = {
-            title: event.name,
-            description: event.description,
-            location: event.location,
-            organizerName: organizer
-          }
+    // console.log("timeslots added!")
+    //show event info on page:
+    console.log("The url here is: ", theURL);
+    Promise.resolve(DataHelpers.findEventByURL(theURL))
+    .then((event) => {
+      DataHelpers.joinOrganizer(theURL)
+      .then((organizer) => {
+        templateVars.eventInfo = {
+          title: event.name,
+          description: event.description,
+          location: event.location,
+          organizerName: organizer
+        };
+        return templateVars;
+      })
+      .then((templateVars) => {
+        DataHelpers.findTimeslots(theURL)
+        .then((timeslots) => {
+          console.log('timeslots: ', timeslots)
+          templateVars.timeslotInfo = {
+            time: timeslots.times.sort((a, b) => a -b)
+          };
+          return templateVars;
+        })
+        .then((templateVars) => {
+          DataHelpers.findGuestLists(theURL)
+          .then((guestList) => {
+            console.log('guestList: ', guestList)
+            if (guestList === false) {
+              templateVars.attendeeInfo = '';
+            } else {
+              templateVars.attendeeInfo = {
+                name: guestList[0].name,
+                email: guestList[0].email,
+                availability: guestList[0].availability
+              };
+            }
+            console.log('templateVars: ', templateVars);
+            let times = templateVars.timeslotInfo.time;
+            for (let i = 0; i < times.length; i++){
+              dateSelection[times[i]] = false;
+            }
+            console.log("The dates for user to choose: ", dateSelection);
 
-          // .then((guestList) => {
-          //   templateVars.attendeeInfo = {
-          //     name: guestList[0].name,
-          //     email: guestList[0].email,
-          //     availability: guestList[0].availability[0]
-          //   }
-          // console.log("THe organizer name: ", templateVars.eventInfo.organizerName);
-          console.log('templateVars: ', templateVars);
-          res.render("event_show", templateVars);
-        // })
+            res.render("event_show", templateVars);
+            res.json(dateSelection);
+          })
+        })
       })
     })
-
-    //-----------------------------
   })
-    // DataHelpers.findEventIDByURL('Z4Xk5b')
-    //   .then((eventList) => {
-    //     console.log("This is the event");
-    //     console.log(eventList);
-    //     console.log(eventList[0]);
-    //     let theInfo = {
-    //       name: eventList[0]['name'],
-    //       location: eventList[0]['location']
-    //     };
-      //   knex('events')
-      // .select('*')
-      // .where({url: totalInfo.theEventInfo.secretURL})
-      // .limit(1)
-      // .then((rows) => {
-      //   let theInfo = {};
-      //   console.log(rows[0]);
-      //   theInfo["theEventName"] = rows[0].name;
-      //   theInfo["eventLocation"] = rows[0].location;
 
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
+    console.log("the urls: ", theURL);
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
-    // DataHelpers.
-    // for (let time of totalInfo.eventSchedules) {
-    //   console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
-    //   console.log("The time for timeslots: ", time);
-    //   DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
-    // }
+    // setTimeout( function () { DataHelpers.findGuestLists(theURL)}, 2000);
     console.log("attendee created!");
-    res.render("event_show");
+    res.render("event_show", templateVars);
+
   })
 
 
