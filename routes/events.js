@@ -138,6 +138,7 @@ module.exports = function (DataHelpers) {
   router.put("/:id", (req, res) => {
     console.log("New guest name: ", req.body.attName);
     console.log("New guest mail: ", req.body.attMail);
+    console.log('req.body: ', req.body);
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName)
     console.log("attendee created!")
     res.render("event_show");
