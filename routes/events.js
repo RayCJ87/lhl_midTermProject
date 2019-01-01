@@ -152,7 +152,7 @@ module.exports = function (DataHelpers) {
             console.log("The dates for user to choose: ", dateSelection);
 
             res.render("event_show", templateVars);
-            res.json(dateSelection);
+            // res.json(dateSelection);
           })
         })
       })
@@ -165,7 +165,56 @@ module.exports = function (DataHelpers) {
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
     // setTimeout( function () { DataHelpers.findGuestLists(theURL)}, 2000);
     console.log("attendee created!");
-    res.render("event_show", templateVars);
+
+    Promise.resolve(DataHelpers.findEventByURL(theURL))
+      .then((event) => {
+        DataHelpers.joinOrganizer(theURL)
+        .then((organizer) => {
+          templateVars.eventInfo = {
+            title: event.name,
+            description: event.description,
+            location: event.location,
+            organizerName: organizer
+          };
+          return templateVars;
+        })
+        .then((templateVars) => {
+          DataHelpers.findTimeslots(theURL)
+          .then((timeslots) => {
+            console.log('timeslots: ', timeslots)
+            templateVars.timeslotInfo = {
+              time: timeslots.times.sort((a, b) => a -b)
+            };
+            return templateVars;
+          })
+          .then((templateVars) => {
+            DataHelpers.findGuestLists(theURL)
+            .then((guestList) => {
+              console.log('guestList: ', guestList)
+              if (guestList === false) {
+                templateVars.attendeeInfo = '';
+              } else {
+                templateVars.attendeeInfo = {
+                  name: guestList[0].name,
+                  email: guestList[0].email,
+                  availability: guestList[0].availability
+                };
+              }
+              console.log('templateVars: ', templateVars);
+              let times = templateVars.timeslotInfo.time;
+              // for (let i = 0; i < times.length; i++){
+              //   dateSelection[times[i]] = false;
+              // }
+              // console.log("The dates for user to choose: ", dateSelection);
+              console.log("The time updates from front end: ", req.body.attTimes);
+              res.render("event_show", templateVars);
+              // res.json(dateSelection);
+            })
+          })
+        })
+    })
+
+    // res.render("event_show", templateVars);
 
   })
 

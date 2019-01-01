@@ -60,7 +60,7 @@
           <div class="rsvpAvailability">
             <h3>Please select your availability:</h3>
             <p class="scheduleList">
-              <%= timeslotInfo.time %>
+
             </p>
           </div>
           <button class="btn btn-success" id="submitAvailability" >Confirm</button>
@@ -72,6 +72,7 @@
       <section class="attendeeList">
         <h3>Who's attending:</h3>
         <p class="attendeeStatus">
+          <p><%= timeslotInfo.time %></p>
           <p><%= attendeeInfo.name %></p>
           <p><%= attendeeInfo.email %></p>
           <p><%= attendeeInfo.availability %></p>

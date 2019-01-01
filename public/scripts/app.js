@@ -92,7 +92,19 @@ function updateAttStatus(){
   // console.log("The schedules data is: ", scheduleData);
     console.log($('.scheduleList'));
     console.log("The checkbox: ", $('.scheduleList .switchToggle'));
-    const attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val()};
+    console.log("The number is ", $('.scheduleList .switchToggle').length);
+    let attTimeUpdate = {}
+    for (let i = 0; i < $('.scheduleList .switchToggle').length; i++) {
+      if (document.getElementById(`box${i}`).checked == true) {
+        attTimeUpdate[i] = true;
+        console.log("The box is:", document.getElementById(`box${i}`), "And", document.getElementById(`box${i}`).closest('li'));
+        console.log("The time update is: ", attTimeUpdate);
+      }
+      else{
+        attTimeUpdate[i] = false;
+      }
+    }
+    let attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val(), attTimes: attTimeUpdate};
     $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
       console.log("Seccessfully sent data!");
     })
@@ -107,7 +119,7 @@ function getSchedules() {
          console.log("the schedule is:  ", response);
           // console.log("weird: ", totalInfo);
           for (let i in response) {
-            let scheduleTables = `<li>${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox">
+            let scheduleTables = `<li id="time${i}">${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox" id="box${i}">
             <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
             $('#attendeeRSVP .scheduleList').append(scheduleTables);
           }
@@ -116,8 +128,6 @@ function getSchedules() {
 }
 
 function showDateSelections(){
-  let dataaa = JSON.parse(dateSelection);
-  console.log("Start to get Data", dataaa);
   let availableDates = $.ajax({url: "/api/events/:id" , method: 'GET'});
     availableDates.done(function(response) {
       console.log("The available dates are: ",  response);
@@ -137,11 +147,12 @@ $( document ).ready(function() {
   $('.toggleEdit').hide();
   $('.eventSetup').hide();
   // $('#rsvp').on("click", getSchedules);
-  // getSchedules();
+  getSchedules();
   $('#copyButton').on("click", copyUrl);
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
-  $('#rsvp').on("click", showDateSelections);
+  // $('#rsvp').on("click", showDateSelections);
+
   console.log("got it!");
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
