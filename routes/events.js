@@ -6,10 +6,10 @@ const ENV         = process.env.ENV || "development";
 const knexConfig  = require("../knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 
-
 let totalInfo = {};
-let templateVars = { 'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': '' };
+let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': ''};
 let counter = 0;
+let theURL = '';
 
 module.exports = function (DataHelpers) {
 
@@ -43,6 +43,7 @@ module.exports = function (DataHelpers) {
     console.log("The super data is: ", totalInfo);
     console.log(req.body);
     res.render("invite");
+    // console.log("successfully rendered 2nd page.")
 
   });
 
@@ -53,6 +54,7 @@ module.exports = function (DataHelpers) {
     // for (let i = 0; i < tempArray.length; i++){
     //   theScheduleData[i] = tempArray[i];
     // }
+
     // console.log("the URL from backend: ", req.body.secretURL);
     // totalInfo.theEventInfo["secretURL"] = req.body.secretURL
     // console.log("Real schedules: ",  theScheduleData);
@@ -87,14 +89,12 @@ module.exports = function (DataHelpers) {
   });
 
 
-
-
   // redirect to the page with the unique URL
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
-    let theScheduleData = {};
-    // const theURL = totalInfo.theEventInfo.secretURL.toString();
-    const theURL = 'a1b2c3d4e5f6g7h8i9j0';
+    let dateSelection = {};
+    // theURL = totalInfo.theEventInfo.secretURL.toString();
+    theURL = 'a1b2c3d4e5f6g7h8i9j0';
     // for (let i = 0; i < tempArray.length; i++){
     //   console.log("The time of the event: ", tempArray[i]);
     //   theScheduleData[i] = tempArray[i];
@@ -103,6 +103,8 @@ module.exports = function (DataHelpers) {
     let secretURL = req.params.id;
     // console.log("timeslots added!")
     //show event info on page:
+    console.log("The url here is: ", theURL);
+
     Promise.resolve(DataHelpers.findEventByURL(theURL))
     .then((event) => {
       DataHelpers.joinOrganizer(theURL)
@@ -133,9 +135,16 @@ module.exports = function (DataHelpers) {
                 email: guestList.email,
                 availability: guestList.availability.sort((a, b) => a - b)
               };
+            let times = templateVars.timeslotInfo.time;
+            for (let i = 0; i < times.length; i++){
+              dateSelection[times[i]] = false;
+            }
+
+            console.log("The dates for user to choose: ", dateSelection);
             console.log('templateVars: ', templateVars);
+
             res.render("event_show", templateVars);
-            // })
+            // res.json(dateSelection);
           })
         })
       })
@@ -146,10 +155,62 @@ module.exports = function (DataHelpers) {
   router.put("/:id", (req, res) => {
     console.log("New guest name: ", req.body.attName);
     console.log("New guest mail: ", req.body.attMail);
+    console.log("the urls: ", theURL);
     console.log('req.body: ', req.body);
-    DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName)
+    DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
     console.log("attendee created!")
     res.render("event_show");
+
+    // Promise.resolve(DataHelpers.findEventByURL(theURL))
+    //   .then((event) => {
+    //     DataHelpers.joinOrganizer(theURL)
+    //     .then((organizer) => {
+    //       templateVars.eventInfo = {
+    //         title: event.name,
+    //         description: event.description,
+    //         location: event.location,
+    //         organizerName: organizer
+    //       };
+    //       return templateVars;
+    //     })
+    //     .then((templateVars) => {
+    //       DataHelpers.findTimeslots(theURL)
+    //       .then((timeslots) => {
+    //         console.log('timeslots: ', timeslots)
+    //         templateVars.timeslotInfo = {
+    //           time: timeslots.times.sort((a, b) => a -b)
+    //         };
+    //         return templateVars;
+    //       })
+    //       .then((templateVars) => {
+    //         DataHelpers.findGuestLists(theURL)
+    //         .then((guestList) => {
+    //           console.log('guestList: ', guestList)
+    //           if (guestList === false) {
+    //             templateVars.attendeeInfo = '';
+    //           } else {
+    //             templateVars.attendeeInfo = {
+    //               name: guestList[0].name,
+    //               email: guestList[0].email,
+    //               availability: guestList[0].availability
+    //             };
+    //           }
+    //           console.log('templateVars: ', templateVars);
+    //           let times = templateVars.timeslotInfo.time;
+    //           // for (let i = 0; i < times.length; i++){
+    //           //   dateSelection[times[i]] = false;
+    //           // }
+    //           // console.log("The dates for user to choose: ", dateSelection);
+    //           console.log("The time updates from front end: ", req.body.attTimes);
+    //           res.render("event_show", templateVars);
+    //           // res.json(dateSelection);
+    //         })
+    //       })
+    //     })
+    // })
+
+    // res.render("event_show", templateVars);
+
   })
 
 // DataHelpers.haveRSVP('a1b2c3d4e5f6g7h8i9j0', 'peter@example.com');
