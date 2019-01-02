@@ -15,11 +15,8 @@ const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
 const DataHelpers = require("./dataHelper.js")(knex);
-
 // Seperated Routes for each Resource
 const eventsRoutes = require("./routes/events")(DataHelpers);
-const organizer = require('./lib/organizer')(knex);
-const event = require('./lib/event')(knex);
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -51,43 +48,25 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-//organizer will be redirected after input personal information and description of event
-app.post("/", (req, res) => {
-
-
-  res.redirect("/createEvent");
-});
-
-//organizer inputs attendee information and create event
-app.get("/createEvent", (req, res) => {
-  // const getNewEventURL = generateRandomString();
-
-  res.render("invite");
+app.post("/api/events/create", (req, res) => {
+    // DataHelpers.createOrganizer(req.body.theHostMail, req.body.theHostName)
+    knex("organizers").insert({
+      name: req.body.theHostName,
+      mail: req.body.theHostMail
+    })
+    .then(function(){
+      console.log("successfully added an organizer.")
+      knex.select().from('organizers')
+        .then(function(organizers) {
+          console.log("done!");
+          req.send(organizers);
+        })
+    })
 })
 
-//organizer will be redirected to an event page after an event is created
-app.post("/createEvent", (req, res) => {
-  console.log(req.body);
-  // function(req.body.email name)
-  // make json
-  // cb add organizer(email, name)
-  // organizer.addOrganizer(req.body.theHostMail, req.body.theHostName);
-  res.redirect("/testEvent");
+app.get("/u/:id", (req, res) => {
+  res.redirect("/api/events/" + req.params.id);
 })
-
-//read the event page
-app.get("/testEvent", (req, res) => {
-  res.render("event_show");
-})
-
-app.post("/testEvent", (req, res) => {
-
-})
-
-//***TEST CODE***
-organizer.find(2);
-event.findByURL('a1b2c3d4e5f6g7h8i9j0');
-// organizer.findByEmail('ajones@example.com');
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
