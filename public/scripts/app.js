@@ -95,6 +95,7 @@ function updateAttStatus(){
     let attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val(), attTimes: attTimeUpdate};
     $.ajax({url: "/api/events/:id" , data: attInfo, method: 'PUT'}).done(function(){
       console.log("Successfully sent data!");
+      location.reload(true);
       // showDateSelections();
       // $('.attendeeStatus').append()
     })
