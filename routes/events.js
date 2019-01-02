@@ -120,7 +120,7 @@ module.exports = function (DataHelpers) {
         .then((timeslots) => {
           console.log('timeslots: ', timeslots)
           templateVars.timeslotInfo = {
-            time: timeslots.times.sort((a, b) => a -b)
+            time: timeslots.times.sort((a, b) => a - b)
           };
           return templateVars;
         })
@@ -128,17 +128,14 @@ module.exports = function (DataHelpers) {
           DataHelpers.findGuestLists(theURL)
           .then((guestList) => {
             console.log('guestList: ', guestList)
-            if (guestList === false) {
-              templateVars.attendeeInfo = '';
-            } else {
-              templateVars.attendeeInfo = {
-                name: guestList[0].name,
-                email: guestList[0].email,
-                availability: guestList[0].availability
+            templateVars.attendeeInfo = {
+                name: guestList.name,
+                email: guestList.email,
+                availability: guestList.availability.sort((a, b) => a - b)
               };
-            }
             console.log('templateVars: ', templateVars);
             res.render("event_show", templateVars);
+            // })
           })
         })
       })
