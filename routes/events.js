@@ -179,7 +179,7 @@ module.exports = function (DataHelpers) {
         .then((templateVars) => {
           DataHelpers.findTimeslots(theURL)
           .then((timeslots) => {
-            console.log('timeslots: ', timeslots)
+            // console.log('timeslots: ', timeslots)
             templateVars.timeslotInfo = {
               time: timeslots.times.sort((a, b) => a -b)
             };
@@ -188,7 +188,7 @@ module.exports = function (DataHelpers) {
           .then((templateVars) => {
             DataHelpers.findGuestLists(theURL)
             .then((guestList) => {
-              console.log('guestList: ', guestList)
+              // console.log('guestList: ', guestList)
               if (guestList === false) {
                 templateVars.attendeeInfo = '';
               } else {
@@ -198,14 +198,15 @@ module.exports = function (DataHelpers) {
                   availability: guestList[0].availability
                 };
               }
-              // console.log('templateVars: ', templateVars);
               /* creat a loop that add guestlists to each timeslot and return a new object which will be rendered
               to the event_show file.*/
               let attGuestList = [];
               let dynamicAvailability = [];
               console.log("updateTimes now: ", templateVars.updateTimes);
+
+              //Update templateVars.updateTimes where data is stored at the back end.
               if (templateVars["updateTimes"] == '') {
-                console.log("make a new updateTimes");
+                // console.log("make a new updateTimes");
                   templateVars["updateTimes"] = {};
                   for (let i = 0; i < req.body.attTimes.length; i++) {
                     templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
@@ -229,12 +230,16 @@ module.exports = function (DataHelpers) {
               else {
                 for (let i = 0; i < req.body.attTimes.length; i++) {
                   if (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].length != 0 && req.body.attTimes[i] == 'false') {
-                    let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexof(req.body.attName);
-                    (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).splice(deleteGuest, 1);
+                    if ((templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).includes(req.body.attName)){
+                      let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexOf(`${req.body.attName}`);
+                      (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).splice(deleteGuest, 1);
+                    }
                   } else{
+                    if (req.body.attTimes[i] == 'true' && !templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].includes(req.body.attName)){
                       userResponse[i] = true;
                       templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(req.body.attName);
                       attGuestList.push(req.body.attName);
+                    }
                   }
                 }
                 for (let j in templateVars.updateTimes){
@@ -244,16 +249,14 @@ module.exports = function (DataHelpers) {
                   }
                   dynamicAvailability.push(element);
                 }
-
-
               }
-
+              //the Availability shows the availability that's been shown on the webpage.
               templateVars.theAvailability = dynamicAvailability;
               console.log("the availability: ", dynamicAvailability);
-              console.log("attGuestList = ", attGuestList);
+              // console.log("attGuestList = ", attGuestList);
               console.log("Update times: ", templateVars.updateTimes);
               console.log('templateVars: ', templateVars);
-              console.log("The time updates from front end: ", req.body.attTimes);
+              // console.log("The time updates from front end: ", req.body.attTimes);
               res.render("event_show", templateVars);
               // res.json(templateVars);
             })
