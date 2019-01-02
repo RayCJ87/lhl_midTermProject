@@ -7,7 +7,7 @@ const knexConfig  = require("../knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 
 let totalInfo = {};
-let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': ''};
+let templateVars = {'eventInfo': '', 'attendeeInfo': [], 'timeslotInfo': ''};
 let counter = 0;
 let theURL = '';
 let userResponse = [];
@@ -51,6 +51,7 @@ module.exports = function (DataHelpers) {
     for (let i = 0; i < totalInfo.eventSchedules.length; i++) {
       userResponse.push(false);
     }
+
     //create organizer here
     // DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
 
@@ -80,21 +81,20 @@ module.exports = function (DataHelpers) {
     console.log("Ultimate data: ", totalInfo);
     console.log("About to knex.");
 
-    //Create the event here
+    // //Create the event here
     DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL)
     console.log("Event created!")
 
 // =======
-    .then(() => {
-      for (let time of totalInfo.eventSchedules) {
-        console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
-        console.log("The time for timeslots: ", time);
-        DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
-      };
+    for (let time of totalInfo.eventSchedules) {
+      console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
+      console.log("The time for timeslots: ", time);
+      DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
+    }
 // >>>>>>> origin/feature/invite
 
       res.redirect(`/api/events/${secretURL}`);
-    })
+    // })
   });
 
 
@@ -102,7 +102,7 @@ module.exports = function (DataHelpers) {
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let dateSelection = {};
-    theURL = 'a1b2c3d4e5f6g7h8i9j0';
+    // theURL = 'a1b2c3d4e5f6g7h8i9j0';
 
     templateVars["updateTimes"] = '';
     templateVars["theAvailability"] = [];
@@ -135,13 +135,16 @@ module.exports = function (DataHelpers) {
         })
         .then((templateVars) => {
           DataHelpers.findGuestLists(theURL)
-          .then((guestList) => {
-            console.log('guestList: ', guestList)
-            templateVars.attendeeInfo = {
-                name: guestList.name,
-                email: guestList.email,
-                availability: guestList.availability.sort((a, b) => a - b)
-            };
+          .then((guests) => {
+            console.log('guestList: ', guests)
+            for (Guest of guests) {
+              templateVars.attendeeInfo.push(Guest);
+            }
+            // templateVars.attendeeInfo = {
+            //     name: guests.Guest.name,
+            //     email: guest.Guest.email,
+            //     availability: guestList.availability
+            // };
             console.log('templateVars: ', templateVars);
             let theScheduleData = {};
             let timeArr = totalInfo.eventSchedules;
@@ -154,7 +157,7 @@ module.exports = function (DataHelpers) {
               }
             }
 
-            console.log("The updates to show on the page: ", theScheduleData);
+            console.log("The updates to show on the page (theScheduleData): ", theScheduleData);
             res.render("event_show", templateVars);
           })
         })
