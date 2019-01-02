@@ -1,14 +1,5 @@
 let scheduleData;
 
-
-
-// function displayTimeSlots() {
-//   let timeSlotLists = `
-//             <li><p class="timeOfEvents">${}</p><label class="switch"><input type="checkbox"><span class="slider round"></span></label>
-//             </li>`;
-
-// }
-
 // button to set multiple timeslots.
 function loadTimeSlots(){
     console.log("loadTimeSlots");
@@ -87,9 +78,9 @@ function generateRandomString() {
   return output;
 }
 
-
+//send attendee info and selected timeslots to back end.
 function updateAttStatus(){
-  // console.log("The schedules data is: ", scheduleData);
+
     console.log($('.scheduleList'));
     console.log("The checkbox: ", $('.scheduleList .switchToggle'));
     console.log("The number is ", $('.scheduleList .switchToggle').length);
@@ -105,14 +96,19 @@ function updateAttStatus(){
       }
     }
     let attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val(), attTimes: attTimeUpdate};
-    $.ajax({url: "/api/events/:id", data: attInfo, method: 'PUT'}).done(function(){
-      console.log("Seccessfully sent data!");
+    $.ajax({url: "/api/events/:id" , data: attInfo, method: 'PUT'}).done(function(){
+      console.log("Successfully sent data!");
+      // showDateSelections();
+      // $('.attendeeStatus').append()
     })
+
+
 
 }
 
 // list all timeslots
 function getSchedules() {
+
      scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
   // if ($('.toggleRSVP').is(':hidden')){
         scheduleData.done(function(response) {
@@ -127,18 +123,25 @@ function getSchedules() {
 
 }
 
-function showDateSelections(){
-  let availableDates = $.ajax({url: "/api/events/:id" , method: 'GET'});
-    availableDates.done(function(response) {
-      console.log("The available dates are: ",  response);
-      let theIndex = 0;
-      for (let i in response) {
-        let timeOptions = `<li><span class=time${theIndex}>${i} </span><input class=toggle type="checkbox"></li>`;
-        $('#attendeeRSVP .scheduleList').append(timeOptions);
-        theIndex++;
-      }
-    });
-}
+//
+// function showDateSelections(){
+//   $('#attendeeRSVP .scheduleList').empty();
+//   let theuuu = window.location.pathname;
+//   let thePath = theuuu.slice(-6);
+//   console.log("the pathname: ", thePath);
+//   // let theDates = $.parseJSON(theScheduleData);
+//   // console.log(theDates);
+//   let availableDates = $.ajax({url: "/api/events/id" , method: 'PUT'});
+//     availableDates.done(function(response) {
+//       console.log("The available dates are: ",  response);
+//       let theIndex = 0;
+//       for (let i in response) {
+//         let timeOptions = `<li><span class=time${theIndex}>${i} </span><input class=toggle type="checkbox"></li>`;
+//         $('#attendeeRSVP .scheduleList').append(timeOptions);
+//         theIndex++;
+//       }
+//     });
+// }
 
 
 
