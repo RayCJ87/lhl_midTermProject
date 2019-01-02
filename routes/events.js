@@ -7,7 +7,7 @@ const knexConfig  = require("../knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 
 let totalInfo = {};
-let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': ''};
+let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
 let counter = 0;
 let theURL = '';
 let userResponse = [];
@@ -96,8 +96,7 @@ module.exports = function (DataHelpers) {
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let dateSelection = {};
-    templateVars["updateTimes"] = '';
-    templateVars["theAvailability"] = [];
+
     let secretURL = req.params.id;
     // console.log("timeslots added!")
     //show event info on page:
@@ -203,33 +202,60 @@ module.exports = function (DataHelpers) {
               /* creat a loop that add guestlists to each timeslot and return a new object which will be rendered
               to the event_show file.*/
               let attGuestList = [];
-              templateVars["updateTimes"] = {};
-              for (let i = 0; i < req.body.attTimes.length; i++) {
-                templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
-                if (req.body.attTimes[i] == 'true' ) {
-                  userResponse[i] = true;
-                  templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(req.body.attName);
-                  attGuestList.push(req.body.attName);
-                }
-              }
               let dynamicAvailability = [];
-              for (let j in templateVars.updateTimes){
-                let element = `${j}`;
-                for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
-                  element+= `, ${templateVars.updateTimes[j][i]}`;
+              console.log("updateTimes now: ", templateVars.updateTimes);
+              if (templateVars["updateTimes"] == '') {
+                console.log("make a new updateTimes");
+                  templateVars["updateTimes"] = {};
+                  for (let i = 0; i < req.body.attTimes.length; i++) {
+                    templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
+                    if (req.body.attTimes[i] == 'true' ) {
+                      userResponse[i] = true;
+                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(req.body.attName);
+                      attGuestList.push(req.body.attName);
+                    }
+                    else{
+                      userResponse[i] = false;
+                    }
+                  }
+                  for (let j in templateVars.updateTimes){
+                    let element = `${j}`;
+                    for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
+                      element+= `, ${templateVars.updateTimes[j][i]}`;
+                    }
+                    dynamicAvailability.push(element);
+                  }
+              }
+              else {
+                for (let i = 0; i < req.body.attTimes.length; i++) {
+                  if (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].length != 0 && req.body.attTimes[i] == 'false') {
+                    let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexof(req.body.attName);
+                    (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).splice(deleteGuest, 1);
+                  } else{
+                      userResponse[i] = true;
+                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(req.body.attName);
+                      attGuestList.push(req.body.attName);
+                  }
                 }
-                dynamicAvailability.push(element);
+                for (let j in templateVars.updateTimes){
+                  let element = `${j}`;
+                  for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
+                    element+= `, ${templateVars.updateTimes[j][i]}`;
+                  }
+                  dynamicAvailability.push(element);
+                }
+
+
               }
 
-
-              templateVars["theAvailability"] = dynamicAvailability;
+              templateVars.theAvailability = dynamicAvailability;
               console.log("the availability: ", dynamicAvailability);
               console.log("attGuestList = ", attGuestList);
               console.log("Update times: ", templateVars.updateTimes);
               console.log('templateVars: ', templateVars);
               console.log("The time updates from front end: ", req.body.attTimes);
-              // res.render("event_show", templateVars);
-              res.json(templateVars);
+              res.render("event_show", templateVars);
+              // res.json(templateVars);
             })
           })
         })
