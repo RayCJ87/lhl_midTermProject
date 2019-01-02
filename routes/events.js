@@ -202,6 +202,7 @@ module.exports = function (DataHelpers) {
               to the event_show file.*/
               let attGuestList = [];
               let dynamicAvailability = [];
+              let uniqueAttendee = `${req.body.attName}(${req.body.attMail})`;
               console.log("updateTimes now: ", templateVars.updateTimes);
 
               //Update templateVars.updateTimes where data is stored at the back end.
@@ -212,8 +213,8 @@ module.exports = function (DataHelpers) {
                     templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
                     if (req.body.attTimes[i] == 'true' ) {
                       userResponse[i] = true;
-                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(req.body.attName);
-                      attGuestList.push(req.body.attName);
+                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
+                      attGuestList.push(uniqueAttendee);
                     }
                     else{
                       userResponse[i] = false;
@@ -222,7 +223,12 @@ module.exports = function (DataHelpers) {
                   for (let j in templateVars.updateTimes){
                     let element = `${j}`;
                     for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
-                      element+= `, ${templateVars.updateTimes[j][i]}`;
+                        if (i === 0){
+                          element+= `: ${templateVars.updateTimes[j][i]} `;
+                        }
+                        else {
+                          element+= `, ${templateVars.updateTimes[j][i]} `;
+                        }
                     }
                     dynamicAvailability.push(element);
                   }
@@ -230,27 +236,33 @@ module.exports = function (DataHelpers) {
               else {
                 for (let i = 0; i < req.body.attTimes.length; i++) {
                   if (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].length != 0 && req.body.attTimes[i] == 'false') {
-                    if ((templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).includes(req.body.attName)){
-                      let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexOf(`${req.body.attName}`);
+                    if ((templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).includes(uniqueAttendee)){
+                      let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexOf(uniqueAttendee);
                       (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).splice(deleteGuest, 1);
                     }
                   } else{
-                    if (req.body.attTimes[i] == 'true' && !templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].includes(req.body.attName)){
+                    if (req.body.attTimes[i] == 'true' && !templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].includes(uniqueAttendee)){
                       userResponse[i] = true;
-                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(req.body.attName);
-                      attGuestList.push(req.body.attName);
+                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
+                      attGuestList.push(uniqueAttendee);
                     }
                   }
                 }
                 for (let j in templateVars.updateTimes){
-                  let element = `${j}`;
+                  let element = `${j}  `;
                   for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
-                    element+= `, ${templateVars.updateTimes[j][i]}`;
+                    if (i === 0){
+                      element+= `: ${templateVars.updateTimes[j][i]} `;
+                    }
+                    else {
+                      element+= `, ${templateVars.updateTimes[j][i]} `;
+                    }
+
                   }
                   dynamicAvailability.push(element);
                 }
               }
-              //the Availability shows the availability that's been shown on the webpage.
+              //the Availability shows the availability that's been shown on the web
               templateVars.theAvailability = dynamicAvailability;
               console.log("the availability: ", dynamicAvailability);
               // console.log("attGuestList = ", attGuestList);
@@ -258,17 +270,12 @@ module.exports = function (DataHelpers) {
               console.log('templateVars: ', templateVars);
               // console.log("The time updates from front end: ", req.body.attTimes);
               res.render("event_show", templateVars);
-              // res.json(templateVars);
             })
           })
         })
     })
-
-    // res.render("event_show", templateVars);
-
   })
 
 
-  // DataHelpers.createTimeslot('8RQ154', '2018-12-30T17:50');
   return router;
 }

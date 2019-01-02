@@ -72,11 +72,10 @@
       <section class="attendeeList">
         <h3>Who's attending:</h3>
         <p class="attendeeStatus">
-          <!-- <p><%= timeslotInfo.time %></p> -->
-          <p><%= theAvailability %></p>
-          <p><%= attendeeInfo.name %></p>
-          <p><%= attendeeInfo.email %></p>
-          <p><%= attendeeInfo.availability %></p>
+          <% for (let i of theAvailability) { %>
+          <li><%= i %></li>
+
+          <% } %>
         </p>
       </section>
       </div>
