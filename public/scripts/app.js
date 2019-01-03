@@ -155,4 +155,12 @@ $('#backBtn').on("click", refreshPage);
     $( '#start' ).hide()
   })
 
+  $( '#thankYou' ).hide()
+  $( '#doneBtn' ).on('click', function(){
+    $(' .eventWrapper ').hide()
+    $(' #thankYou ').fadeIn('slow').delay( 3000 ).fadeOut('slow');
+    window.location.href = "http://localhost:8080";
+  })
+
+
 })

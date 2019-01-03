@@ -60,7 +60,7 @@ module.exports = function (DataHelpers) {
 
     console.log("The super data is: ", totalInfo);
     console.log(req.body);
-    res.render("invite");
+    res.render("invite", eventInfo);
     // console.log("successfully rendered 2nd page.")
 
   });

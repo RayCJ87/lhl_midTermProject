@@ -33,7 +33,7 @@ body .title {
 
 .eventWrapper {
   padding-top: 30px;
-  overflow: scroll;
+  /*overflow: scroll;*/
 }
 
 .bodyLayout #start {
@@ -237,6 +237,22 @@ footer {
 .formLabel {
   vertical-align: top;
 }
+
+#doneBtn {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+
+#submitAvailability {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
 
 
 /*submit availability*/
