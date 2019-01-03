@@ -18,7 +18,6 @@ module.exports = function (DataHelpers) {
   let totalGuests = {};
   router.get("/", (req, res) =>{
     console.log("Hello there!");
-    // res.render("index");
   });
 
   // store secretURL  to be reused later
@@ -52,12 +51,9 @@ module.exports = function (DataHelpers) {
       userResponse.push(false);
     }
     //create organizer here
+    counter = 0;
     DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
-    console.log("The super data is: ", totalInfo);
-    console.log(req.body);
     res.render("invite");
-    // console.log("successfully rendered 2nd page.")
-
   });
 
   // redirect to the invite page and store event times.
@@ -67,7 +63,6 @@ module.exports = function (DataHelpers) {
     for (let i = 0; i < sortedArr.length; i++){
       theScheduleData[i] = sortedArr[i].toISOString().split('T')[0] + sortedArr[i].toISOString().split('T')[1].slice(0, 5);
     }
-    console.log(" The desired time: ", theScheduleData);
     res.json(theScheduleData);
   })
 
@@ -78,29 +73,22 @@ module.exports = function (DataHelpers) {
     theURL = totalInfo.theEventInfo.secretURL.toString();
     console.log("Ultimate data: ", totalInfo);
     console.log("About to knex.");
-
-    //Create the event here
-
-    // .then(() => {
-      for (let time of totalInfo.eventSchedules) {
-        console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
-        console.log("The time for timeslots: ", time);
-        DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
-      };
+    for (let time of totalInfo.eventSchedules) {
+      console.log("THe url for timeslots: ", totalInfo.theEventInfo.secretURL);
+      console.log("The time for timeslots: ", time);
+      DataHelpers.createTimeslot(totalInfo.theEventInfo.secretURL, time)
+    };
     console.log("Event created!");
     res.redirect(`/api/events/${secretURL}`);
-    // })
   })
 
   // redirect to the page with the unique URL
   router.get("/:id", (req, res) => {
     let tempArray = totalInfo.eventSchedules;
     let dateSelection = {};
-
     let secretURL = req.params.id;
-    // console.log("timeslots added!")
+
     //show event info on page:
-    console.log("The url here is: ", theURL);
     Promise.resolve(DataHelpers.findEventByURL(theURL))
     .then((event) => {
       DataHelpers.joinOrganizer(theURL)
@@ -116,7 +104,6 @@ module.exports = function (DataHelpers) {
       .then((templateVars) => {
         DataHelpers.findTimeslots(theURL)
         .then((timeslots) => {
-          console.log('timeslots: ', timeslots)
           templateVars.timeslotInfo = {
             time: timeslots.times.sort((a, b) => a -b)
           };
@@ -125,7 +112,6 @@ module.exports = function (DataHelpers) {
         .then((templateVars) => {
           DataHelpers.findGuestLists(theURL)
           .then((guestList) => {
-            console.log('guestList: ', guestList)
             if (guestList === false) {
               templateVars.attendeeInfo = '';
             } else {
@@ -149,19 +135,16 @@ module.exports = function (DataHelpers) {
 
             console.log("The updates to show on the page: ", theScheduleData);
             res.render("event_show", templateVars);
-
           })
         })
       })
     })
   })
 
-
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
     console.log("the urls: ", theURL);
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
-    // setTimeout( function () { DataHelpers.findGuestLists(theURL)}, 2000);
     console.log("attendee created!");
 
     Promise.resolve(DataHelpers.findEventByURL(theURL))
@@ -257,7 +240,6 @@ module.exports = function (DataHelpers) {
                     else {
                       element+= `, ${templateVars.updateTimes[j][i]} `;
                     }
-
                   }
                   dynamicAvailability.push(element);
                 }
@@ -268,7 +250,6 @@ module.exports = function (DataHelpers) {
               // console.log("attGuestList = ", attGuestList);
               console.log("Update times: ", templateVars.updateTimes);
               console.log('templateVars: ', templateVars);
-              // console.log("The time updates from front end: ", req.body.attTimes);
               res.render("event_show", templateVars);
             })
           })
