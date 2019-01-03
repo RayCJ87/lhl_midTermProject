@@ -380,13 +380,15 @@ module.exports = function MakeDataHelpers(knex) {
   deleteGuestList: (attendeeID, url, time) => {
     findTimeslotID(url, time)
     .then((timeslotID) => {
-      knex('attendees')
-      .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
-      .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
-      .select('guest_lists')
-      .where({attendee_id: attendeeID})
-      .andWhere({timeslot_id: timeslotID})
-      .del()
+      return (
+        knex('guest_lists')
+        .join('attendees', 'attendees.id', '=', 'guest_lists.attendee_id')
+        .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+        // .select('guest_lists')
+        .where({attendee_id: attendeeID})
+        .andWhere({timeslot_id: timeslotID})
+        .del()
+      )
     })
     console.log('deleteGuestList is running');
   },
