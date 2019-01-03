@@ -1,12 +1,15 @@
 let scheduleData;
 
 // button to set multiple timeslots.
-function loadTimeSlots(){
+function loadTimeSlots() {
     console.log("loadTimeSlots");
     time = $('.eventSetup #getDate').val();
+    let yymmdd = time.toString().split('T')[0];
+    let hhmm = time.toString().split('T')[1].slice(0, 5);
+    time = yymmdd + " " + hhmm;
+    console.log("loadTimeSlots time: ", time);
     let theText = `<p>${time}</p> <input type="hidden" value="${time}" name="eventTimes[]"/>`;
     $('.eventSetup .timeZone').append(theText);
-
 }
 
 //show timeslots selection
@@ -134,7 +137,6 @@ $( document ).ready(function() {
   // $('#rsvp').on("click", getSchedules);
   getSchedules();
   $('#copyButton').on("click", copyUrl);
-  loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   // $('#rsvp').on("click", showDateSelections);
 $('#backBtn').on("click", refreshPage);

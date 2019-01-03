@@ -160,33 +160,34 @@ module.exports = function MakeDataHelpers(knex) {
     };
 
     const showGuestLists = (guestList) => {
-      console.log('showGuestLists guestList: ', guestList);
+
       class Guest {
 
         constructor(attendeeName, attendeeEmail) {
           this.guestName = attendeeName;
           this.guestEmail = attendeeEmail;
           this.availability = [];
+          // this.guestTimes = attendeeTimes;
         }
 
-        // addAvailability(times) {
-          // times = times.toString;
-          // times.sort((a, b) => a - b);
-          // console.log('times: ', times);
-          // for (let time of times) {
-            // this.availability.push(time);
-          // }
-        // }
+        addAvailability(times) {
+          times.sort((a, b) => a - b);
+          console.log('times: ', times);
+          for (let time of times) {
+            this.availability.push(time);
+          }
+        }
 
       }
+
       const guests = [];
-      for (let guest of guestList) {
-        guest = new Guest(guest.name, guest.email);
-        // guest.times = guest.times;
-        console.log('typeof times: ', guest.times);
+      for (let attendee of guestList) {
+        let guest = new Guest(attendee.name, attendee.email);
+        guest.addAvailability(attendee.times);
         guests.push(guest);
       }
-      console.log('guests: ', guests);
+      console.log('showGuestLists guests: ', guests);
+
       return guests;
 
       // if (guestList.length >= 1) {
@@ -356,12 +357,13 @@ module.exports = function MakeDataHelpers(knex) {
           .select([
             'attendees.name',
             'attendees.email',
-            knex.raw('to_json(array_agg((timeslots.start_time))) as times')
+            knex.raw('array_agg(timeslots.start_time) as times')
             ])
           .where({event_id: eventID})
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
-            console.log('guestList: ', guestList);
+            console.log('findGuestLists guestList: ', guestList);
+            // resolve(guestList);
             resolve(showGuestLists(guestList));
           })
         })
