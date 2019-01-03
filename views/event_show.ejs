@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
-     <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,14 +19,13 @@
 
   </head>
 
-
-<!--   <div class="icon-bar">
+  <div class="icon-bar">
     <a href="https://www.facebook.com" class="facebook" target="_blank"><i class="fa fa-facebook"></i></a>
     <a href="https://www.twitter.com" class="twitter" target="_blank"><i class="fa fa-twitter"></i></a>
     <a href="https://www.google.com" class="google" target="_blank"><i class="fa fa-google"></i></a>
     <a href="https://www.linkedin.com" class="linkedin" target="_blank"><i class="fa fa-linkedin"></i></a>
     <a href="https://www.youtube.com" class="youtube" target="_blank"><i class="fa fa-youtube"></i></a>
-  </div> -->
+  </div>
 
   <body class="bodyLayout">
 
@@ -40,48 +39,51 @@
 
   <!-- Event Information -->
       <section class="eventInformation">
-        <h2 class="eventName">Name of Event Goes Here</h2>
-        <h3 class="organizerName">Hosted by: Organizer Name Goes Here</h3>
-        <h3 class="eventLocation">Location: Location of Event Goes Here</h3>
-        <p class="eventDescription">Description of Event Goes Here Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+        <h2 class="eventName"><%= eventInfo.title %></h2>
+        <h3 class="organizerName">Hosted by: <%= eventInfo.organizerName %></h3>
+        <h3 class="eventLocation">Location: <%= eventInfo.location %></h3>
+        <p class="eventDescription"><%= eventInfo.description %></p>
       </section>
 
   <!-- RSVP Button -->
-      <input id="rsvp" type="button" value="Check" class="btn btn-info">
+      <input id="rsvp" type="button" value="check">
 
       <!-- slideToggle form (new)  -->
       <br>
-      <form id="attendeeRSVP" method="PUT" action="/api/events/invite">
+      <div id="attendeeRSVP" >
         <section class="toggleRSVP">
           <br>
           <label class="formLabel">Name:</label>
-          <input type="text" id="nameNew" name="text" placeholder="Enter your first and last name" style="width: 50%"><br>
+          <input type="text" id="newAttendeeName" name="newName" placeholder="Enter your first and last name" style="width: 30%">
           <label class="formLabel">Email:</label>
-          <input type="email" name="email" placeholder="Enter your email address" style="width: 50%">
+          <input type="email" id="newAttendeeMail" name="newMail" placeholder="Enter your email address" style="width: 30%">
           <div class="rsvpAvailability">
             <h3>Please select your availability:</h3>
             <p class="scheduleList">
 
             </p>
           </div>
-          <button class="btn btn-success" id="submitAvalability" type="submit">Confirm</button>
+          <button class="btn btn-success" id="submitAvailability" >Confirm</button>
         </section>
-      </form>
+      </div>
+
 
       <!-- List of Attendees -->
       <section class="attendeeList">
         <h3>Who's attending:</h3>
         <p class="attendeeStatus">
+          <% for (let i of theAvailability) { %>
+          <li><%= i %></li>
 
+          <% } %>
         </p>
       </section>
-
       </div>
 
     </main>
   </body>
 
-    <footer>
+  <footer>
     <div>© 2019 Copyright:
       <span>Schoodle.com</span>
     </div>
