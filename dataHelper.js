@@ -114,7 +114,23 @@ module.exports = function MakeDataHelpers(knex) {
       .where({url: url})
       .then((rows) => {
         let eventID = rows[0].id
-          resolve(eventID);
+        resolve(eventID);
+      })
+    });
+  };
+
+  const findTimeslotID = (url, time) => {
+    return new Promise((resolve) => {
+      findEventIDByURL(url)
+      .then((eventID) => {
+        knex('timeslots')
+        .select('id')
+        .where({event_id: eventID})
+        .andWhere({start_time: time})
+        .then((rows) => {
+          let timeslotID = rows[0].id
+          resolve(timeslotID);
+        })
       })
     });
   };
@@ -189,29 +205,6 @@ module.exports = function MakeDataHelpers(knex) {
       console.log('showGuestLists guests: ', guests);
 
       return guests;
-
-      // if (guestList.length >= 1) {
-      //   console.log('function orig guestList: ', guestList)
-      //   let names = [];
-      //   let emails = [];
-      //   let availabilities = [];
-      //   for (let guest of guestList) {
-      //     names.push(guest.name);
-      //     emails.push(guest.email);
-      //     availabilities.push(guest.timeSelection);
-      //     //get value of timeSelection [array] [array]
-      //   };
-      //   guestList = {
-      //     name: names,
-      //     email: emails,
-      //     availability: availabilities
-      //   };
-      //   console.log('function guestList: ', guestList)
-      //   resolve(guestList);
-      // } else {
-      //   guestList = [ { 'name': '', 'email': '', 'availability': '' } ];
-      //   resolve(guestList);
-      // }
     }
 
     //SHOWS ALL TIMESLOTS THAT AN ATTENDEE HAS SELECTED FOR A SPECIFIC EVENT
@@ -251,6 +244,7 @@ module.exports = function MakeDataHelpers(knex) {
     doesOrganizerExist: doesOrganizerExist,
     doesAttendeeExist: doesAttendeeExist,
     findEventByURL: findEventByURL,
+    findTimeslotID: findTimeslotID,
     findAttendeeIDByEmail: findAttendeeIDByEmail,
     showGuestLists: showGuestLists,
     // showRSVP: showRSVP,
@@ -369,6 +363,30 @@ module.exports = function MakeDataHelpers(knex) {
         })
       });
     },
+
+  //LINKS ATTENDEE TO TIMESLOT WHEN TIME IS CHECKED
+  createGuestList: (attendeeID, url, time) => {
+    findTimeslotID(url, time)
+    .then((timeslotID) => {
+      knex('guest_lists').insert([{attendee_id: attendeeID}, {timeslot_id: timeslotID}])
+    })
+    console.log('createGuestList is running');
+  },
+
+  //DELETES LINK BETWEEN ATTENDEE AND TIMESLOT WHEN TIME IS UNCHECKED
+  deleteGuestList: (attendeeID, url, time) => {
+    findTimeslotID(url, time)
+    .then((timeslotID) => {
+      knex('attendees')
+      .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
+      .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+      .select('guest_lists')
+      .where({attendee_id: attendeeID})
+      .andWhere({timeslot_id: timeslotID})
+      .del()
+    })
+    console.log('deleteGuestList is running');
+  },
 
     //PULLS ALL GUEST_LISTS FOR A SPECIFIC ATTENDEE AND EVENT
     findAttendeeGuestLists: (url, attendeeEmail) => {
