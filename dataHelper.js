@@ -161,7 +161,6 @@ module.exports = function MakeDataHelpers(knex) {
 
     const showGuestLists = (guestList) => {
       console.log('showGuestLists guestList: ', guestList);
-
       class Guest {
 
         constructor(attendeeName, attendeeEmail) {
@@ -170,23 +169,26 @@ module.exports = function MakeDataHelpers(knex) {
           this.availability = [];
         }
 
-        // addAvailability(array_agg) {
-        //   array_agg.sort((a, b) => a - b);
-        //   for (let time of array_agg) {
-        //     this.availability.push(time);
-        //   }
+        // addAvailability(times) {
+          // times = times.toString;
+          // times.sort((a, b) => a - b);
+          // console.log('times: ', times);
+          // for (let time of times) {
+            // this.availability.push(time);
+          // }
         // }
 
       }
       const guests = [];
       for (let guest of guestList) {
         guest = new Guest(guest.name, guest.email);
-        console.log('array_agg as timeSelection: ', guest.timeSelection);
-        // guest.availability = guest.array_agg;
+        // guest.times = guest.times;
+        console.log('typeof times: ', guest.times);
         guests.push(guest);
       }
       console.log('guests: ', guests);
       return guests;
+
       // if (guestList.length >= 1) {
       //   console.log('function orig guestList: ', guestList)
       //   let names = [];
@@ -298,6 +300,7 @@ module.exports = function MakeDataHelpers(knex) {
           return organizerID;
         })
         .then((organizerID) => {
+          console.log('************** EVENT CREATED ****************');
           return knex('events').insert({
             url: secretURL,
             name: eventName,
@@ -359,34 +362,7 @@ module.exports = function MakeDataHelpers(knex) {
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
             console.log('guestList: ', guestList);
-            class Guest {
-
-              constructor(attendeeName, attendeeEmail) {
-                this.guestName = attendeeName;
-                this.guestEmail = attendeeEmail;
-                this.availability = [];
-              }
-
-              // addAvailability(times) {
-                // times = times.toString;
-                // times.sort((a, b) => a - b);
-                // console.log('times: ', times);
-                // for (let time of times) {
-                  // this.availability.push(time);
-                // }
-              // }
-
-            }
-            const guests = [];
-            for (let guest of guestList) {
-              guest = new Guest(guest.name, guest.email);
-              // guest.times = guest.times;
-              console.log('typeof times: ', guest.times);
-              guests.push(guest);
-            }
-            console.log('guests: ', guests);
-            resolve(guests);
-            // resolve(showGuestLists(guestList));
+            resolve(showGuestLists(guestList));
           })
         })
       });

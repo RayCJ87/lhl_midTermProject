@@ -50,7 +50,7 @@ function clearInfo() {
 // generate an new Url
 function getEventUrl(){
   let randomURL = generateRandomString();
-  let totalURL = "http://localhost:8080/api/events/" + randomURL;
+  let totalURL = "http://localhost:8080/u/" + randomURL;
   $('#eventURL').val(totalURL);
   console.log($('#eventURL').val());
   return randomURL;
@@ -77,10 +77,11 @@ function generateRandomString() {
 
 //send attendee info and selected timeslots to back end.
 function updateAttStatus(){
+  if ($('#newAttendeeMail').val() && $('#newAttendeeName').val()) {
 
-    console.log($('.scheduleList'));
-    console.log("The checkbox: ", $('.scheduleList .switchToggle'));
-    console.log("The number is ", $('.scheduleList .switchToggle').length);
+    console.log('updateAttStatus in app.js - $(.scheduleList): ', $('.scheduleList'));
+    console.log("updateAttStatus in app.js - The checkbox: ", $('.scheduleList .switchToggle'));
+    console.log("updateAttStatus in app.js - The number is ", $('.scheduleList .switchToggle').length);
     let attTimeUpdate = {}
     for (let i = 0; i < $('.scheduleList .switchToggle').length; i++) {
       if (document.getElementById(`box${i}`).checked == true) {
@@ -100,7 +101,7 @@ function updateAttStatus(){
       // $('.attendeeStatus').append()
     })
 
-
+  }
 
 }
 
@@ -121,25 +122,9 @@ function getSchedules() {
 
 }
 
-//
-// function showDateSelections(){
-//   $('#attendeeRSVP .scheduleList').empty();
-//   let theuuu = window.location.pathname;
-//   let thePath = theuuu.slice(-6);
-//   console.log("the pathname: ", thePath);
-//   // let theDates = $.parseJSON(theScheduleData);
-//   // console.log(theDates);
-//   let availableDates = $.ajax({url: "/api/events/id" , method: 'PUT'});
-//     availableDates.done(function(response) {
-//       console.log("The available dates are: ",  response);
-//       let theIndex = 0;
-//       for (let i in response) {
-//         let timeOptions = `<li><span class=time${theIndex}>${i} </span><input class=toggle type="checkbox"></li>`;
-//         $('#attendeeRSVP .scheduleList').append(timeOptions);
-//         theIndex++;
-//       }
-//     });
-// }
+function refreshPage() {
+  location.reload(true);
+}
 
 
 $( document ).ready(function() {
@@ -152,7 +137,7 @@ $( document ).ready(function() {
   loadTimeSlots();
   $('#addAttendee').on("click", addAttendeeInfo);
   // $('#rsvp').on("click", showDateSelections);
-
+$('#backBtn').on("click", refreshPage);
   console.log("got it!");
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
