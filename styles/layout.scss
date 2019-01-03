@@ -1,6 +1,8 @@
 body {
   background-color: #EEE;
   min-height: 400px;
+  padding-top: 30px;
+  padding-bottom: 20px;
   h1 {
     color: #244751;
   }
@@ -29,6 +31,11 @@ body .title {
   background-blend-mode: lighten;
 }
 
+.eventWrapper {
+  padding-top: 30px;
+  overflow: scroll;
+}
+
 .bodyLayout #start {
   display: block;
   margin: auto;
@@ -39,8 +46,8 @@ body .title {
   padding-top: 20px;
   opacity: 0.85;
   width: 70%;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 15px;
+  padding-left: 15px;
   float: center;
   /*shadow*/
   position: relative;
@@ -49,6 +56,8 @@ body .title {
   /*centered*/
   margin:0 auto;
   max-width: 600px;
+  max-height: 610px;
+  overflow: auto;
 }
 
 .wrapper {
@@ -206,8 +215,8 @@ footer {
   height: 5%;
   color: white;
   text-align: center;
-  /*vertical-align: center;*/
   background-color: #333;
+  padding-top: 5px;
 
 }
 
@@ -231,7 +240,7 @@ footer {
 
 
 /*submit availability*/
-.switch-yes-no {
+/*.switch-yes-no {
   padding: 0;
   margin: 15px 0 0;
   background: #FFF;
@@ -281,7 +290,9 @@ footer {
 
 .switch-yes-no .switch-input:checked ~ .switch-label:after {
   transform: rotateY(0)
-}
+}*/
+
+
 
 
 
