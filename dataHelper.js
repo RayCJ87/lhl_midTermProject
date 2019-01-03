@@ -368,7 +368,10 @@ module.exports = function MakeDataHelpers(knex) {
   createGuestList: (attendeeID, url, time) => {
     findTimeslotID(url, time)
     .then((timeslotID) => {
-      knex('guest_lists').insert([{attendee_id: attendeeID}, {timeslot_id: timeslotID}])
+      return knex('guest_lists').insert({
+        attendee_id: attendeeID,
+        timeslot_id: timeslotID
+      })
     })
     console.log('createGuestList is running');
   },
