@@ -9,11 +9,11 @@ const knex        = require("knex")(knexConfig[ENV]);
 let totalInfo = {};
 let counter = 0;
 let theURL = '';
-let userResponse = [];
+// let userResponse = [];
 let virtualDB = {};
 let eventURL = '';
 let templateVarsDB = {};
-let templateVars = {'eventInfo': '', 'attendeeInfo': [], 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
+let templateVars = {'eventInfo': '', 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
 
 module.exports = function (DataHelpers) {
 
@@ -51,7 +51,7 @@ module.exports = function (DataHelpers) {
     sortedArr.sort((a, b) => a - b)
     totalInfo.eventSchedules = sortedArr;
     for (let i = 0; i < totalInfo.eventSchedules.length; i++) {
-      userResponse.push(false);
+      // userResponse.push(false);
     }
     //create organizer here
     counter = 0;
@@ -98,15 +98,13 @@ module.exports = function (DataHelpers) {
     console.log("about to knex here!!")
     //show event info on page:
     if (!templateVarsDB.hasOwnProperty(theURL)) {
-      let templateVars = {'eventInfo': '', 'attendeeInfo': [], 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
+      let templateVars = {'eventInfo': '', 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
       templateVarsDB[theURL] = templateVars;
     }
     Promise.resolve(DataHelpers.findEventByURL(theURL))
     .then((event) => {
       DataHelpers.joinOrganizer(theURL)
-
       .then((organizer) => {
-
         templateVarsDB[theURL].eventInfo = {
           title: event.name,
           description: event.description,
@@ -114,7 +112,6 @@ module.exports = function (DataHelpers) {
           organizerName: organizer
         };
         const templateVars = templateVarsDB[theURL];
-        console.log("The template Var 1st get: ", templateVars)
         return templateVars;
       })
       .then((templateVars) => {
@@ -127,40 +124,26 @@ module.exports = function (DataHelpers) {
         })
         .then((templateVars) => {
           DataHelpers.findGuestLists(theURL)
-          .then((guests) => {
-
-            for (let guest of guests) {
-              templateVars.attendeeInfo.push(guest);
-            }
+          .then(() => {
             DataHelpers.findUpdateTimesByURL(theURL)
             .then((theTimes) => {
               let dynamicAvailability = [];
-              console.log("The updateTimes from DB: ", theTimes);
-              console.log("The templateVars for handling:  ", templateVars)
               if (templateVars["updateTimes"] == '' ) {
-                console.log("times length: ", theTimes.length);
-                console.log("weird place: ", templateVars);
                 for (let i = 0; i < theTimes.length; i++) {
                   if (i == 0){
                     templateVars["updateTimes"] = {};
                   }
-                  if (!templateVars.updateTimes.hasOwnProperty(theTimes[i].startTime))
+                  if (!templateVars.updateTimes.hasOwnProperty(theTimes[i].startTime)){
                     templateVars.updateTimes[theTimes[i].startTime] = [];
                   }
-                console.log("weird place2 : ", templateVars);
+                }
                 for (let i = 0; i < theTimes.length; i++) {
-                  console.log(theTimes[i].name)
-                  console.log(typeof theTimes[i].name);
                   if (theTimes[i].name.length >0 ){
-                    console.log("now:  ",templateVars.updateTimes[theTimes[i].startTime]);
                       if (!templateVars.updateTimes[theTimes[i].startTime].includes(theTimes[i].name))
                           templateVars.updateTimes[theTimes[i].startTime].push(theTimes[i].name);
-                      }
+                    }
+                }
               }
-                // console.log("Thetimes . startTime is ====> ", templateVars.updateTimes[theTimes[i]])
-
-              }
-              console.log("The updateTimes 2nd stage: ", templateVars.updateTimes)
               for (let j in templateVars.updateTimes){
                 let element = `${j}  `;
                 for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
@@ -174,11 +157,8 @@ module.exports = function (DataHelpers) {
                 dynamicAvailability.push(element);
               }
               templateVars.theAvailability = dynamicAvailability;
-              console.log('templateVars: ', templateVars);
               res.render("event_show", templateVars);
             })
-
-
           })
         })
       })
@@ -214,11 +194,7 @@ module.exports = function (DataHelpers) {
           })
           .then((templateVars) => {
             DataHelpers.findGuestLists(theURL)
-            .then((guests) => {
-
-              for (let guest of guests) {
-                templateVars.attendeeInfo.push(guest);
-              }
+            .then(() => {
               /* creat a loop that add guestlists to each timeslot and return a new object which will be rendered
               to the event_show file.*/
               let attGuestList = [];
@@ -232,12 +208,11 @@ module.exports = function (DataHelpers) {
                   for (let i = 0; i < req.body.attTimes.length; i++) {
                     templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
                     if (req.body.attTimes[i] == 'true' ) {
-                      userResponse[i] = true;
+                      // userResponse[i] = true;
                       templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
-                      attGuestList.push(uniqueAttendee);
                     }
                     else{
-                      userResponse[i] = false;
+                      // userResponse[i] = false;
                     }
                   }
                   for (let j in templateVars.updateTimes){
@@ -254,8 +229,7 @@ module.exports = function (DataHelpers) {
                   }
               }
               else {
-                console.log("Y or N:   ", req.body.attTimes);
-                console.log("Here there: ", templateVars);
+                //make a temporary variable use later.
                 let middle = {}
                 for (let k = 0; k < templateVars.timeslotInfo.time.length; k++) {
                   middle[templateVars.timeslotInfo.time[k]] = req.body.attTimes[k];
@@ -263,31 +237,24 @@ module.exports = function (DataHelpers) {
 
                 for(let k in middle){
                   if(templateVars["updateTimes"][k].length != 0 && middle[k] === "false"){
-                      console.log("Ready----> delete", k);
                       DataHelpers.deleteGuestInUpdateTimes(theURL, k, uniqueAttendee);
                   }
                 }
-
-                console.log("A temp variable for use: ", middle);
                 for (let i = 0; i < req.body.attTimes.length; i++) {
-                  console.log("THe length: ", templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]);
                   if (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].length != 0 && req.body.attTimes[i] == 'false') {
                     if ((templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).includes(uniqueAttendee)){
                       let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexOf(uniqueAttendee);
                       (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).splice(deleteGuest, 1);
-
-
                     }
                   } else{
                     if (req.body.attTimes[i] == 'true' && !templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].includes(uniqueAttendee)){
-                      userResponse[i] = true;
+                      // userResponse[i] = true;
                       templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
                       attGuestList.push(uniqueAttendee);
                     }
                   }
                 }
                 for (let j in templateVars.updateTimes){
-
                   let element = `${j}  `;
                   for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
                     if (i === 0){
@@ -301,12 +268,9 @@ module.exports = function (DataHelpers) {
                 }
               }
               for (let i in templateVars.updateTimes){
-
                 if (templateVars.updateTimes[i].length > 0){
                   for (let j = 0; j < templateVars.updateTimes[i].length; j++){
-                    // console.log("createUpdateTimes", theDate)
                     if (!templateVars.updateTimes[i].hasOwnProperty(uniqueAttendee)){
-                      console.log("createUpdateTimes", i, templateVars.updateTimes[i])
                       DataHelpers.createUpdateTimes(theURL, i, templateVars.updateTimes[i][j]);
                       console.log(" succeed now!");
                     }
