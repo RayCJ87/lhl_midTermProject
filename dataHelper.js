@@ -119,7 +119,6 @@ module.exports = function MakeDataHelpers(knex) {
         .andWhere({start_time: time})
         .then((rows) => {
           let timeslotID = rows[0].id
-          console.log('findTimeslotID timeslotID: ', timeslotID);
           resolve(timeslotID);
         })
       })
@@ -287,7 +286,6 @@ module.exports = function MakeDataHelpers(knex) {
 
   //LINKS ATTENDEE TO TIMESLOT WHEN TIME IS CHECKED
   createGuestList: (attendeeID, url, time) => {
-    console.log('createGuestList attendeeID: ', attendeeID);
     findTimeslotID(url, time)
     .then((timeslotID) => {
       knex('guest_lists')

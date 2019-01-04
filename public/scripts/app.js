@@ -88,7 +88,6 @@ $( document ).ready(function() {
   loadTimeSlots();
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
-  console.log("The URL is: ", urlAddress);
   $('#submitAvailability').on("click", updateAttStatus);
   $.ajax({url: "/api/events/create", data: urlAddress, method: 'PUT'}).done(function(){
       console.log("Success!");
