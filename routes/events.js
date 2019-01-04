@@ -311,7 +311,7 @@ module.exports = function (DataHelpers) {
 // DataHelpers.findEventByURL('a1b2c3d4e5f6g7h8i9j0');
 // DataHelpers.createTimeslot('8RQ154', '2018-12-30T17:50');
 // DataHelpers.findTimeslots('a1b2c3d4e5f6g7h8i9j0');
-
+// DataHelpers.deleteGuestList(1, 'IblNiA', '2019-01-04 22:22');
 
   return router;
 }
