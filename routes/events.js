@@ -13,7 +13,7 @@ let userResponse = [];
 let virtualDB = {};
 let eventURL = '';
 let templateVarsDB = {};
-let templateVars = {'eventInfo': '', 'attendeeInfo': [], 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
+let templateVars = {'eventInfo': '', 'attendeeInfo': '', 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
 
 module.exports = function (DataHelpers) {
 
@@ -53,14 +53,11 @@ module.exports = function (DataHelpers) {
     for (let i = 0; i < totalInfo.eventSchedules.length; i++) {
       userResponse.push(false);
     }
-
-    // const secretURL = totalInfo.theEventInfo.secretURL;
-    // DataHelpers.createEvent(totalInfo.organizers.mail, totalInfo.organizers.name, totalInfo.theEventInfo.title, totalInfo.theEventInfo.description, totalInfo.theEventInfo.location, secretURL)
-
     //create organizer here
     counter = 0;
-    // DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
-    res.render("invite", eventInfo);
+    DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
+    // res.render("invite", eventInfo);
+    res.render("invite");
   });
 
   // redirect to the invite page and store event times.
@@ -80,7 +77,6 @@ module.exports = function (DataHelpers) {
 
     const secretURL = eventURL;
     console.log("About to knex.");
-
     for (let time of virtualDB[eventURL].eventSchedules) {
       let yymmdd = time.toISOString().split('T')[0];
       let hhmm = time.toISOString().split('T')[1].slice(0, 5);
@@ -90,7 +86,6 @@ module.exports = function (DataHelpers) {
     console.log("Event created!");
     res.redirect(`/api/events/${eventURL}`);
   })
-
 
   // redirect to the page with the unique URL
   router.get("/:id", (req, res) => {
@@ -128,24 +123,15 @@ module.exports = function (DataHelpers) {
         })
         .then((templateVars) => {
           DataHelpers.findGuestLists(theURL)
-//feature_midTerm, commented out for testing function to show the guest_lists
-          // .then((guestList) => {
-          //   if (guestList === false) {
-          //     templateVars.attendeeInfo = '';
-          //   } else {
-          //     templateVars.attendeeInfo = {
-          //       name: guestList[0].name,
-          //       email: guestList[0].email,
-          //       availability: guestList[0].availability
-          //     };
-// origin/feature_midTerm ends
-          .then((guests) => {
-            // console.log('guestList: ', guests)
-            // templateVars.attendeeInfo = guests;
-            for (let guest of guests) {
-              templateVars.attendeeInfo.push(guest);
+          .then((guestList) => {
+            let i = 0;
+            let guestArr = [];
+            for (let guest of guestList) {
+              guestArr.push(guest);
+              i++;
             }
-            console.log('templateVars: ', templateVars);
+            console.log('guestArr: ', guestArr);
+            console.log('templateVars at GET :id: ', templateVars);
             let theScheduleData = {};
             let timeArr = virtualDB[theURL].eventSchedules;
             for (let i = 0; i < timeArr.length; i++) {
@@ -158,7 +144,7 @@ module.exports = function (DataHelpers) {
             }
             console.log("The virtualDB at Get bottom: ", virtualDB[theURL])
             console.log("The updates to show on the page: ", theScheduleData);
-            res.render("event_show", templateVars);
+            res.render("event_show", { templateVars, guestArr });
           })
         })
       })
@@ -209,16 +195,14 @@ module.exports = function (DataHelpers) {
           .then((templateVars) => {
             DataHelpers.findGuestLists(theURL)
             .then((guestList) => {
-              // console.log('guestList: ', guestList)
-              if (guestList === false) {
-                templateVars.attendeeInfo = '';
-              } else {
-                templateVars.attendeeInfo = {
-                  name: guestList[0].name,
-                  email: guestList[0].email,
-                  availability: guestList[0].availability
-                };
+              let i = 0;
+              let guestArr = [];
+              for (let guest of guestList) {
+                guestArr.push(guest);
+                i++;
               }
+              console.log('guestArr: ', guestArr);
+              console.log('templateVars at PUT :id: ', templateVars);
               /* creat a loop that add guestlists to each timeslot and return a new object which will be rendered
               to the event_show file.*/
               let attGuestList = [];
@@ -287,7 +271,7 @@ module.exports = function (DataHelpers) {
               // console.log("attGuestList = ", attGuestList);
               console.log("Update times: ", templateVars.updateTimes);
               console.log('templateVars: ', templateVars);
-              res.render("event_show", templateVars);
+              res.render("event_show", { templateVars, guestArr });
             })
           })
         })

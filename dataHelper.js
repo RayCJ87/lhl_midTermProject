@@ -175,36 +175,32 @@ module.exports = function MakeDataHelpers(knex) {
       })
     };
 
-    const showGuestLists = (guestList) => {
-      class Guest {
+    // const showGuestLists = (guestList) => {
+    //   class Guest {
 
-        constructor(attendeeName, attendeeEmail) {
-          this.guestName = attendeeName;
-          this.guestEmail = attendeeEmail;
-          this.availability = [];
-          // this.guestTimes = attendeeTimes;
-        }
+    //     constructor(attendeeName, attendeeEmail) {
+    //       this.guestName = attendeeName;
+    //       this.guestEmail = attendeeEmail;
+    //       this.availability = [];
+    //     }
 
-        addAvailability(times) {
-          times.sort((a, b) => a - b);
-          console.log('times: ', times);
-          for (let time of times) {
-            this.availability.push(time);
-          }
-        }
+    //     addAvailability(times) {
+    //       for (let time of times) {
+    //         this.availability.push(time);
+    //       }
+    //     }
 
-      }
+    //   }
 
-      const guests = [];
-      for (let attendee of guestList) {
-        let guest = new Guest(attendee.name, attendee.email);
-        guest.addAvailability(attendee.times);
-        guests.push(guest);
-      }
-      console.log('showGuestLists guests: ', guests);
+    //   const guests = [];
+    //   for (let attendee of guestList) {
+    //     let guest = new Guest(attendee.name, attendee.email);
+    //     guest.addAvailability(attendee.times);
+    //     guests.push(guest);
+    //   }
 
-      return guests;
-    }
+    //   return guests;
+    // }
 
     //SHOWS ALL TIMESLOTS THAT AN ATTENDEE HAS SELECTED FOR A SPECIFIC EVENT
     // const showRSVP = (url, email) => {
@@ -245,7 +241,7 @@ module.exports = function MakeDataHelpers(knex) {
     findEventByURL: findEventByURL,
     findTimeslotID: findTimeslotID,
     findAttendeeIDByEmail: findAttendeeIDByEmail,
-    showGuestLists: showGuestLists,
+    // showGuestLists: showGuestLists,
     // showRSVP: showRSVP,
 
     //SAVES WEBSITE INPUT IN SERVER MEMORY
@@ -355,9 +351,8 @@ module.exports = function MakeDataHelpers(knex) {
           .where({event_id: eventID})
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
-            console.log('findGuestLists guestList: ', guestList);
-            // resolve(guestList);
-            resolve(showGuestLists(guestList));
+            resolve(guestList);
+            // resolve(showGuestLists(guestList));
           })
         })
       });

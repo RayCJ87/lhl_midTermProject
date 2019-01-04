@@ -108,7 +108,6 @@ $( document ).ready(function() {
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
   console.log("The URL is: ", urlAddress);
-  console.log("got it!");
   // Should show host and event info on the page
   $('#submitAvailability').on("click", updateAttStatus);
   $.ajax({url: "/api/events/create", data: urlAddress, method: 'PUT'}).done(function(){
