@@ -61,6 +61,20 @@ module.exports = function MakeDataHelpers(knex) {
     })
   };
 
+  //ADDS an updated time according to attendees' reqponse
+  const createUpdateTimes = (url, time, attendeeName) => {
+    return new Promise((resolve) => {
+      knex('updatetimes').insert({
+        url: url,
+        startTime: time,
+        name: attendeeName
+      })
+      .then(() => {
+        console.log("create updateTime succeed!");
+      })
+    })
+  };
+
   //FINDS ATTENDEE BY EMAIL TO PREVENT DUPLICATE ATTENDEES
   const doesAttendeeExist = (attendeeEmail, attendeeName) => {
     return new Promise ((resolve) => {
@@ -94,7 +108,6 @@ module.exports = function MakeDataHelpers(knex) {
       knex('events')
       .select('*')
       .where({url: url})
-      .limit(1)
       .then((rows) => {
         let event = rows[0]
         if (event) {
@@ -108,12 +121,23 @@ module.exports = function MakeDataHelpers(knex) {
     });
   };
 
+  const findupdateTimesByURL = (url) => {
+  return new Promise((resolve, reject) => {
+    knex('updatetimes')
+    .select('*')
+    .where({url: url})
+    .then((rows) => {
+      let theUpdateTimes = rows
+      resolve(theUpdateTimes);
+    })
+  });
+  };
+
   const findEventIDByURL = (url) => {
     return new Promise((resolve) => {
       knex('events')
       .select('*')
       .where({url: url})
-      .limit(1)
       .then((rows) => {
         let eventID = rows[0].id
           resolve(eventID);
@@ -161,60 +185,6 @@ module.exports = function MakeDataHelpers(knex) {
       })
     };
 
-    const showGuestLists = (guestList) => {
-      console.log('showGuestLists guestList: ', guestList);
-      class Guest {
-
-        constructor(attendeeName, attendeeEmail) {
-          this.guestName = attendeeName;
-          this.guestEmail = attendeeEmail;
-          this.availability = [];
-        }
-
-        // addAvailability(times) {
-          // times = times.toString;
-          // times.sort((a, b) => a - b);
-          // console.log('times: ', times);
-          // for (let time of times) {
-            // this.availability.push(time);
-          // }
-        // }
-
-      }
-      const guests = [];
-      for (let guest of guestList) {
-        guest = new Guest(guest.name, guest.email);
-        // guest.times = guest.times;
-        console.log('typeof times: ', guest.times);
-        guests.push(guest);
-      }
-      console.log('guests: ', guests);
-      return guests;
-
-      // if (guestList.length >= 1) {
-      //   console.log('function orig guestList: ', guestList)
-      //   let names = [];
-      //   let emails = [];
-      //   let availabilities = [];
-      //   for (let guest of guestList) {
-      //     names.push(guest.name);
-      //     emails.push(guest.email);
-      //     availabilities.push(guest.timeSelection);
-      //     //get value of timeSelection [array] [array]
-      //   };
-      //   guestList = {
-      //     name: names,
-      //     email: emails,
-      //     availability: availabilities
-      //   };
-      //   console.log('function guestList: ', guestList)
-      //   resolve(guestList);
-      // } else {
-      //   guestList = [ { 'name': '', 'email': '', 'availability': '' } ];
-      //   resolve(guestList);
-      // }
-    }
-
     //SHOWS ALL TIMESLOTS THAT AN ATTENDEE HAS SELECTED FOR A SPECIFIC EVENT
     // const showRSVP = (url, email) => {
     //   return new Promise((resolve) => {
@@ -240,6 +210,37 @@ module.exports = function MakeDataHelpers(knex) {
     //     })
     //   })
     // };
+    const showGuestLists = (guestList) => {
+
+      class Guest {
+
+        constructor(attendeeName, attendeeEmail) {
+          this.guestName = attendeeName;
+          this.guestEmail = attendeeEmail;
+          this.availability = [];
+          // this.guestTimes = attendeeTimes;
+        }
+
+        addAvailability(times) {
+          times.sort((a, b) => a - b);
+          console.log('times: ', times);
+          for (let time of times) {
+            this.availability.push(time);
+          }
+        }
+
+      }
+
+      const guests = [];
+      for (let attendee of guestList) {
+        let guest = new Guest(attendee.name, attendee.email);
+        guest.addAvailability(attendee.times);
+        guests.push(guest);
+      }
+      console.log('showGuestLists guests: ', guests);
+
+      return guests;
+    }
 
 
 
@@ -254,6 +255,8 @@ module.exports = function MakeDataHelpers(knex) {
     findEventByURL: findEventByURL,
     findAttendeeIDByEmail: findAttendeeIDByEmail,
     showGuestLists: showGuestLists,
+    findUpdateTimesByURL: findupdateTimesByURL,
+    createUpdateTimes: createUpdateTimes,
     // showRSVP: showRSVP,
 
     //SAVES WEBSITE INPUT IN SERVER MEMORY
@@ -291,7 +294,7 @@ module.exports = function MakeDataHelpers(knex) {
     },
 
     //ADDS EVENT TO DB
-    createEvent: (email, organizerName, eventName, description, location, secretURL) => {
+    createEvent: (email, organizerName, eventName, description, location, url) => {
       doesOrganizerExist(email, organizerName)
       .then((organizerID) => {
         knex('organizers')
@@ -302,9 +305,8 @@ module.exports = function MakeDataHelpers(knex) {
           return organizerID;
         })
         .then((organizerID) => {
-          console.log('************** EVENT CREATED ****************');
           return knex('events').insert({
-            url: secretURL,
+            url: url,
             name: eventName,
             description: description,
             location: location,
@@ -327,6 +329,18 @@ module.exports = function MakeDataHelpers(knex) {
       })
     },
 
+    deleteGuestInUpdateTimes : (url, time, name) => {
+      knex('updatetimes')
+        .select('*')
+        .where({url: url})
+        .andWhere({name: name})
+        .andWhere({startTime: time})
+        .del()
+        .then (() =>{
+            console.log("deleted!")
+        })
+    },
+
     //PULLS ALL TIMESLOTS DATA FOR AN EVENT FROM DB
     findTimeslots: (url) => {
       return new Promise((resolve) => {
@@ -347,6 +361,46 @@ module.exports = function MakeDataHelpers(knex) {
       })
     },
 
+    //LINKS ATTENDEE TO SELECTED TIMESLOTS
+    //get attendee from email;
+    //page shows list of all timeslots available,
+    //checkmarks by ones already chosen by attendee;
+    //on submit, add new checkmarks to guest_lists
+    // createGuestList: (attendeeEmail, attendeeName, availabilityArr) => {
+    //   doesAttendeeExist(attendeeEmail, attendeeName)
+    //   .then((attendeeID) => {
+
+    //   })
+    // },
+
+      //LINKS ATTENDEE TO TIMESLOT WHEN TIME IS CHECKED
+    createGuestList: (attendeeID, url, time) => {
+      findTimeslotID(url, time)
+      .then((timeslotID) => {
+        return knex('guest_lists').insert({
+          attendee_id: attendeeID,
+          timeslot_id: timeslotID
+        })
+      })
+      console.log('createGuestList is running');
+    },
+
+    //DELETES LINK BETWEEN ATTENDEE AND TIMESLOT WHEN TIME IS UNCHECKED
+    deleteGuestList: (attendeeID, url, time) => {
+      findTimeslotID(url, time)
+      .then((timeslotID) => {
+        knex('attendees')
+        .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
+        .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+        .select('guest_lists')
+        .where({attendee_id: attendeeID})
+        .andWhere({timeslot_id: timeslotID})
+        .del()
+      })
+      console.log('deleteGuestList is running');
+    },
+
+
     // PULLS ALL GUEST_LISTS NAMES, EMAILS, AND TIMES FOR AN EVENT FROM DB
     findGuestLists: (url) => {
       return new Promise((resolve, reject) => {
@@ -358,12 +412,13 @@ module.exports = function MakeDataHelpers(knex) {
           .select([
             'attendees.name',
             'attendees.email',
-            knex.raw('to_json(array_agg((timeslots.start_time))) as times')
+            knex.raw('array_agg(timeslots.start_time) as times')
             ])
           .where({event_id: eventID})
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
-            console.log('guestList: ', guestList);
+            console.log('findGuestLists guestList: ', guestList);
+            // resolve(guestList);
             resolve(showGuestLists(guestList));
           })
         })

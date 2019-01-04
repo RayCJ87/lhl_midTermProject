@@ -1,4 +1,4 @@
-# Node Skeleton
+<!-- # Node Skeleton
 
 ## Project Setup
 
@@ -21,9 +21,34 @@
 6. Run the seed: `npm run knex seed:run`
   - Check the seeds file to see what gets seeded in the DB
 7. Run the server: `npm run local`
-8. Visit `http://localhost:8080/`
+8. Visit `http://localhost:8080/` -->
+
+
+#Schoodle
+
+Schoodle is great for scheduling events within a group.
+
+
+## Getting Started
+1. Fork and then clone this repository.
+2. Install dependencies using `npm i` command.
+3. Run the server using `npm run local` command.
+4. Visit <http://localhost:8080/> in your browser
 
 ## Dependencies
-
 - Node 5.10.x or above
 - NPM 3.8.x or above
+- Body Parser
+- Bootstrap
+- dotenv
+- EJS
+- Express
+- jQuery
+- Knex
+- Moment
+- Morgan
+- Sass
+- PG
+
+## Preview
+ - Home page
