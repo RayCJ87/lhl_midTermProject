@@ -9,7 +9,6 @@ const knex        = require("knex")(knexConfig[ENV]);
 let totalInfo = {};
 let counter = 0;
 let theURL = '';
-// let userResponse = [];
 let virtualDB = {};
 let eventURL = '';
 let templateVarsDB = {};
@@ -27,12 +26,12 @@ module.exports = function (DataHelpers) {
   router.put("/create", (req, res) => {
     if (counter === 0 && totalInfo.hasOwnProperty('organizers')) {
       eventURL = req.body.secretURL
-      totalInfo.theEventInfo["secretURL"] = req.body.secretURL;
       virtualDB[eventURL] = totalInfo;
       DataHelpers.createEvent(virtualDB[eventURL].organizers.mail, virtualDB[eventURL].organizers.name, virtualDB[eventURL].theEventInfo.title, virtualDB[eventURL].theEventInfo.description, virtualDB[eventURL].theEventInfo.location, eventURL);
       counter++;
     }
   })
+
 
   //store event, host information.
   router.post("/create", (req, res) => {
@@ -51,13 +50,13 @@ module.exports = function (DataHelpers) {
     sortedArr.sort((a, b) => a - b)
     totalInfo.eventSchedules = sortedArr;
     for (let i = 0; i < totalInfo.eventSchedules.length; i++) {
-      // userResponse.push(false);
     }
     //create organizer here
     counter = 0;
     DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
     res.render("invite");
   });
+
 
   // redirect to the invite page and store event times.
   router.get("/invite", (req, res) => {
@@ -79,23 +78,20 @@ module.exports = function (DataHelpers) {
     res.json(theScheduleData);
   })
 
+
   // store guest names and mails and redirect to event page.
   router.post("/invite", (req, res) => {
-
-    const secretURL = eventURL;
-    console.log("About to knex.");
     for (let time of virtualDB[eventURL].eventSchedules) {
       DataHelpers.createTimeslot(eventURL, time)
     };
-    console.log("Event created!");
     res.redirect(`/api/events/${eventURL}`);
   })
 
+
   // redirect to the page with the unique URL
   router.get("/:id", (req, res) => {
-    let dateSelection = {};
     theURL = req.params.id;
-    console.log("about to knex here!!")
+
     //show event info on page:
     if (!templateVarsDB.hasOwnProperty(theURL)) {
       let templateVars = {'eventInfo': '', 'timeslotInfo': '', 'theAvailability': [] , 'updateTimes': ''};
@@ -130,7 +126,7 @@ module.exports = function (DataHelpers) {
               let dynamicAvailability = [];
               if (templateVars["updateTimes"] == '' ) {
                 for (let i = 0; i < theTimes.length; i++) {
-                  if (i == 0){
+                  if (i === 0){
                     templateVars["updateTimes"] = {};
                   }
                   if (!templateVars.updateTimes.hasOwnProperty(theTimes[i].startTime)){
@@ -138,8 +134,7 @@ module.exports = function (DataHelpers) {
                   }
                 }
                 for (let i = 0; i < theTimes.length; i++) {
-                  if (theTimes[i].name.length >0 ){
-                      if (!templateVars.updateTimes[theTimes[i].startTime].includes(theTimes[i].name))
+                  if (theTimes[i].name.length >0 && !templateVars.updateTimes[theTimes[i].startTime].includes(theTimes[i].name)){
                           templateVars.updateTimes[theTimes[i].startTime].push(theTimes[i].name);
                     }
                 }
@@ -165,6 +160,7 @@ module.exports = function (DataHelpers) {
     })
   })
 
+
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
@@ -172,9 +168,7 @@ module.exports = function (DataHelpers) {
     Promise.resolve(DataHelpers.findEventByURL(theURL))
       .then((event) => {
         DataHelpers.joinOrganizer(theURL)
-
         .then((organizer) => {
-
           templateVarsDB[theURL].eventInfo = {
             title: event.name,
             description: event.description,
@@ -197,7 +191,6 @@ module.exports = function (DataHelpers) {
             .then(() => {
               /* creat a loop that add guestlists to each timeslot and return a new object which will be rendered
               to the event_show file.*/
-              let attGuestList = [];
               let dynamicAvailability = [];
               let uniqueAttendee = `${req.body.attName}(${req.body.attMail})`;
 
@@ -208,11 +201,7 @@ module.exports = function (DataHelpers) {
                   for (let i = 0; i < req.body.attTimes.length; i++) {
                     templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
                     if (req.body.attTimes[i] == 'true' ) {
-                      // userResponse[i] = true;
                       templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
-                    }
-                    else{
-                      // userResponse[i] = false;
                     }
                   }
                   for (let j in templateVars.updateTimes){
@@ -234,7 +223,6 @@ module.exports = function (DataHelpers) {
                 for (let k = 0; k < templateVars.timeslotInfo.time.length; k++) {
                   middle[templateVars.timeslotInfo.time[k]] = req.body.attTimes[k];
                 }
-
                 for(let k in middle){
                   if(templateVars["updateTimes"][k].length != 0 && middle[k] === "false"){
                       DataHelpers.deleteGuestInUpdateTimes(theURL, k, uniqueAttendee);
@@ -248,9 +236,7 @@ module.exports = function (DataHelpers) {
                     }
                   } else{
                     if (req.body.attTimes[i] == 'true' && !templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].includes(uniqueAttendee)){
-                      // userResponse[i] = true;
                       templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
-                      attGuestList.push(uniqueAttendee);
                     }
                   }
                 }
