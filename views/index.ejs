@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
@@ -19,14 +19,6 @@
   </head>
 
   <header><% include partials/_header %></header>
-
-<!--   <div class="icon-bar">
-    <a href="https://www.facebook.com" class="facebook" target="_blank"><i class="fa fa-facebook"></i></a>
-    <a href="https://www.twitter.com" class="twitter" target="_blank"><i class="fa fa-twitter"></i></a>
-    <a href="https://www.google.com" class="google" target="_blank"><i class="fa fa-google"></i></a>
-    <a href="https://www.linkedin.com" class="linkedin" target="_blank"><i class="fa fa-linkedin"></i></a>
-    <a href="https://www.youtube.com" class="youtube" target="_blank"><i class="fa fa-youtube"></i></a>
-  </div> -->
 
 <body class="bodyLayout">
 
@@ -42,9 +34,9 @@
   <div class="wrapper">
 
   <article>
-    <div class="jumbotron" >
+    <div class="jumbotron" class="fitContent">
       <h4 class="sub-title">Create an event!</h4>
-      <h4 class="sub-title">Step 1 of 3</h4>
+      <h4 class="sub-title">Step 1</h4>
       <form action="/api/events/create" method="POST">
         <div class="eventInput">
         <table>

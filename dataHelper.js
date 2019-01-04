@@ -176,7 +176,6 @@ module.exports = function MakeDataHelpers(knex) {
     };
 
     const showGuestLists = (guestList) => {
-
       class Guest {
 
         constructor(attendeeName, attendeeEmail) {

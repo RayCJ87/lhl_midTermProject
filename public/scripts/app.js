@@ -14,6 +14,7 @@ function loadTimeSlots() {
 
 //show timeslots selection
 function composeEvent(){
+  $('.title').slideToggle(100)
   $('.eventSetup').slideToggle(100)
 }
 
@@ -38,7 +39,6 @@ function copyUrl(){
   theDoc.select();
   document.execCommand("copy");
 }
-
 
 // generate a random string as new event id which can be used as URL
 function generateRandomString() {
@@ -120,5 +120,13 @@ $( document ).ready(function() {
     $( '.content1' ).slideDown(500)
     $( '#start' ).hide()
   })
+
+  $( '#thankYou' ).hide()
+  $( '#doneBtn' ).on('click', function(){
+    $(' .eventWrapper ').hide()
+    $(' #thankYou ').fadeIn('slow').delay( 3000 ).fadeOut('slow');
+    window.location.href = "http://localhost:8080";
+  })
+
 
 })

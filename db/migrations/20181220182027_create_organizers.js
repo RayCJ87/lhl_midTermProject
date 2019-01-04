@@ -1,4 +1,3 @@
-
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('organizers', function (table) {
     table.increments('id').unsigned().notNullable();

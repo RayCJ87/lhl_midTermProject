@@ -1,4 +1,3 @@
-
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('guest_lists', function (table) {
     table.integer('attendee_id').unsigned().notNullable();

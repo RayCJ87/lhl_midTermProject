@@ -2,6 +2,8 @@
 body {
   background-color: #EEE;
   min-height: 400px;
+  padding-top: 30px;
+  padding-bottom: 20px;
   h1 {
     color: #036;
   }
@@ -30,6 +32,11 @@ body .title {
   background-blend-mode: lighten;
 }
 
+.eventWrapper {
+  padding-top: 30px;
+  /*overflow: scroll;*/
+}
+
 .bodyLayout #start {
   display: block;
   margin: auto;
@@ -40,8 +47,8 @@ body .title {
   padding-top: 20px;
   opacity: 0.85;
   width: 70%;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 15px;
+  padding-left: 15px;
   float: center;
   /*shadow*/
   position: relative;
@@ -50,6 +57,8 @@ body .title {
   /*centered*/
   margin:0 auto;
   max-width: 600px;
+  max-height: 610px;
+  overflow: auto;
 }
 
 .wrapper {
@@ -155,26 +164,46 @@ body .title {
 .facebook {
   background: #3B5998;
   color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
 }
 
 .twitter {
   background: #55ACEE;
   color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
 }
 
 .google {
   background: #dd4b39;
   color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
 }
 
 .linkedin {
   background: #007bb5;
   color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
 }
 
 .youtube {
   background: #bb0000;
   color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
 }
 
 
@@ -187,8 +216,8 @@ footer {
   height: 5%;
   color: white;
   text-align: center;
-  /*vertical-align: center;*/
   background-color: #333;
+  padding-top: 5px;
 
 }
 
@@ -209,6 +238,23 @@ footer {
 .formLabel {
   vertical-align: top;
 }
+
+#doneBtn {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+
+#submitAvailability {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+
 
 /*submit availability*/
 /*.switch-yes-no {
@@ -262,6 +308,8 @@ footer {
 .switch-yes-no .switch-input:checked ~ .switch-label:after {
   transform: rotateY(0)
 }*/
+
+
 
 
 
