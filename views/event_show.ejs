@@ -58,7 +58,9 @@
         <h4>Who's attending:</h4>
         <p class="attendeeStatus">
           <% for (let i of guestArr) { %>
-              <ul><li><%= i %></li></ul>
+              <ul>
+                <li><%= i.name + " - " + i.email + "; availability: " + i.times %></li>
+              </ul>
           <% } %>
         </p>
       </section>
