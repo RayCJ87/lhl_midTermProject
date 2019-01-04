@@ -119,6 +119,7 @@ module.exports = function MakeDataHelpers(knex) {
         .andWhere({start_time: time})
         .then((rows) => {
           let timeslotID = rows[0].id
+          console.log('findTimeslotID timeslotID: ', timeslotID);
           resolve(timeslotID);
         })
       })
@@ -286,11 +287,25 @@ module.exports = function MakeDataHelpers(knex) {
 
   //LINKS ATTENDEE TO TIMESLOT WHEN TIME IS CHECKED
   createGuestList: (attendeeID, url, time) => {
+    console.log('createGuestList attendeeID: ', attendeeID);
     findTimeslotID(url, time)
     .then((timeslotID) => {
-      return knex('guest_lists').insert({
-        attendee_id: attendeeID,
-        timeslot_id: timeslotID
+      knex('guest_lists')
+      .join('attendees', 'attendees.id', '=', 'guest_lists.attendee_id')
+      .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
+      .select([
+        'attendee_id',
+        'timeslot_id'
+        ])
+      .where({attendee_id: attendeeID})
+      .andWhere({timeslot_id: timeslotID})
+      .then((rows) => {
+        if (rows.length < 1) {
+          return knex('guest_lists').insert({
+            attendee_id: attendeeID,
+            timeslot_id: timeslotID
+          })
+        }
       })
     })
   },

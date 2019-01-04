@@ -27,18 +27,16 @@
     <article class="eventWrapper">
     <main class="container">
       <div class="jumbotron">
-      <!-- <h4 class="sub-title">Step 3 of 3</h4> -->
 
   <!-- Event Information -->
       <section class="eventInformation">
-        <h3 class="eventName"><%= eventInfo.title %></h4>
-        <h4 class="organizerName">Hosted by: <%= eventInfo.organizerName %></h4>
-        <h4 class="eventLocation">Location: <%= eventInfo.location %></h4>
-        <h4 class="eventDescription"><%= eventInfo.description %></h4>
+        <h3 class="eventName"><%= templateVars.eventInfo.title %></h4>
+        <h4 class="organizerName">Hosted by: <%= templateVars.eventInfo.organizerName %></h4>
+        <h4 class="eventLocation">Location: <%= templateVars.eventInfo.location %></h4>
+        <h4 class="eventDescription"><%= templateVars.eventInfo.description %></h4>
       </section>
 
   <!-- RSVP Button -->
-      <!-- slideToggle form (new)  -->
       <div id="attendeeRSVP" >
         <section class="toggleRSVP">
           <label class="formLabel">Name:</label>
@@ -52,18 +50,6 @@
           <button class="btn btn-success" id="submitAvailability" >Confirm</button>
         </section>
 
-<!-- ****ORIGINAL**** -->
-        <!-- List of Attendees -->
-        <!-- <section class="attendeeList">
-          <h3>Who's attending:</h3>
-          <p class="attendeeStatus">
-            <p><%= theAvailability %></p>
-            <p><%= attendeeInfo.name %></p>
-            <p><%= attendeeInfo.email %></p>
-            <p><%= attendeeInfo.availability %></p>
-          </p>
-        </section> -->
-<!-- ****ORIGINAL ENDS**** -->
       </div>
 
 
@@ -71,7 +57,7 @@
       <section class="attendeeList">
         <h4>Who's attending:</h4>
         <p class="attendeeStatus">
-          <% for (let i of theAvailability) { %>
+          <% for (let i of guestArr) { %>
               <ul><li><%= i %></li></ul>
           <% } %>
         </p>

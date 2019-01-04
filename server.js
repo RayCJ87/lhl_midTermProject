@@ -26,9 +26,6 @@ app.use(morgan('dev'));
 // Log knex SQL queries to STDOUT as well
 app.use(knexLogger(knex));
 
-let timeSlotCount = [];
-
-
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/styles", sass({
@@ -37,7 +34,6 @@ app.use("/styles", sass({
   debug: true,
   outputStyle: 'expanded'
 }));
-// app.use(express.static("public"));
 
 app.use(express.static("public"));
 
@@ -48,36 +44,6 @@ app.use("/api/events", eventsRoutes);
 app.get("/", (req, res) => {
   res.render("index");
 });
-
-// //organizer will be redirected after input personal information and description of event
-// app.post("/", (req, res) => {
-
-
-//   res.redirect("/createEvent");
-// });
-
-// //organizer inputs attendee information and create event
-// app.get("/createEvent", (req, res) => {
-//   // const getNewEventURL = generateRandomString();
-
-//   res.render("invite");
-// })
-
-app.post("/api/events/create", (req, res) => {
-    // DataHelpers.createOrganizer(req.body.theHostMail, req.body.theHostName)
-    knex("organizers").insert({
-      name: req.body.theHostName,
-      mail: req.body.theHostMail
-    })
-    .then(function(){
-      console.log("successfully added an organizer.")
-      knex.select().from('organizers')
-        .then(function(organizers) {
-          console.log("done!");
-          req.send(organizers);
-        })
-    })
-})
 
 app.get("/u/:id", (req, res) => {
   res.redirect("/api/events/" + req.params.id);

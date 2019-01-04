@@ -57,18 +57,23 @@ module.exports = function (DataHelpers) {
     counter = 0;
     DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
     // res.render("invite", eventInfo);
-    res.render("invite");
+    res.render("invite", eventInfo);
   });
 
   // redirect to the invite page and store event times.
   router.get("/invite", (req, res) => {
     let theScheduleData = {};
     if (virtualDB[theURL]){
-        let sortedArr = virtualDB[theURL].eventSchedules;
-        for (let i = 0; i < sortedArr.length; i++){
-          theScheduleData[i] = sortedArr[i].toISOString().split('T')[0] + ' ' + sortedArr[i].toISOString().split('T')[1].slice(0, 5);
-        }
+      let sortedArr = virtualDB[theURL].eventSchedules;
+      for (let i = 0; i < sortedArr.length; i++){
+        theScheduleData[i] = sortedArr[i].toISOString().split('T')[0] + ' ' + sortedArr[i].toISOString().split('T')[1].slice(0, 5);
       }
+    } else if (templateVarsDB[theURL]) {
+      let sortedArr = templateVarsDB[theURL].timeslotInfo.time;
+      for (let i = 0; i < sortedArr.length; i++) {
+        theScheduleData[i] = sortedArr[i].toISOString().split('T')[0] + ' ' + sortedArr[i].toISOString().split('T')[1].slice(0, 5);
+      }
+    }
     res.json(theScheduleData);
   })
 
@@ -78,10 +83,8 @@ module.exports = function (DataHelpers) {
     const secretURL = eventURL;
     console.log("About to knex.");
     for (let time of virtualDB[eventURL].eventSchedules) {
-      let yymmdd = time.toISOString().split('T')[0];
-      let hhmm = time.toISOString().split('T')[1].slice(0, 5);
-      time = yymmdd + " " + hhmm;
-      DataHelpers.createTimeslot(eventURL, time)
+      time = time.toISOString().split('T')[0] + ' ' + time.toISOString().split('T')[1].slice(0, 5);
+      DataHelpers.createTimeslot(eventURL, time);
     };
     console.log("Event created!");
     res.redirect(`/api/events/${eventURL}`);
@@ -110,7 +113,7 @@ module.exports = function (DataHelpers) {
           organizerName: organizer
         };
         const templateVars = templateVarsDB[theURL];
-        console.log("The templateVarsDB here -->", templateVarsDB);
+        console.log("The templateVars 1st GET: ", templateVars);
         return templateVars;
       })
       .then((templateVars) => {
@@ -145,6 +148,7 @@ module.exports = function (DataHelpers) {
             console.log("The virtualDB at Get bottom: ", virtualDB[theURL])
             console.log("The updates to show on the page: ", theScheduleData);
             res.render("event_show", { templateVars, guestArr });
+            // res.render("event_show", templateVars);
           })
         })
       })
@@ -153,22 +157,12 @@ module.exports = function (DataHelpers) {
 
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
-    console.log("the urls: ", theURL);
+    console.log("PUT /:id theURL: ", theURL);
     console.log('req.body: ', req.body);
-    DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName)
-    // .then((attendeeID) => {
-    //   for (let i = 0; i < req.body.attTimes.length; i++) {
-    //     if (req.body.attTimes === 'true') {
-    //       dataHelpers.createGuestList(attendeeID, theURL, templateVars.timeslotInfo.time[i])
-    //     } else {
-    //       dataHelpers.deleteGuestList(attendeeID, theURL, templateVars.timeslotInfo.time[i])
-    //     }
-    //   }
-    // })
+    let urlString = theURL.toString();
 
 // =======
 
-    console.log("attendee created!");
     Promise.resolve(DataHelpers.findEventByURL(theURL))
       .then((event) => {
         DataHelpers.joinOrganizer(theURL)
@@ -201,6 +195,23 @@ module.exports = function (DataHelpers) {
                 guestArr.push(guest);
                 i++;
               }
+              return guestArr;
+            })
+            .then((guestArr) => {
+              DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName)
+              .then((attendeeID) => {
+                console.log('req.body.attTimes[0]: ', req.body.attTimes[0]);
+                console.log('testing params 3: ', templateVars.timeslotInfo.time);
+                console.log('testing params 1 attendeeID: ', attendeeID, typeof attendeeID);
+                for (let i = 0; i < req.body.attTimes.length; i++) {
+                  if (req.body.attTimes[i] === 'true') {
+                    DataHelpers.createGuestList(attendeeID, urlString, templateVars.timeslotInfo.time[i])
+                  } else if (req.body.attTimes[i] === 'false') {
+                    DataHelpers.deleteGuestList(attendeeID, urlString, templateVars.timeslotInfo.time[i])
+                  }
+                }
+              // })
+            // })
               console.log('guestArr: ', guestArr);
               console.log('templateVars at PUT :id: ', templateVars);
               /* creat a loop that add guestlists to each timeslot and return a new object which will be rendered
@@ -210,68 +221,69 @@ module.exports = function (DataHelpers) {
               let uniqueAttendee = `${req.body.attName}(${req.body.attMail})`;
 
               //Update templateVars.updateTimes where data is stored at the back end.
-              if (templateVars["updateTimes"] == '') {
-                // console.log("make a new updateTimes");
-                  templateVars["updateTimes"] = {};
-                  for (let i = 0; i < req.body.attTimes.length; i++) {
-                    templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
-                    if (req.body.attTimes[i] == 'true' ) {
-                      userResponse[i] = true;
-                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
-                      attGuestList.push(uniqueAttendee);
-                    }
-                    else{
-                      userResponse[i] = false;
-                    }
-                  }
-                  for (let j in templateVars.updateTimes){
-                    let element = `${j}`;
-                    for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
-                        if (i === 0){
-                          element+= `: ${templateVars.updateTimes[j][i]} `;
-                        }
-                        else {
-                          element+= `, ${templateVars.updateTimes[j][i]} `;
-                        }
-                    }
-                    dynamicAvailability.push(element);
-                  }
-              }
-              else {
-                for (let i = 0; i < req.body.attTimes.length; i++) {
-                  if (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].length != 0 && req.body.attTimes[i] == 'false') {
-                    if ((templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).includes(uniqueAttendee)){
-                      let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexOf(uniqueAttendee);
-                      (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).splice(deleteGuest, 1);
-                    }
-                  } else{
-                    if (req.body.attTimes[i] == 'true' && !templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].includes(uniqueAttendee)){
-                      userResponse[i] = true;
-                      templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
-                      attGuestList.push(uniqueAttendee);
-                    }
-                  }
-                }
-                for (let j in templateVars.updateTimes){
-                  let element = `${j}  `;
-                  for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
-                    if (i === 0){
-                      element+= `: ${templateVars.updateTimes[j][i]} `;
-                    }
-                    else {
-                      element+= `, ${templateVars.updateTimes[j][i]} `;
-                    }
-                  }
-                  dynamicAvailability.push(element);
-                }
-              }
-              //the Availability shows the availability that's been shown on the web
-              templateVars.theAvailability = dynamicAvailability;
-              console.log("the availability: ", dynamicAvailability);
-              // console.log("attGuestList = ", attGuestList);
-              console.log("Update times: ", templateVars.updateTimes);
-              console.log('templateVars: ', templateVars);
+              // if (templateVars["updateTimes"] == '') {
+              //     templateVars["updateTimes"] = {};
+              //     for (let i = 0; i < req.body.attTimes.length; i++) {
+              //       templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
+              //       if (req.body.attTimes[i] == 'true' ) {
+              //         userResponse[i] = true;
+              //         templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
+              //         attGuestList.push(uniqueAttendee);
+              //       }
+              //       else{
+              //         userResponse[i] = false;
+              //       }
+              //     }
+              //     for (let j in templateVars.updateTimes){
+              //       let element = `${j}`;
+              //       for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
+              //           if (i === 0){
+              //             element+= `: ${templateVars.updateTimes[j][i]} `;
+              //           }
+              //           else {
+              //             element+= `, ${templateVars.updateTimes[j][i]} `;
+              //           }
+              //       }
+              //       dynamicAvailability.push(element);
+              //     }
+              // }
+              // else {
+              //   for (let i = 0; i < req.body.attTimes.length; i++) {
+              //     if (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].length != 0 && req.body.attTimes[i] == 'false') {
+              //       if ((templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).includes(uniqueAttendee)){
+              //         let deleteGuest = (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).indexOf(uniqueAttendee);
+              //         (templateVars["updateTimes"][templateVars.timeslotInfo.time[i]]).splice(deleteGuest, 1);
+              //       }
+              //     } else{
+              //       if (req.body.attTimes[i] == 'true' && !templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].includes(uniqueAttendee)){
+              //         userResponse[i] = true;
+              //         templateVars["updateTimes"][templateVars.timeslotInfo.time[i]].push(uniqueAttendee);
+              //         attGuestList.push(uniqueAttendee);
+              //       }
+              //     }
+              //   }
+              //   for (let j in templateVars.updateTimes){
+              //     let element = `${j}  `;
+              //     for (let i = 0; i < templateVars.updateTimes[j].length; i++) {
+              //       if (i === 0){
+              //         element+= `: ${templateVars.updateTimes[j][i]} `;
+              //       }
+              //       else {
+              //         element+= `, ${templateVars.updateTimes[j][i]} `;
+              //       }
+              //     }
+              //     dynamicAvailability.push(element);
+              //   }
+              // }
+              // //the Availability shows the availability that's been shown on the web
+              // templateVars.theAvailability = dynamicAvailability;
+              // console.log("the availability: ", dynamicAvailability);
+              // // console.log("attGuestList = ", attGuestList);
+              // console.log("Update times: ", templateVars.updateTimes);
+              console.log('templateVars at end: ', templateVars);
+              console.log('guestArr at end: ', guestArr);
               res.render("event_show", { templateVars, guestArr });
+              })
             })
           })
         })
