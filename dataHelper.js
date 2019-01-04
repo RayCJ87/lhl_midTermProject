@@ -6,7 +6,7 @@ module.exports = function MakeDataHelpers(knex) {
 //CALLBACKS:
 //-------------------------------------------------------------
 
-  //ADDS A NEW ORGANIZER
+  //ADDS A NEW ORGANIZER - CB OF doesOrganizerExist
   const createOrganizer = (email, name) => {
     return new Promise((resolve) => {
       knex('organizers').insert({
@@ -25,7 +25,7 @@ module.exports = function MakeDataHelpers(knex) {
     });
   };
 
-  //FINDS ORGANIZER BY EMAIL TO PREVENT DUPLICATE ORGANIZERS
+  //FINDS ORGANIZER BY EMAIL TO PREVENT DUPLICATE ORGANIZERS - CB OF createEvent
   const doesOrganizerExist = (email, name) => {
     return new Promise ((resolve) => {
       knex('organizers')
@@ -42,7 +42,7 @@ module.exports = function MakeDataHelpers(knex) {
     });
   };
 
-  //ADDS A NEW ATTENDEE FROM RSVP FORM
+  //ADDS A NEW ATTENDEE FROM RSVP FORM - CB OF doesAttendeeExist
   const createAttendee = (attendeeEmail, attendeeName) => {
     return new Promise((resolve) => {
       knex('attendees').insert({
@@ -76,16 +76,6 @@ module.exports = function MakeDataHelpers(knex) {
         }
       })
     });
-  };
-
-  //GENERATES RANDOM STRING FOR EVENT URL
-  const generateURL = (num) => {
-    let alphaNumeric = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let randomString = '';
-    for (let i = 0; i < num; i++) {
-      randomString += alphaNumeric.charAt(Math.floor(Math.random() * alphaNumeric.length));
-    }
-    return randomString;
   };
 
   //RETURNS EVENT ROW FROM DB BY URL TO DISPLAY ON EVENT PAGE
@@ -164,70 +154,14 @@ module.exports = function MakeDataHelpers(knex) {
             if (rsvp) {
               let hasRSVP = true;
               resolve(hasRSVP);
-              // console.log('rsvp: ', rsvp)
             } else {
               let hasRSVP = false;
               resolve(hasRSVP);
-              // console.log('no rsvp')
             }
           })
         })
       })
     };
-
-    // const showGuestLists = (guestList) => {
-    //   class Guest {
-
-    //     constructor(attendeeName, attendeeEmail) {
-    //       this.guestName = attendeeName;
-    //       this.guestEmail = attendeeEmail;
-    //       this.availability = [];
-    //     }
-
-    //     addAvailability(times) {
-    //       for (let time of times) {
-    //         this.availability.push(time);
-    //       }
-    //     }
-
-    //   }
-
-    //   const guests = [];
-    //   for (let attendee of guestList) {
-    //     let guest = new Guest(attendee.name, attendee.email);
-    //     guest.addAvailability(attendee.times);
-    //     guests.push(guest);
-    //   }
-
-    //   return guests;
-    // }
-
-    //SHOWS ALL TIMESLOTS THAT AN ATTENDEE HAS SELECTED FOR A SPECIFIC EVENT
-    // const showRSVP = (url, email) => {
-    //   return new Promise((resolve) => {
-    //     findEventIDByURL(url)
-    //     .then((eventID) => {
-    //       knex('attendees')
-    //       .join('guest_lists', 'attendees.id', '=', 'guest_lists.attendee_id')
-    //       .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
-    //       .select('timeslots.start_time')
-    //       .where({email: email})
-    //       .andWhere({event_id: eventID})
-    //       .then((rows) => {
-    //         if (rows[0]) {
-    //           let rsvp = rows;
-    //           // console.log('rsvp: ', rsvp)
-    //           resolve(rsvp);
-    //         } else {
-    //           let rsvp = false;
-    //           // console.log('no rsvp')
-    //           resolve(rsvp);
-    //         }
-    //       })
-    //     })
-    //   })
-    // };
-
 
 
 //-------------------------------------------------------------
@@ -241,12 +175,9 @@ module.exports = function MakeDataHelpers(knex) {
     findEventByURL: findEventByURL,
     findTimeslotID: findTimeslotID,
     findAttendeeIDByEmail: findAttendeeIDByEmail,
-    // showGuestLists: showGuestLists,
-    // showRSVP: showRSVP,
 
     //SAVES WEBSITE INPUT IN SERVER MEMORY
     saveActivityInfo: function(info, callback) {
-      // console.log(1)
       for (let i of info){
         if (i === "organizer"){
           knex("organizer").insert(knex.info.i);
@@ -278,7 +209,7 @@ module.exports = function MakeDataHelpers(knex) {
       });
     },
 
-    //ADDS EVENT TO DB
+    //ADDS EVENT TO DB, ADDS ORGANIZER IF NEW
     createEvent: (email, organizerName, eventName, description, location, secretURL) => {
       doesOrganizerExist(email, organizerName)
       .then((organizerID) => {
@@ -290,7 +221,6 @@ module.exports = function MakeDataHelpers(knex) {
           return organizerID;
         })
         .then((organizerID) => {
-          console.log('************** EVENT CREATED ****************');
           return knex('events').insert({
             url: secretURL,
             name: eventName,
@@ -302,9 +232,6 @@ module.exports = function MakeDataHelpers(knex) {
       })
     },
 
-    //ADDS A NEW TIMESLOT TO DB
-    //***let me know if we need a function to
-    //***check if timeslot already exists
     createTimeslot: (url, startTime) => {
       findEventIDByURL(url)
       .then((eventID) => {
@@ -352,7 +279,6 @@ module.exports = function MakeDataHelpers(knex) {
           .groupBy('attendees.email', 'attendees.name')
           .then((guestList) => {
             resolve(guestList);
-            // resolve(showGuestLists(guestList));
           })
         })
       });
@@ -367,7 +293,6 @@ module.exports = function MakeDataHelpers(knex) {
         timeslot_id: timeslotID
       })
     })
-    console.log('createGuestList is running');
   },
 
   //DELETES LINK BETWEEN ATTENDEE AND TIMESLOT WHEN TIME IS UNCHECKED
@@ -378,13 +303,11 @@ module.exports = function MakeDataHelpers(knex) {
         knex('guest_lists')
         .join('attendees', 'attendees.id', '=', 'guest_lists.attendee_id')
         .join('timeslots', 'guest_lists.timeslot_id', '=', 'timeslots.id')
-        // .select('guest_lists')
         .where({attendee_id: attendeeID})
         .andWhere({timeslot_id: timeslotID})
         .del()
       )
     })
-    console.log('deleteGuestList is running');
   },
 
     //PULLS ALL GUEST_LISTS FOR A SPECIFIC ATTENDEE AND EVENT
