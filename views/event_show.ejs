@@ -75,8 +75,9 @@
           <button class="btn btn-success" id="submitAvalability" type="submit">Confirm</button>
         </section>
 
+<!-- ****ORIGINAL**** -->
         <!-- List of Attendees -->
-        <section class="attendeeList">
+        <!-- <section class="attendeeList">
           <h3>Who's attending:</h3>
           <p class="attendeeStatus">
             <p><%= theAvailability %></p>
@@ -84,7 +85,20 @@
             <p><%= attendeeInfo.email %></p>
             <p><%= attendeeInfo.availability %></p>
           </p>
-        </section>
+        </section> -->
+<!-- ****ORIGINAL ENDS**** -->
+
+
+      <!-- List of Attendees -->
+      <section class="attendeeList">
+        <h3>Who's attending:</h3>
+        <p class="attendeeStatus">
+          <% for (let i of theAvailability) { %>
+          <li><%= i %></li>
+
+          <% } %>
+        </p>
+      </section>
       </div>
 
     </main>

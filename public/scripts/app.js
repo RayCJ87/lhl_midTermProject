@@ -39,6 +39,7 @@ function copyUrl(){
   document.execCommand("copy");
 }
 
+
 // generate a random string as new event id which can be used as URL
 function generateRandomString() {
   const randomKey = "1qaz2wsx3edc4rfv5tgb6yhn7ujm8ik9ol0pQAZWSXEDCRFVTGBYHNUJMIKOLP";
@@ -52,48 +53,48 @@ function generateRandomString() {
 
 //send attendee info and selected timeslots to back end.
 function updateAttStatus(){
-  if ($('#newAttendeeMail').val() && $('#newAttendeeName').val()) {
+    if ($('#newAttendeeMail').val() && $('#newAttendeeName').val()){
 
-    console.log('updateAttStatus in app.js - $(.scheduleList): ', $('.scheduleList'));
-    console.log("updateAttStatus in app.js - The checkbox: ", $('.scheduleList .switchToggle'));
-    console.log("updateAttStatus in app.js - The number is ", $('.scheduleList .switchToggle').length);
-    let attTimeUpdate = {}
-    for (let i = 0; i < $('.scheduleList .switchToggle').length; i++) {
-      if (document.getElementById(`box${i}`).checked == true) {
-        attTimeUpdate[i] = true;
-        console.log("The box is:", document.getElementById(`box${i}`), "And", document.getElementById(`box${i}`).closest('li'));
-        console.log("The time update is: ", attTimeUpdate);
+      console.log($('.scheduleList'));
+      console.log("The checkbox: ", $('.scheduleList .switchToggle'));
+      console.log("The number is ", $('.scheduleList .switchToggle').length);
+      let attTimeUpdate = {}
+      for (let i = 0; i < $('.scheduleList .switchToggle').length; i++) {
+        if (document.getElementById(`box${i}`).checked == true) {
+          attTimeUpdate[i] = true;
+          console.log("The box is:", document.getElementById(`box${i}`), "And", document.getElementById(`box${i}`).closest('li'));
+          console.log("The time update is: ", attTimeUpdate);
+        }
+        else{
+          attTimeUpdate[i] = false;
+        }
       }
-      else{
-        attTimeUpdate[i] = false;
-      }
+      let attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val(), attTimes: attTimeUpdate};
+      $.ajax({url: "/api/events/:id" , data: attInfo, method: 'PUT'}).done(function(){
+        console.log("Successfully sent data!");
+        location.reload(true);
+      })
     }
-    let attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val(), attTimes: attTimeUpdate};
-    $.ajax({url: "/api/events/:id" , data: attInfo, method: 'PUT'}).done(function(){
-      console.log("Successfully sent data!");
-      location.reload(true);
-    })
-
-  }
-
 }
 
 // list all timeslots
 function getSchedules() {
   scheduleData = $.ajax({url: "/api/events/invite" , method: 'GET'});
   // if ($('.toggleRSVP').is(':hidden')){
-    scheduleData.done(function(response) {
-     console.log("the schedule is:  ", response);
-      // console.log("weird: ", totalInfo);
-      for (let i in response) {
-        if (!checkList.includes(response[i])) {
-          let scheduleTables = `<li id="time${i}">${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox" id="box${i}">
-          <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
-          $('#attendeeRSVP .scheduleList').append(scheduleTables);
-        }
-        checkList.push(response[i]);
-      }
-  });
+        scheduleData.done(function(response) {
+         console.log("the schedule is:  ", response);
+          // console.log("weird: ", totalInfo);
+          let checkList = [];
+          for (let i in response) {
+            if (!checkList.includes(response[i])){
+              let scheduleTables = `<li id="time${i}">${response[i]}  <label class="switch"><input class="switchToggle" type="checkbox" id="box${i}">
+              <span class="sliderRound" data-on="Yes" data-off="off"></span></label></li>`;
+              $('#attendeeRSVP .scheduleList').append(scheduleTables);
+            }
+            checkList.push(response[i]);
+          }
+      });
+
 }
 
 $( document ).ready(function() {
