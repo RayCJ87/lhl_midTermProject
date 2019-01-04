@@ -27,14 +27,14 @@
     <article class="eventWrapper">
     <main class="container">
       <div class="jumbotron">
-      <h4 class="sub-title">Step 3 of 3</h4>
+      <!-- <h4 class="sub-title">Step 3 of 3</h4> -->
 
   <!-- Event Information -->
       <section class="eventInformation">
-        <h2 class="eventName"><%= eventInfo.title %></h2>
-        <h3 class="organizerName">Hosted by: <%= eventInfo.organizerName %></h3>
-        <h3 class="eventLocation">Location: <%= eventInfo.location %></h3>
-        <p class="eventDescription"><%= eventInfo.description %></p>
+        <h3 class="eventName"><%= eventInfo.title %></h4>
+        <h4 class="organizerName">Hosted by: <%= eventInfo.organizerName %></h4>
+        <h4 class="eventLocation">Location: <%= eventInfo.location %></h4>
+        <h4 class="eventDescription"><%= eventInfo.description %></h4>
       </section>
 
   <!-- RSVP Button -->
@@ -46,7 +46,7 @@
           <label class="formLabel">Email:</label>
           <input type="email" id="newAttendeeMail" name="newMail" placeholder="Enter your email address" style="width: 38%">
           <div class="rsvpAvailability">
-            <h3>Please select your availability:</h3>
+            <h4>Please select your availability:</h4>
             <p class="scheduleList"></p>
           </div>
           <button class="btn btn-success" id="submitAvailability" >Confirm</button>
@@ -56,20 +56,27 @@
 
       <!-- List of Attendees -->
       <section class="attendeeList">
-        <h3>Who's attending:</h3>
+        <h4>Who's attending:</h4>
         <p class="attendeeStatus">
           <% for (let i of theAvailability) { %>
               <ul><li><%= i %></li></ul>
           <% } %>
         </p>
       </section>
-      </div>
 
+      <button class="btn btn-primary" id="doneBtn" style="float: right;">Make a new event</button>
+      </div>
     </main>
     </article>
+
+    <div class="jumbotron" id="thankYou">
+      <h3>Thank you for using Schoodle!!!</h3>
+      <h6>See you again...</h6>
+    </div>
+
   </body>
 
-    <footer>
+  <footer>
     <div>© 2019 Copyright:
       <span>Schoodle.com</span>
     </div>

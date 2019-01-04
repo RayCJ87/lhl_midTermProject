@@ -61,7 +61,6 @@ module.exports = function (DataHelpers) {
   // redirect to the invite page and store event times.
   router.get("/invite", (req, res) => {
     let theScheduleData = {};
-
     if (virtualDB[theURL]) {
       let sortedArr = virtualDB[theURL].eventSchedules;
       for (let i = 0; i < sortedArr.length; i++){
