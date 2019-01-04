@@ -19,7 +19,6 @@ module.exports = function (DataHelpers) {
   //organizer will be redirected after input personal information and description of event
   let totalGuests = {};
   router.get("/", (req, res) =>{
-    console.log("Hello there!");
   });
 
   // store secretURL  to be reused later
@@ -54,7 +53,7 @@ module.exports = function (DataHelpers) {
     //create organizer here
     counter = 0;
     DataHelpers.doesOrganizerExist(organizer.mail, organizer.name);
-    res.render("invite");
+    res.render("invite", eventInfo);
   });
 
 
@@ -163,7 +162,6 @@ module.exports = function (DataHelpers) {
   //update the page after the client select availability.
   router.put("/:id", (req, res) => {
     DataHelpers.doesAttendeeExist(req.body.attMail, req.body.attName);
-    console.log("attendee created!");
     Promise.resolve(DataHelpers.findEventByURL(theURL))
       .then((event) => {
         DataHelpers.joinOrganizer(theURL)
@@ -196,7 +194,6 @@ module.exports = function (DataHelpers) {
               //Update templateVars.updateTimes where data is stored at the back end.
               if (templateVars["updateTimes"] == '') {
                   templateVars["updateTimes"] = {};
-                  console.log("Here: ", templateVars);
                   for (let i = 0; i < req.body.attTimes.length; i++) {
                     templateVars["updateTimes"][templateVars.timeslotInfo.time[i]] = [];
                     if (req.body.attTimes[i] == 'true' ) {
@@ -257,7 +254,6 @@ module.exports = function (DataHelpers) {
                   for (let j = 0; j < templateVars.updateTimes[i].length; j++){
                     if (!templateVars.updateTimes[i].hasOwnProperty(uniqueAttendee)){
                       DataHelpers.createUpdateTimes(theURL, i, templateVars.updateTimes[i][j]);
-                      console.log(" succeed now!");
                     }
                   }
                 }
@@ -267,7 +263,6 @@ module.exports = function (DataHelpers) {
               }
               //the Availability shows the availability that's been shown on the web
               templateVars.theAvailability = dynamicAvailability;
-              console.log('templateVars: ', templateVars);
               res.render("event_show", templateVars);
             })
           })

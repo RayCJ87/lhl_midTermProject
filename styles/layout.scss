@@ -1,10 +1,321 @@
-@import 'rsvp-forms';
-
 body {
-  background-color: #fff;
-
+  background-color: #EEE;
+  min-height: 400px;
+  padding-top: 30px;
+  padding-bottom: 20px;
   h1 {
-    color: #036;
+    color: #244751;
   }
 }
+
+.welcome {
+  padding-top: 20px;
+  font-family: 'Montserrat', sans-serif;
+  color: black;
+  text-shadow: 2px 0 0 #ffd, -2px 0 0 #ffd, 0 2px 0 #ffd, 0 -2px 0 #ffd, 1px 1px #ffd, -1px -1px 0 #ffd, 1px -1px 0 #ffd, -1px 1px 0 #ffd;
+  font-size: 45px;
+}
+
+body .title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  color: #FFD700;
+  text-align: center;
+  text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  padding-top: 30px;
+}
+
+.bodyLayout {
+  background: url(https://cssanimation.rocks/levelup/public/images/background.jpg);
+  font: black;
+  background-blend-mode: lighten;
+}
+
+.eventWrapper {
+  padding-top: 30px;
+  /*overflow: scroll;*/
+}
+
+.bodyLayout #start {
+  display: block;
+  margin: auto;
+  display: block;
+}
+
+.jumbotron {
+  padding-top: 20px;
+  opacity: 0.85;
+  width: 70%;
+  padding-right: 15px;
+  padding-left: 15px;
+  float: center;
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+  /*centered*/
+  margin:0 auto;
+  max-width: 600px;
+  max-height: 610px;
+  overflow: auto;
+}
+
+.wrapper {
+  /*width: 60%;*/
+  /*align-items: center;*/
+  padding-top: 30px;
+  /*padding-left: 20px;*/
+}
+
+
+/*#start {
+  color: #FFD700;
+}*/
+
+.main {
+  padding-top: 40px;
+  padding-left: 30px;
+}
+
+#createEvent {
+  float: right;
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#sendInvite {
+  float: right;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.textArea {
+  vertical-align: top;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+
+}
+
+.clmnWidth {
+  column-width: 200px;
+}
+
+#addAttendee {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#backBtn {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#setEvent {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#setDate {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#copyButton {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+/*fixed social bar*/
+
+.icon-bar a {
+  /*display: block;*/
+  text-align: center;
+  padding: 16px;
+  padding-right: 20px;
+  padding-left: 20px;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 15px;
+  border-radius: 3px;
+}
+
+.icon-bar {
+  align-content: center;
+}
+
+.icon-bar a:hover {
+  background-color: #000;
+}
+
+.facebook {
+  background: #3B5998;
+  color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.twitter {
+  background: #55ACEE;
+  color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.google {
+  background: #dd4b39;
+  color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.linkedin {
+  background: #007bb5;
+  color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.youtube {
+  background: #bb0000;
+  color: white;
+    /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+
+/*footer*/
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 5%;
+  color: white;
+  text-align: center;
+  background-color: #333;
+  padding-top: 5px;
+
+}
+
+#submitAvalability {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+#rsvp {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+.formLabel {
+  vertical-align: top;
+}
+
+#doneBtn {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+
+#submitAvailability {
+  /*shadow*/
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -6px black;
+}
+
+
+
+/*submit availability*/
+/*.switch-yes-no {
+  padding: 0;
+  margin: 15px 0 0;
+  background: #FFF;
+  border-radius: 0;
+  background-image: none;
+}
+
+.switch-yes-no .switch-label {
+  box-shadow: none;
+  background: none;
+}
+
+.switch-yes-no .switch-label:after, .switch-yes-no .switch-label:before {
+  width: 100%;
+  height: 70%;
+  top: 5px;
+  left: 0;
+  text-align: center;
+  padding-top: 10%;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.switch-yes-no .switch-label:after {
+  color: #FFFFFF;
+  background: #32CD32;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+
+.switch-yes-no .switch-label:before {
+  background: #eceeef;
+  backface-visibility: hidden;
+}
+
+.switch-yes-no .switch-handle {
+  display: none;
+}
+
+.switch-yes-no .switch-input:checked ~ .switch-label {
+  background: #FFF;
+  border-color: #0088cc;
+}
+
+.switch-yes-no .switch-input:checked ~ .switch-label:before {
+  transform: rotateY(180deg)
+}
+
+.switch-yes-no .switch-input:checked ~ .switch-label:after {
+  transform: rotateY(0)
+}*/
+
+
+
+
+
+
+
+
+
+
+
 
