@@ -1,4 +1,15 @@
-# Node Skeleton
+# Schoodle
+
+Schoole is a simple, easy to use, free event organizing app.
+
+The repository is the start code for the project: users will fork and clone this repository, then build upon it using HTML, CSS, SASS,Bootstrap, JS, JQuery, AJAX front-end skills, and back-end skills including Node, express, postgres and knex.
+
+## Final Product
+
+!["Screenshot of welcome page](https://github.com/RayCJ87/lhl_midTermProject/blob/feature_midTerm/screeshots/Screen%20Shot%20-%20welcome%20page.png)
+!["Screenshot of creating an event](https://github.com/RayCJ87/lhl_midTermProject/blob/feature_midTerm/screeshots/Screen%20Shot%20-%20create%20an%20event.png)
+!["Screenshot of sending the link to attendees](https://github.com/RayCJ87/lhl_midTermProject/blob/feature_midTerm/screeshots/Screen%20Shot%20-%20send%20the%20link%20to%20attendees.png)
+!["Screenshot of the event page](https://github.com/RayCJ87/lhl_midTermProject/blob/feature_midTerm/screeshots/Screen%20Shot%20-%20the%20event%20page.png)
 
 ## Project Setup
 
@@ -27,3 +38,11 @@
 
 - Node 5.10.x or above
 - NPM 3.8.x or above
+- Dotenv
+- Bootstrap
+- Body-parser
+- Ejs
+- Knex
+- Knex-logger
+- Node-sass-middleware
+- Pg
