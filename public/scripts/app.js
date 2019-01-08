@@ -57,7 +57,6 @@ function updateAttStatus(){
       }
       let attInfo = {attName: $('#newAttendeeName').val(), attMail: $('#newAttendeeMail').val(), attTimes: attTimeUpdate};
       $.ajax({url: "/api/events/:id" , data: attInfo, method: 'PUT'}).done(function(){
-        console.log("Successfully sent data!");
         location.reload(true);
       })
     }
@@ -88,10 +87,8 @@ $( document ).ready(function() {
   loadTimeSlots();
   const secretURL = getEventUrl();
   const urlAddress = {secretURL: secretURL};
-  console.log("The URL is: ", urlAddress);
   $('#submitAvailability').on("click", updateAttStatus);
   $.ajax({url: "/api/events/create", data: urlAddress, method: 'PUT'}).done(function(){
-      console.log("Success!");
     });
   //to make first page toggle slide when click on "create an event" button
   $( '.content1' ).hide();

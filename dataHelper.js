@@ -361,17 +361,7 @@ module.exports = function MakeDataHelpers(knex) {
       })
     },
 
-    //LINKS ATTENDEE TO SELECTED TIMESLOTS
-    //get attendee from email;
-    //page shows list of all timeslots available,
-    //checkmarks by ones already chosen by attendee;
-    //on submit, add new checkmarks to guest_lists
-    // createGuestList: (attendeeEmail, attendeeName, availabilityArr) => {
-    //   doesAttendeeExist(attendeeEmail, attendeeName)
-    //   .then((attendeeID) => {
 
-    //   })
-    // },
 
       //LINKS ATTENDEE TO TIMESLOT WHEN TIME IS CHECKED
     createGuestList: (attendeeID, url, time) => {
